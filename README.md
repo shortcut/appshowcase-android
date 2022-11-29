@@ -6,6 +6,6 @@ This version is currently being re-written due to the fact that the first versio
 
 The old version will be archived.
 
-Link to original version: link
+Link to original version:
 
 https://github.com/shortcut/app-showcase-android
