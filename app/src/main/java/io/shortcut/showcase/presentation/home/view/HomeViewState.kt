@@ -15,6 +15,9 @@ data class HomeViewState(
     val refreshing: Boolean = false,
     val loading: Boolean = false,
 
+    val totalTimerTime: Long = 30000L, // 30: Seconds
+    val isTimerRunning: Boolean = true,
+
     val appInView: ShowcaseAppUI = genMockShowcaseAppUI(),
 
     val filterButtons: List<FilterButtonData> = emptyList(),
