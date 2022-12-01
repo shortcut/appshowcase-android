@@ -1,5 +1,6 @@
 package io.shortcut.showcase.presentation.home.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -62,7 +64,8 @@ fun HomeCategoryRow(
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
             )
             Spacer(modifier = Modifier.weight(1f))
-            Text(
+            // TODO: Disabled show all.
+            /*Text(
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -73,7 +76,7 @@ fun HomeCategoryRow(
                 text = stringResource(id = R.string.home_showAll),
                 style = ShowcaseThemeCustom.typography.bodySmall,
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
-            )
+            )*/
         }
         LazyRow(
             modifier = childModifier
@@ -86,10 +89,15 @@ fun HomeCategoryRow(
             )
         ) {
             items(apps) { app ->
+                val appImageUrl = app.iconIos.ifBlank { app.iconAndroid }
+                val appTitle = app.titleIos.ifBlank { app.titleAndroid }
+                val appRating = app.scoreTextAndroid.ifBlank { app.scoreTextIos.toString() }
+
                 CategoryRowItem(
-                    imageURL = app.iconIos,
-                    appTitle = app.titleIos,
-                    appRating = app.scoreTextAndroid
+                    imageURL = appImageUrl,
+                    appTitle = appTitle,
+                    appRating = appRating,
+                    onAppIconClick = app.onClick
                 )
             }
         }
@@ -102,14 +110,11 @@ private fun CategoryRowItem(
     imageURL: String,
     appTitle: String,
     appRating: String,
-    onAppIconClick: () -> Unit = {}
+    onAppIconClick: () -> Unit = {},
 ) {
     Column(
         modifier = modifier
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
-            ) {
+            .clickable {
                 onAppIconClick()
             },
         horizontalAlignment = Alignment.Start
@@ -120,33 +125,45 @@ private fun CategoryRowItem(
                 .clip(shape = RoundedCornerShape(Dimens.XS)),
             model = imageURL,
             contentDescription = null,
-            contentScale = ContentScale.Fit
+            contentScale = ContentScale.FillWidth
         )
         Spacer(modifier = Modifier.height(Dimens.XS))
         Text(
+            modifier = Modifier
+                .sizeIn(maxWidth = 80.dp), // To stop the text from overflowing.
             text = appTitle,
             style = ShowcaseThemeCustom.typography.h2,
             color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
+        if (appRating.isNotBlank() || appRating != "0.0") {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = appRating,
+                    style = ShowcaseThemeCustom.typography.h3,
+                    color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Spacer(modifier = Modifier.width(Dimens.XXS))
+                Icon(
+                    modifier = Modifier
+                        .size(Dimens.S),
+                    imageVector = Icons.Filled.Star,
+                    contentDescription = null,
+                    tint = ShowcaseThemeCustom.colors.ShowcaseLightGrey
+                )
+            }
+        } else {
             Text(
-                text = appRating,
+                text = stringResource(id = R.string.error_ratingUnknown),
                 style = ShowcaseThemeCustom.typography.h3,
                 color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.width(Dimens.XXS))
-            Icon(
-                modifier = Modifier
-                    .size(Dimens.S),
-                imageVector = Icons.Filled.Star,
-                contentDescription = null,
-                tint = ShowcaseThemeCustom.colors.ShowcaseLightGrey
             )
         }
     }

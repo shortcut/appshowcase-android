@@ -1,6 +1,7 @@
 package io.shortcut.showcase.domain.model
 
 import io.shortcut.showcase.data.mapper.Country
+import io.shortcut.showcase.data.mapper.GeneralCategory
 
 data class ShowcaseAppAPI(
     val genreAndroid: String = "",
@@ -25,6 +26,6 @@ data class ShowcaseAppAPI(
     val summaryIos: String = "",
     val titleAndroid: String = "",
     val titleIos: String = "",
-    val country: String = ""
-
+    val country: String = "",
+    val generalCategory: String = "",
 )

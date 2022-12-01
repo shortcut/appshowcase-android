@@ -32,4 +32,6 @@ data class ShowcaseAppUI(
 
     val screenshots: Screenshots,
     val histogram: Histogram,
+
+    val onClick: () -> Unit = {}
 )

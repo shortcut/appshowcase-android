@@ -4,5 +4,5 @@ enum class Country {
     Norway,
     Sweden,
     Denmark,
-    Unknown
+    Unknown,
 }

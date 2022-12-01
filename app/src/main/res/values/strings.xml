@@ -2,4 +2,12 @@
     <string name="app_name">Showcase</string>
 
     <string name="home_showAll">Show all</string>
+
+    <string name="error_publisherUnknown">No publisher</string>
+    <string name="error_ratingUnknown">No rating</string>
+
+    <string name="details_ratingTitle">Rating</string>
+    <string name="details_downloadsTitle">Downloads</string>
+    <string name="details_categoryTitle">Category</string>
+    <string name="details_shortDescriptionTitle">Short description</string>
 </resources>
