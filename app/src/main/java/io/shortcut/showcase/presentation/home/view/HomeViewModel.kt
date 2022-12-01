@@ -45,11 +45,25 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let { apps ->
+
+                            // Attach on click listener
+                            val appsWithOnClick = apps.map { app ->
+                                app.copy(
+                                    onClick = {
+                                        homeViewState = homeViewState.copy(
+                                            appInView = app
+                                        )
+                                        sendViewEffect(HomeViewEffects.OpenBottomSheet)
+                                    }
+                                )
+                            }
+
+                            val filteredApps = buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
+
                             homeViewState = homeViewState.copy(
-                                apps = buildList { addAll(apps.filter { it.country == homeViewState.activeCountryFilter }) }
+                                apps = filteredApps
                             )
                         }
-                        // After fetching the data, we need to generate the sections.
                         genSections()
                     }
 
