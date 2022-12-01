@@ -3,8 +3,8 @@ package io.shortcut.showcase.util.formatter
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import java.util.Locale
 
-fun formatGeneralCategory(subCategory: String): GeneralCategory {
-    return when (subCategory.lowercase(Locale.getDefault())) {
+fun formatGeneralCategory(category: String): GeneralCategory {
+    return when (category.lowercase(Locale.getDefault())) {
         "navigation" -> GeneralCategory.NAVIGATION
         "health & fitness", "medical", "sports" -> GeneralCategory.HEALTH_AND_FITNESS
         "lifestyle", "other", "social networking" -> GeneralCategory.OTHER

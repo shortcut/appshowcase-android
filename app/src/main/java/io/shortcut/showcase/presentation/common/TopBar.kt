@@ -47,11 +47,12 @@ fun TopBar(
             )
         }
         Spacer(modifier = Modifier.weight(1f))
-        Icon(
+        // TODO: Currently disabled, needs proper search integration.
+        /*Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = null,
             tint = iconTint
-        )
+        )*/
     }
 }
 

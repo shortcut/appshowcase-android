@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -28,15 +29,21 @@ import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.SwipeRefreshIndicator
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import io.shortcut.showcase.data.mapper.GeneralCategory
-import io.shortcut.showcase.presentation.common.FilterRow
+import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.TopBar
+import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockBanners
+import io.shortcut.showcase.util.mock.genMockFilterButtons
+import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
@@ -49,11 +56,14 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     val homeViewState: HomeViewState = viewModel.homeViewState
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = homeViewState.refreshing)
 
     val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
         skipHalfExpanded = true
     )
+
+    var appInView = homeViewState.appInView
 
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
@@ -62,39 +72,48 @@ fun HomeScreen(
         }
     }
 
-    /* sheetContent = { TODO }, */
-
     ModularBottomSheet(
         state = modalBottomSheetState,
+        sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
         sheetContent = {
-            Column(modifier = Modifier.fillMaxSize()) {
-                Text(text = "Hello World")
-            }
+            HomeSheetContent(
+                childModifier = Modifier
+                    .padding(horizontal = Dimens.M),
+                app = appInView
+            )
         },
     ) {
-        Scaffold(
-            topBar = {
-                TopBar(
-                    modifier = Modifier
-                        .padding(
-                            horizontal = Dimens.S,
-                            vertical = Dimens.M
-                        ),
-                    color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                    iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary
-                )
-            },
-            modifier = Modifier
-                .fillMaxSize()
-        ) { paddingValues ->
-            LazyColumn(
+        SwipeRefresh(
+            state = swipeRefreshState,
+            onRefresh = { viewModel.fetchDataFromRemote() }
+        ) {
+            Scaffold(
+                topBar = {
+                    TopBar(
+                        modifier = Modifier
+                            .padding(
+                                horizontal = Dimens.S,
+                                vertical = Dimens.M
+                            ),
+                        color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                        iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary
+                    )
+                },
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
-                    .padding(paddingValues)
-            ) {
-                item {
-                    HomeContent(sections = homeViewState.categorySections)
+            ) { paddingValues ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+                        .padding(paddingValues)
+                ) {
+                    item {
+                        HomeContent(
+                            filterButtons = homeViewState.filterButtons,
+                            sections = homeViewState.categorySections
+                        )
+                    }
                 }
             }
         }
@@ -104,6 +123,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     modifier: Modifier = Modifier,
+    filterButtons: List<FilterButtonData>,
     sections: List<CategorySection>
 ) {
     Column(
@@ -114,19 +134,20 @@ private fun HomeContent(
         HomeScreenPager(images = genMockBanners())
         Spacer(modifier = Modifier.height(Dimens.L))
         FilterRow(
-            modifier = Modifier
-                .padding(horizontal = Dimens.S)
+            buttons = filterButtons,
+            buttonSpacing = Dimens.S,
+            horizontalContentPadding = Dimens.S
         )
         Spacer(modifier = Modifier.height(Dimens.L))
-
         sections.forEach { section ->
             HomeCategoryRow(
                 modifier = Modifier
                     .padding(horizontal = Dimens.S),
                 rowTitle = section.generalCategory,
                 apps = section.apps,
-                onShowAllClick = { section.onClickShowAll }
+                onShowAllClick = { section.onClickShowAll() }
             )
+            Spacer(modifier = Modifier.height(Dimens.L))
         }
     }
 }
@@ -187,6 +208,7 @@ private fun HomeScreenPagerPreview() {
 private fun HomeContentPreview() {
     ExtendedShowcaseTheme {
         HomeContent(
+            filterButtons = genMockFilterButtons(),
             sections = emptyList()
         )
     }

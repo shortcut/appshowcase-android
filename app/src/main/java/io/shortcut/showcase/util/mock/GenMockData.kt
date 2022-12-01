@@ -2,7 +2,9 @@ package io.shortcut.showcase.util.mock
 
 import io.shortcut.showcase.data.local.Histogram
 import io.shortcut.showcase.data.local.Screenshots
+import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
+import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.util.formatter.formatCountry
 import io.shortcut.showcase.util.formatter.formatGeneralCategory
@@ -38,8 +40,7 @@ fun genMockShowcaseAppUI(): ShowcaseAppUI {
                 "https://play-lh.googleusercontent.com/90Pnstuyyv4ZRJOARjiMCXCyEyk1pjoD8Ukv9RbACJhThdNtayvULjQMY_2NGh7RsQ",
                 "https://play-lh.googleusercontent.com/https://play-lh.googleusercontent.com/sEDIn7bgSWIqm5iaRtPz-VUoarlp2VWS4-YKCUHg3ecSpV-HKpCQnfpIFtfqMXyVh_g",
                 "https://play-lh.googleusercontent.com/thjmg3d0R-6I9jQHozz3q-Mgn8dslEx3gyrSuvYNWOrts8xw7xDvUGJEl7FcLngk_U0"
-            ),
-            imagesIos = listOf(
+            ), imagesIos = listOf(
                 "https://is3-ssl.mzstatic.com/image/thumb/Purple112/v4/bc/9a/45/bc9a459f-23f8-8b4c-aaac-ec030c95c93f/abad0f87-e0ea-4368-b77d-a8c7cec8d5ca_04.png/392x696bb.png",
                 "https://is2-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/67/b1/3d/67b13dc9-5c18-cfe5-22d8-a79be1cd0d77/3b4fd0eb-3f1d-4825-9a2b-7e85e0b84bbc_02.png/392x696bb.png",
                 "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/1f/1e/95/1f1e95b4-385f-6eeb-fd44-21d5cea28081/7fe1530c-dca4-4e2d-8678-eb095f85eb14_03.png/392x696bb.png",
@@ -53,18 +54,9 @@ fun genMockShowcaseAppUI(): ShowcaseAppUI {
         ),
         histogram = Histogram(
             histogramAndroid = mapOf(
-                "1" to 2400,
-                "2" to 882,
-                "3" to 3116,
-                "4" to 13777,
-                "5" to 83800
-            ),
-            histogramIos = mapOf(
-                "1" to 8914,
-                "2" to 3558,
-                "3" to 14120,
-                "4" to 69034,
-                "5" to 501462
+                "1" to 2400, "2" to 882, "3" to 3116, "4" to 13777, "5" to 83800
+            ), histogramIos = mapOf(
+                "1" to 8914, "2" to 3558, "3" to 14120, "4" to 69034, "5" to 501462
             )
         ),
         generalCategory = formatGeneralCategory("Finance"),
@@ -74,11 +66,19 @@ fun genMockShowcaseAppUI(): ShowcaseAppUI {
 
 fun genMockShowcaseAppUIList(count: Int = 10) = List(count) { genMockShowcaseAppUI() }
 
-    fun genMockBanners(): List<String> {
+fun genMockBanners(): List<String> {
     return buildList {
         add("https://images.unsplash.com/photo-1669707357879-2daffd3ef7f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1665&q=80")
         add("https://images.unsplash.com/photo-1669705746675-18a4dd315e93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3272&q=80")
         add("https://images.unsplash.com/photo-1669573234406-00c9e3f6ab34?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80")
+    }
+}
+
+fun genMockFilterButtons(): List<FilterButtonData> {
+    return buildList {
+        add(FilterButtonData(type = Country.Norway, selected = false, onClick = {}))
+        add(FilterButtonData(type = Country.Sweden, selected = false, onClick = {}))
+        add(FilterButtonData(type = Country.Denmark, selected = false, onClick = {}))
     }
 }
 

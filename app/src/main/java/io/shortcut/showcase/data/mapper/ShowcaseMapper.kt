@@ -37,7 +37,7 @@ fun ShowcaseAppAPI.toShowcaseAppEntity(): ShowcaseAppEntity {
             histogramIos = histogramIos
         ),
 
-        generalCategory = formatGeneralCategory(genreIos),
+        generalCategory = formatGeneralCategory(generalCategory),
         country = formatCountry(country)
     )
 }

@@ -34,6 +34,16 @@ object Dimens {
     val fourty = 40.dp
 
     /**
+     * 48dp
+     */
+    val fourtyEight = 48.dp
+
+    /**
+     * 56dp
+     */
+    val fiftySix = 56.dp
+
+    /**
      * 64.dp
      */
     val XL = 64.dp
