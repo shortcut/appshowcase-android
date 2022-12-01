@@ -12,6 +12,7 @@ import io.shortcut.showcase.data.repository.HomeScreenRepositoryImpl
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.util.resource.Resource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
@@ -58,7 +59,8 @@ class HomeViewModel @Inject constructor(
                                 )
                             }
 
-                            val filteredApps = buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
+                            val filteredApps =
+                                buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
 
                             homeViewState = homeViewState.copy(
                                 apps = filteredApps
@@ -98,7 +100,8 @@ class HomeViewModel @Inject constructor(
                                 )
                             }
 
-                            val filteredApps = buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
+                            val filteredApps =
+                                buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
 
                             homeViewState = homeViewState.copy(
                                 apps = filteredApps
@@ -163,7 +166,6 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun setCountryFilter(country: Country) {
-        // This function is called when a filter button is clicked.
         viewModelScope.launch {
             homeViewState = homeViewState.copy(
                 activeCountryFilter = country
@@ -172,6 +174,37 @@ class HomeViewModel @Inject constructor(
             genFilterButtons()
             fetchDataFromDatabase()
             genSections()
+        }
+    }
+
+    private fun startIdleTimer() {
+        viewModelScope.launch {
+            // Sets the timer state to running.
+            homeViewState = homeViewState.copy(isTimerRunning = true)
+
+            // Loop thar removes 1000L each second.
+            while (homeViewState.isTimerRunning) {
+                if (homeViewState.totalTimerTime > 1) {
+                    homeViewState = homeViewState.copy(
+                        totalTimerTime = (homeViewState.totalTimerTime - 1000L)
+                    )
+                    delay(1000L)
+                } else {
+                    homeViewState = homeViewState.copy(isTimerRunning = false)
+                    // Navigate
+                    // onEvent(event = SharedEvent.NavigateToSecondaryScreen)
+                    break
+                }
+            }
+        }
+    }
+
+    private fun resetTimer() {
+        viewModelScope.launch {
+            // When the screen is touched, the timer is reset.
+            homeViewState = homeViewState.copy(totalTimerTime = 3000L)
+            // Sets the timer state to running.
+            homeViewState = homeViewState.copy(isTimerRunning = true)
         }
     }
 }
