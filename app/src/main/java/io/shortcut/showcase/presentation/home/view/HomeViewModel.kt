@@ -176,35 +176,4 @@ class HomeViewModel @Inject constructor(
             genSections()
         }
     }
-
-    private fun startIdleTimer() {
-        viewModelScope.launch {
-            // Sets the timer state to running.
-            homeViewState = homeViewState.copy(isTimerRunning = true)
-
-            // Loop thar removes 1000L each second.
-            while (homeViewState.isTimerRunning) {
-                if (homeViewState.totalTimerTime > 1) {
-                    homeViewState = homeViewState.copy(
-                        totalTimerTime = (homeViewState.totalTimerTime - 1000L)
-                    )
-                    delay(1000L)
-                } else {
-                    homeViewState = homeViewState.copy(isTimerRunning = false)
-                    // Navigate
-                    // onEvent(event = SharedEvent.NavigateToSecondaryScreen)
-                    break
-                }
-            }
-        }
-    }
-
-    private fun resetTimer() {
-        viewModelScope.launch {
-            // When the screen is touched, the timer is reset.
-            homeViewState = homeViewState.copy(totalTimerTime = 3000L)
-            // Sets the timer state to running.
-            homeViewState = homeViewState.copy(isTimerRunning = true)
-        }
-    }
 }
