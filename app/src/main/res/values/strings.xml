@@ -5,6 +5,7 @@
 
     <string name="error_publisherUnknown">No publisher</string>
     <string name="error_ratingUnknown">No rating</string>
+    <string name="error_dataIsMissing">Sorry about that, data seems to be missing or inconsistent. Try clicking on Ruter!</string>
 
     <string name="details_ratingTitle">Rating</string>
     <string name="details_downloadsTitle">Downloads</string>

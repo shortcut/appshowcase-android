@@ -7,12 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -40,6 +43,7 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
+import io.shortcut.showcase.util.validate.validateShowcaseAppUI
 
 @Composable
 private fun Header(
@@ -276,36 +280,57 @@ fun HomeSheetContent(
     childModifier: Modifier = Modifier,
     app: ShowcaseAppUI
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
-        verticalArrangement = Arrangement.Top
-    ) {
-        Spacer(modifier = Modifier.height(Dimens.M))
-        Header(
-            modifier = childModifier,
-            appUrl = app.iconIos,
-            appTitle = app.titleIos,
-            appCompany = "Unknown",
-            appCountry = app.country.name
-        )
-        Spacer(modifier = Modifier.height(Dimens.L))
-        Stats(
-            modifier = childModifier,
-            appRating = app.scoreTextAndroid,
-            appDownloads = app.installsAndroid,
-            appCategory = app.generalCategory.category
-        )
-        Spacer(modifier = Modifier.height(Dimens.L))
-        ShortDescription(
-            modifier = childModifier,
-            shortDescription = app.summaryIos
-        )
-        Spacer(modifier = Modifier.height(Dimens.S))
-        Screenshots(screenshots = app.screenshots.imagesIos)
-        Spacer(modifier = Modifier.height(Dimens.L))
+    if (validateShowcaseAppUI(app)) {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
+            verticalArrangement = Arrangement.Top
+        ) {
+            Spacer(modifier = Modifier.height(Dimens.M))
+            Header(
+                modifier = childModifier,
+                appUrl = app.iconIos,
+                appTitle = app.titleIos,
+                appCompany = "Unknown",
+                appCountry = app.country.name
+            )
+            Spacer(modifier = Modifier.height(Dimens.L))
+            Stats(
+                modifier = childModifier,
+                appRating = app.scoreTextAndroid,
+                appDownloads = app.installsAndroid,
+                appCategory = app.generalCategory.category
+            )
+            Spacer(modifier = Modifier.height(Dimens.L))
+            ShortDescription(
+                modifier = childModifier,
+                shortDescription = app.summaryIos
+            )
+            Spacer(modifier = Modifier.height(Dimens.S))
+            Screenshots(screenshots = app.screenshots.imagesIos)
+            Spacer(modifier = Modifier.height(Dimens.L))
+        }
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxHeight(0.5f),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(horizontal = Dimens.XL),
+                text = stringResource(id = R.string.error_dataIsMissing),
+                style = ShowcaseThemeCustom.typography.h3,
+                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 4,
+                textAlign = TextAlign.Center
+            )
+        }
     }
 }
 
