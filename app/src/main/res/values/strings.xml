@@ -7,6 +7,9 @@
     <string name="error_ratingUnknown">No rating</string>
     <string name="error_dataIsMissing">Sorry about that, data seems to be missing or inconsistent. \nTry clicking on Ruter!</string>
 
+    <string name="component_showcaseButtonLaunch">Launch</string>
+    <string name="component_showcaseButtonInstall">Install</string>
+
     <string name="details_ratingTitle">Rating</string>
     <string name="details_downloadsTitle">Downloads</string>
     <string name="details_categoryTitle">Category</string>
