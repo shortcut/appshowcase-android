@@ -1,36 +1,46 @@
 package io.shortcut.showcase.util.validate
 
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.domain.model.ShowcaseAppAPI
 
 
-fun validateShowcaseAppUI(app: ShowcaseAppUI): Boolean {
-    if (app.iconIos.isBlank() && app.iconAndroid.isBlank()) {
-        return false
+fun showcaseAppAPIContainsNull(app: ShowcaseAppAPI?): Boolean {
+    if (app == null) {
+        return true
+    }
+    if (app.title.isNullOrBlank()) {
+        return true
+    }
+    if (app.iconUrl.isNullOrBlank()) {
+        return true
+    }
+    if (app.publisher.isNullOrBlank()) {
+        return true
+    }
+    if (app.screenshots.isNullOrEmpty()) {
+        return true
+    }
+    if (app.totalInstalls.isNullOrBlank()) {
+        return true
+    }
+    if (app.shortDescription.isNullOrBlank()) {
+        return true
     }
 
-    if (app.titleIos.isBlank() && app.titleIos.isBlank()) {
-        return false
+    if (app.generalCategory.isNullOrBlank()) {
+        return true
     }
 
-    if (app.country.name.isBlank()) {
-        return false
+    if (app.highestRating.isNullOrBlank()) {
+        return true
     }
 
-    if (app.scoreTextAndroid.isBlank()) {
-        return false
+    /*if (app.totalHistogram.isNullOrEmpty()) {
+        return true
+    }*/
+
+    if (app.androidPackageID.isNullOrBlank()) {
+        return true
     }
 
-    if (app.installsAndroid.isBlank()) {
-        return false
-    }
-
-    if (app.summaryIos.isBlank()) {
-        return false
-    }
-
-    if (app.screenshots.imagesIos.isEmpty()) {
-        return false
-    }
-
-    return true
+    return false
 }

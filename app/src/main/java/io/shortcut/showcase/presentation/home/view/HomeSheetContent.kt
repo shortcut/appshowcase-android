@@ -43,7 +43,7 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
-import io.shortcut.showcase.util.validate.validateShowcaseAppUI
+
 
 @Composable
 private fun Header(
@@ -280,57 +280,36 @@ fun HomeSheetContent(
     childModifier: Modifier = Modifier,
     app: ShowcaseAppUI
 ) {
-    if (validateShowcaseAppUI(app)) {
-        Column(
-            modifier = modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
-            verticalArrangement = Arrangement.Top
-        ) {
-            Spacer(modifier = Modifier.height(Dimens.M))
-            Header(
-                modifier = childModifier,
-                appUrl = app.iconIos,
-                appTitle = app.titleIos,
-                appCompany = "Unknown",
-                appCountry = app.country.name
-            )
-            Spacer(modifier = Modifier.height(Dimens.L))
-            Stats(
-                modifier = childModifier,
-                appRating = app.scoreTextAndroid,
-                appDownloads = app.installsAndroid,
-                appCategory = app.generalCategory.category
-            )
-            Spacer(modifier = Modifier.height(Dimens.L))
-            ShortDescription(
-                modifier = childModifier,
-                shortDescription = app.summaryIos
-            )
-            Spacer(modifier = Modifier.height(Dimens.S))
-            Screenshots(screenshots = app.screenshots.imagesIos)
-            Spacer(modifier = Modifier.height(Dimens.L))
-        }
-    } else {
-        Column(
-            modifier = Modifier
-                .fillMaxHeight(0.5f),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
-        ) {
-            Text(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .padding(horizontal = Dimens.XL),
-                text = stringResource(id = R.string.error_dataIsMissing),
-                style = ShowcaseThemeCustom.typography.h3,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
-                overflow = TextOverflow.Ellipsis,
-                maxLines = 4,
-                textAlign = TextAlign.Center
-            )
-        }
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
+        verticalArrangement = Arrangement.Top
+    ) {
+        Spacer(modifier = Modifier.height(Dimens.M))
+        Header(
+            modifier = childModifier,
+            appUrl = app.iconUrl,
+            appTitle = app.title,
+            appCompany = app.publisher,
+            appCountry = app.country.name
+        )
+        Spacer(modifier = Modifier.height(Dimens.L))
+        Stats(
+            modifier = childModifier,
+            appRating = app.highestRating,
+            appDownloads = app.totalInstalls,
+            appCategory = app.generalCategory.category
+        )
+        Spacer(modifier = Modifier.height(Dimens.L))
+        ShortDescription(
+            modifier = childModifier,
+            shortDescription = app.shortDescription
+        )
+        Spacer(modifier = Modifier.height(Dimens.S))
+        Screenshots(screenshots = app.screenshots.imageURLs)
+        Spacer(modifier = Modifier.height(Dimens.XL))
     }
 }
 
@@ -340,9 +319,9 @@ private fun HeaderPreview() {
     val app = genMockShowcaseAppUI()
     ExtendedShowcaseTheme {
         Header(
-            appUrl = app.iconIos,
-            appTitle = app.titleIos,
-            appCompany = stringResource(id = R.string.error_publisherUnknown),
+            appUrl = app.iconUrl,
+            appTitle = app.title,
+            appCompany = app.publisher,
             appCountry = app.country.name
         )
     }
@@ -354,8 +333,8 @@ private fun StatsPreview() {
     val app = genMockShowcaseAppUI()
     ExtendedShowcaseTheme {
         Stats(
-            appRating = app.scoreTextAndroid,
-            appDownloads = app.installsAndroid,
+            appRating = app.highestRating,
+            appDownloads = app.totalInstalls,
             appCategory = app.generalCategory.category
         )
     }
@@ -367,7 +346,7 @@ private fun ShortDescriptionPreview() {
     val app = genMockShowcaseAppUI()
     ExtendedShowcaseTheme {
         ShortDescription(
-            shortDescription = app.summaryIos
+            shortDescription = app.shortDescription
         )
     }
 }
@@ -378,7 +357,7 @@ private fun ScreenshotsPreview() {
     val app = genMockShowcaseAppUI()
     ExtendedShowcaseTheme {
         Screenshots(
-            screenshots = app.screenshots.imagesIos,
+            screenshots = app.screenshots.imageURLs,
             horizontalContentPadding = Dimens.M,
             itemSpacing = Dimens.S
         )
