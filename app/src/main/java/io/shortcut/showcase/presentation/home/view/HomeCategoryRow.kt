@@ -89,14 +89,11 @@ fun HomeCategoryRow(
             )
         ) {
             items(apps) { app ->
-                val appImageUrl = app.iconIos.ifBlank { app.iconAndroid }
-                val appTitle = app.titleIos.ifBlank { app.titleAndroid }
-                val appRating = app.scoreTextAndroid.ifBlank { app.scoreTextIos.toString() }
 
                 CategoryRowItem(
-                    imageURL = appImageUrl,
-                    appTitle = appTitle,
-                    appRating = appRating,
+                    imageURL = app.iconUrl,
+                    appTitle = app.title,
+                    appRating = app.highestRating,
                     onAppIconClick = app.onClick
                 )
             }
@@ -176,9 +173,9 @@ private fun CategoryRowItemPreview() {
 
     ExtendedShowcaseTheme {
         CategoryRowItem(
-            imageURL = app.iconIos,
-            appTitle = app.titleIos,
-            appRating = app.scoreTextAndroid
+            imageURL = app.iconUrl,
+            appTitle = app.title,
+            appRating = app.highestRating
         )
     }
 }

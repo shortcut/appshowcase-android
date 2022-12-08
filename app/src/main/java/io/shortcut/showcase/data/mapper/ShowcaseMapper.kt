@@ -1,6 +1,5 @@
 package io.shortcut.showcase.data.mapper
 
-import io.shortcut.showcase.data.local.Histogram
 import io.shortcut.showcase.data.local.Screenshots
 import io.shortcut.showcase.data.local.ShowcaseAppEntity
 import io.shortcut.showcase.domain.model.ShowcaseAppAPI
@@ -10,35 +9,19 @@ import io.shortcut.showcase.util.formatter.formatGeneralCategory
 
 fun ShowcaseAppAPI.toShowcaseAppEntity(): ShowcaseAppEntity {
     return ShowcaseAppEntity(
-        genreAndroid = genreAndroid,
-        genreIos = genreIos,
-        iconAndroid = iconAndroid,
-        iconIos = iconIos,
-        installsAndroid = installsAndroid,
-        isShortcutApp = isShortcutApp,
-        packageAndroid = packageAndroid,
-        ratingAndroid = ratingAndroid,
-        ratingIos = ratingIos,
-        releasedAndroid = releasedAndroid,
-        releasedIos = releasedIos,
-        scoreTextAndroid = scoreTextAndroid,
-        scoreTextIos = scoreTextIos,
-        summaryAndroid = summaryAndroid,
-        summaryIos = summaryIos,
-        titleAndroid = titleAndroid,
-        titleIos = titleIos,
+        id = 0,
 
-        screenshots = Screenshots(
-            imagesAndroid = imagesAndroid,
-            imagesIos = imagesIos
-        ),
-        histogram = Histogram(
-            histogramAndroid = histogramAndroid,
-            histogramIos = histogramIos
-        ),
-
-        generalCategory = formatGeneralCategory(generalCategory),
-        country = formatCountry(country)
+        title = title ?: "Unknown",
+        iconUrl = iconUrl ?: "Unknown",
+        publisher = publisher ?: "Unknown",
+        country = country?.let { formatCountry(it) } ?: Country.Unknown,
+        screenshots = screenshots?.let { Screenshots(imageURLs = it) } ?: Screenshots(emptyList()),
+        totalInstalls = totalInstalls ?: "Unknown",
+        shortDescription = shortDescription ?: "Unknown",
+        generalCategory = generalCategory?.let { formatGeneralCategory(it) } ?: GeneralCategory.OTHER,
+        highestRating = highestRating?.toFloat() ?: 0.0f,
+        // totalHistogram = Histogram(histogramData = totalHistogram),
+        androidPackageID = androidPackageID ?: "Unknown"
     )
 }
 
@@ -46,28 +29,16 @@ fun ShowcaseAppEntity.toShowcaseAppUI() : ShowcaseAppUI {
     return ShowcaseAppUI(
         id = id,
 
-        genreAndroid = genreAndroid,
-        genreIos = genreIos,
-        iconAndroid = iconAndroid,
-        iconIos = iconIos,
-        installsAndroid = installsAndroid,
-        isShortcutApp = isShortcutApp,
-        packageAndroid = packageAndroid,
-        ratingAndroid = ratingAndroid,
-        ratingIos = ratingIos,
-        releasedAndroid = releasedAndroid,
-        releasedIos = releasedIos,
-        scoreTextAndroid = scoreTextAndroid,
-        scoreTextIos = scoreTextIos,
-        summaryAndroid = summaryAndroid,
-        summaryIos = summaryIos,
-        titleAndroid = titleAndroid,
-        titleIos = titleIos,
-
+        title = title,
+        iconUrl = iconUrl,
+        publisher = publisher,
+        country = country,
         screenshots = screenshots,
-        histogram = histogram,
-
+        totalInstalls = totalInstalls,
+        shortDescription = shortDescription,
         generalCategory = generalCategory,
-        country = country
+        highestRating = highestRating.toString(),
+        // totalHistogram = totalHistogram,
+        androidPackageID = androidPackageID
     )
 }

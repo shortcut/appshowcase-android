@@ -76,7 +76,6 @@ fun HomeScreen(
         when (it) {
             HomeViewEffects.OpenBottomSheet -> launch { modalBottomSheetState.show() }
             HomeViewEffects.HideBottomSheet -> launch { modalBottomSheetState.hide() }
-            else -> {}
         }
     }
 
@@ -132,16 +131,13 @@ fun HomeScreen(
                 }
             }
 
-            val topColor = Color(0xFF161616)
-            val bottomColor = Color.Transparent
-
             GradientOverlay(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxHeight(0.15f)
                     .align(Alignment.BottomCenter),
-                topColor = topColor,
-                bottomColor = bottomColor
+                topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
+                bottomColor = Color.Transparent
             )
         }
     }

@@ -8,30 +8,20 @@ import io.shortcut.showcase.data.mapper.GeneralCategory
 data class ShowcaseAppUI(
     val id: Int,
 
-    val genreAndroid: String,
-    val genreIos: String,
-    val iconAndroid: String,
-    val iconIos: String,
-    val installsAndroid: String,
-    val isShortcutApp: Boolean,
-    val packageAndroid: String,
-    val ratingAndroid: Float,
-    val ratingIos: Float,
-    val releasedAndroid: String,
-    val releasedIos: String,
-    val scoreTextAndroid: String,
-    val scoreTextIos: Float,
-    val summaryAndroid: String,
-    val summaryIos: String,
-    val titleAndroid: String,
-    val titleIos: String,
+    val title: String,
+    val iconUrl: String,
+    val publisher: String,
+    val country: Country,
+    val screenshots: Screenshots,
+    val totalInstalls: String,
+    val shortDescription: String,
 
     val generalCategory: GeneralCategory,
 
-    val country: Country,
+    val highestRating: String,
+    // val totalHistogram: Histogram,
 
-    val screenshots: Screenshots,
-    val histogram: Histogram,
+    val androidPackageID: String,
 
     val onClick: () -> Unit = {}
 )

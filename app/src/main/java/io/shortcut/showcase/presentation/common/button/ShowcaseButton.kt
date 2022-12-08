@@ -74,13 +74,13 @@ fun ShowcaseButton(
     ) {
         Text(
             modifier = childModifier
-                .sizeIn(
-                    minHeight = 1.dp,
-                    minWidth = 1.dp
+                .defaultMinSize(
+                    minWidth = 1.dp,
+                    minHeight = 1.dp
                 )
                 .padding(
-                    horizontal = Dimens.fourty,
-                    vertical = 10.dp
+                    horizontal = Dimens.S,
+                    vertical = Dimens.XXS
                 ),
             text = buttonText,
             style = ShowcaseThemeCustom.typography.button,

@@ -1,46 +1,23 @@
 package io.shortcut.showcase.util.mock
 
+
 import io.shortcut.showcase.data.local.Histogram
 import io.shortcut.showcase.data.local.Screenshots
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
-import io.shortcut.showcase.util.formatter.formatCountry
-import io.shortcut.showcase.util.formatter.formatGeneralCategory
-import java.util.UUID
 
 fun genMockShowcaseAppUI(): ShowcaseAppUI {
     return ShowcaseAppUI(
-        id = 1,
-        genreAndroid = "Finance",
-        genreIos = "Finance",
-        iconAndroid = "https://play-lh.googleusercontent.com/0PbbTOfd4p_kT2iumjByeiQoj4AkK5aHFFeAe61BeW9saYtpY0z4S0CPBjJUN188fpg",
-        iconIos = "https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/4c/02/32/4c02323b-c2fb-f501-095b-85b94645b14f/AppIcon-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
-        installsAndroid = "1,000,000+",
-        isShortcutApp = true,
-        packageAndroid = "no.dnb.vipps",
-        ratingAndroid = 4.688234f,
-        ratingIos = 4.75949f,
-        releasedAndroid = "May 30, 2015",
-        releasedIos = "2015-05-30T16:18:18Z",
-        scoreTextAndroid = "4.7",
-        scoreTextIos = 4.75949f,
-        summaryAndroid = "Pay with Vipps!",
-        summaryIos = "Pay with Vipps!All you need is the name or number of the person you want to send money. We’ll take care of the rest. It’s as safe as a regular bank transfer, just way easier!With Vipps you’re able to:• Send and request money• Send gifts• View your account balanceIf you're older than 15 years old you can also: • Pay a business• Pay in stores • Pay online• Pay bills• Settle expenses in a group• Create a mobile appscriptionTo use Vipps you’ll need:• A Norwegian national identity number or d-number• A Norwegian mobile number • A Norwegian bank accountIf you're above 15 years old you'll need: • A Norwegian payment card (Visa or MasterCard)• An email address• BankID If you add a picture of yourself, it’s easier for others to see who you are - if you don't we'll give you a Vipps-emoji!You can send up to 5000 kr for free. If you want to send more than 5000 kr the charge is 1% of the total amount. Sending gifts cost 5 kroner, but is free of charge for vippsers under 15. There is no charge for receiving money and sending money to a business or organisation is free no matter the amount. It is also free of charge to shop with Vipps online, pay in stores and pay bills. For more information, visit vipps.noRead our general terms and conditions on vipps.no/vilkar",
-        titleAndroid = "Vipps",
-        titleIos = "Vipps",
+        id = 0,
+
+        title = "Vipps",
+        iconUrl = "https://is3-ssl.mzstatic.com/image/thumb/Purple122/v4/4c/02/32/4c02323b-c2fb-f501-095b-85b94645b14f/AppIcon-0-1x_U007emarketing-0-7-0-85-220.png/512x512bb.jpg",
+        publisher = "Vipps",
+        country = Country.Norway,
         screenshots = Screenshots(
-            imagesAndroid = listOf(
-                "https://play-lh.googleusercontent.com/sbF4Gw6BAimnkxl3DJtypgmrYkp5EmWZkzUtck1zdg801Lqx7-knPQpO6ahL6o5Cug",
-                "https://play-lh.googleusercontent.com/7zoRbc1gb5p2RJY-tAD5xpKGWzkdmgj9z5RLWnfHHr0wuwqCL0dD40vA3d5b9HIIbr8",
-                "https://play-lh.googleusercontent.com/GrmtTdj6aCCtcWS6-3_c12-4uImBOXyczr4rdPFOi9y5mjaWt0IKrY2deT3PxtnmoZs",
-                "https://play-lh.googleusercontent.com/U1BOHJbF2ChGla9no646xrlrljmtUmqBjIoZl66P3kJbu7UzAdOiHJd9J_jSYTc42A",
-                "https://play-lh.googleusercontent.com/C-LKqb8mQp0v5eXF2vIIAG03kFMBhBH77r9TARolCUgEy4FB_wN0RyFNm9ki8KN29A",
-                "https://play-lh.googleusercontent.com/90Pnstuyyv4ZRJOARjiMCXCyEyk1pjoD8Ukv9RbACJhThdNtayvULjQMY_2NGh7RsQ",
-                "https://play-lh.googleusercontent.com/https://play-lh.googleusercontent.com/sEDIn7bgSWIqm5iaRtPz-VUoarlp2VWS4-YKCUHg3ecSpV-HKpCQnfpIFtfqMXyVh_g",
-                "https://play-lh.googleusercontent.com/thjmg3d0R-6I9jQHozz3q-Mgn8dslEx3gyrSuvYNWOrts8xw7xDvUGJEl7FcLngk_U0"
-            ), imagesIos = listOf(
+            imageURLs = listOf(
                 "https://is3-ssl.mzstatic.com/image/thumb/Purple112/v4/bc/9a/45/bc9a459f-23f8-8b4c-aaac-ec030c95c93f/abad0f87-e0ea-4368-b77d-a8c7cec8d5ca_04.png/392x696bb.png",
                 "https://is2-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/67/b1/3d/67b13dc9-5c18-cfe5-22d8-a79be1cd0d77/3b4fd0eb-3f1d-4825-9a2b-7e85e0b84bbc_02.png/392x696bb.png",
                 "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/1f/1e/95/1f1e95b4-385f-6eeb-fd44-21d5cea28081/7fe1530c-dca4-4e2d-8678-eb095f85eb14_03.png/392x696bb.png",
@@ -52,15 +29,21 @@ fun genMockShowcaseAppUI(): ShowcaseAppUI {
                 "https://is1-ssl.mzstatic.com/image/thumb/Purple122/v4/64/22/b6/6422b6e9-9ef0-4446-84b7-3d3c7a71f000/9d7cabe0-4b68-4ea3-bc99-cc9cafc4e4c1_08.png/392x696bb.png"
             )
         ),
-        histogram = Histogram(
-            histogramAndroid = mapOf(
-                "1" to 2400, "2" to 882, "3" to 3116, "4" to 13777, "5" to 83800
-            ), histogramIos = mapOf(
-                "1" to 8914, "2" to 3558, "3" to 14120, "4" to 69034, "5" to 501462
+        totalInstalls = "1,000,000+",
+        shortDescription = "Pay with Vipps!All you need is the name or number of the person you want to send money. We’ll take care of the rest. It’s as safe as a regular bank transfer, just way easier!With Vipps you’re able to:• Send and request money• Send gifts• View ",
+        generalCategory = GeneralCategory.BUSINESS,
+        highestRating = "4.76",
+        /*totalHistogram = Histogram(
+            histogramData = mapOf(
+                "1" to 11337,
+                "2" to 4452,
+                "3" to 17324,
+                "4" to 82939,
+                "5" to 586544,
             )
-        ),
-        generalCategory = formatGeneralCategory("Finance"),
-        country = formatCountry("NO")
+        ),*/
+        androidPackageID = "no.dnb.vipps",
+        onClick = {}
     )
 }
 
