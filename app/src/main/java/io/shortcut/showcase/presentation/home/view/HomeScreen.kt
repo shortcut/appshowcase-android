@@ -42,6 +42,7 @@ import io.shortcut.showcase.presentation.common.TopBar
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
+import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
@@ -128,6 +129,7 @@ fun HomeScreen(
                     ) {
                         item {
                             HomeContent(
+                                banners = homeViewState.banners,
                                 filterButtons = homeViewState.filterButtons,
                                 sections = homeViewState.categorySections
                             )
@@ -151,6 +153,7 @@ fun HomeScreen(
 @Composable
 private fun HomeContent(
     modifier: Modifier = Modifier,
+    banners: List<ShowcaseBannerUI>,
     filterButtons: List<FilterButtonData>,
     sections: List<CategorySection>,
 ) {
@@ -159,7 +162,7 @@ private fun HomeContent(
             .fillMaxSize()
             .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
     ) {
-        HomeScreenPager(images = genMockBanners())
+        HomeScreenPager(images = banners)
         Spacer(modifier = Modifier.height(Dimens.L))
         FilterRow(
             buttons = filterButtons,
@@ -168,6 +171,7 @@ private fun HomeContent(
         )
         Spacer(modifier = Modifier.height(Dimens.L))
         sections.forEach { section ->
+
             HomeCategoryRow(
                 modifier = Modifier
                     .padding(horizontal = Dimens.S),
@@ -175,7 +179,7 @@ private fun HomeContent(
                 apps = section.apps,
                 onShowAllClick = { section.onClickShowAll() }
             )
-            Spacer(modifier = Modifier.height(Dimens.L))
+            Spacer(modifier = Modifier.height(Dimens.fourty))
         }
     }
 }
@@ -184,7 +188,7 @@ private fun HomeContent(
 @Composable
 private fun HomeScreenPager(
     modifier: Modifier = Modifier,
-    images: List<String>,
+    images: List<ShowcaseBannerUI>,
 ) {
     val pageCount: Int = images.size
     val startIndex = pageCount / 2
@@ -214,7 +218,7 @@ private fun HomeScreenPager(
         AsyncImage(
             modifier = Modifier
                 .fillMaxSize(),
-            model = images[page],
+            model = images[page].imageUrl,
             contentDescription = null,
             contentScale = ContentScale.FillWidth
         )
@@ -236,6 +240,7 @@ private fun HomeScreenPagerPreview() {
 private fun HomeContentPreview() {
     ExtendedShowcaseTheme {
         HomeContent(
+            banners = genMockBanners(),
             filterButtons = genMockFilterButtons(),
             sections = emptyList()
         )

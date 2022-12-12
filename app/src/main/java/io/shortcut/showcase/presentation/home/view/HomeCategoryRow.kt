@@ -1,5 +1,6 @@
 package io.shortcut.showcase.presentation.home.view
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -38,6 +39,7 @@ import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeCategoryRow(
     modifier: Modifier = Modifier,
@@ -86,7 +88,6 @@ fun HomeCategoryRow(
             )
         ) {
             items(apps) { app ->
-
                 CategoryRowItem(
                     imageURL = app.iconUrl,
                     appTitle = app.title,

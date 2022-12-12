@@ -9,6 +9,7 @@ import dagger.hilt.components.SingletonComponent
 import io.shortcut.showcase.data.local.ShowcaseDatabase
 import io.shortcut.showcase.data.remote.FirebaseServiceImpl
 import io.shortcut.showcase.domain.model.ShowcaseAppAPI
+import io.shortcut.showcase.domain.model.ShowcaseBannerAPI
 import javax.inject.Singleton
 
 @Module
@@ -34,5 +35,7 @@ object AppModule {
 
 abstract class FirebaseService {
     abstract suspend fun getApps(): List<ShowcaseAppAPI?>?
+
+    abstract suspend fun getBanners(): List<ShowcaseBannerAPI?>?
 }
 

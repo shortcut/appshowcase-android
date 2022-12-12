@@ -15,6 +15,7 @@ import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import timber.log.Timber
 import javax.inject.Inject
@@ -31,12 +32,35 @@ class HomeViewModel @Inject constructor(
 
     init {
         fetchDataFromDatabase()
+        fetchBanners()
         genFilterButtons()
     }
 
     private fun sendViewEffect(effect: HomeViewEffects) {
         viewModelScope.launch {
             _viewEffects.emit(effect)
+        }
+    }
+
+    private fun fetchBanners() {
+        viewModelScope.launch {
+            repository.fetchBanners().collect { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        result.data?.let { banners ->
+                            homeViewState = homeViewState.copy(
+                                banners = banners
+                            )
+                        }
+                    }
+                    is Resource.Loading -> {
+                        homeViewState = homeViewState.copy(refreshing = result.isLoading)
+                    }
+                    is Resource.Error -> {
+                        /*TODO*/
+                    }
+                }
+            }
         }
     }
 
