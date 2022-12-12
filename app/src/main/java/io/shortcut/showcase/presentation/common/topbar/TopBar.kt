@@ -1,6 +1,8 @@
 package io.shortcut.showcase.presentation.common
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -20,12 +22,13 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TopBar(
     modifier: Modifier = Modifier,
     color: Color,
     iconTint: Color,
-    onBackArrowClick: (() -> Unit)? = null,
+    onLongClick: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -33,19 +36,19 @@ fun TopBar(
             .background(color = color),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (onBackArrowClick != null) {
-            Icon(
-                imageVector = Icons.Filled.ArrowBack,
-                contentDescription = null,
-                tint = iconTint
-            )
-        } else {
-            Icon(
-                painter = painterResource(id = R.drawable.shortcut_logo_small),
-                contentDescription = null,
-                tint = iconTint
-            )
-        }
+        Icon(
+            modifier = Modifier
+                .combinedClickable(
+                    onLongClick = {
+                        onLongClick()
+                    }
+                ) {
+
+                },
+            painter = painterResource(id = R.drawable.shortcut_logo_small),
+            contentDescription = null,
+            tint = iconTint
+        )
         Spacer(modifier = Modifier.weight(1f))
         // TODO: Currently disabled, needs proper search integration.
         /*Icon(

@@ -244,7 +244,7 @@ private fun Screenshots(
     screenshots: List<String>,
     horizontalContentPadding: Dp = Dimens.M,
     itemSpacing: Dp = Dimens.S,
-    onClick: () -> Unit = {}
+    // onClick: () -> Unit = {}
 ) {
     // TODO: Fix padding and modifiers.
     val lazyListState = rememberLazyListState()
@@ -263,9 +263,9 @@ private fun Screenshots(
                     .width(92.dp)
                     .height(160.dp)
                     .clip(shape = RoundedCornerShape(6.dp))
-                    .clickable {
+                    /*.clickable {
                         onClick()
-                    },
+                    }*/,
                 model = imageURL,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,

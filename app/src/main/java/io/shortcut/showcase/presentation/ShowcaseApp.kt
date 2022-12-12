@@ -2,14 +2,15 @@ package io.shortcut.showcase.presentation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import io.shortcut.showcase.presentation.home.view.HomeScreen
-import io.shortcut.showcase.presentation.home.view.HomeViewModel
+import androidx.navigation.compose.rememberNavController
+import io.shortcut.showcase.presentation.home.navigation.MainNavigation
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 
 @Composable
 fun ShowcaseApp() {
     ExtendedShowcaseTheme {
-        // HomeScreen()
+        val navController = rememberNavController()
+        MainNavigation(navController = navController)
     }
 }
 

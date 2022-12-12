@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -56,7 +57,8 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel
+    viewModel: HomeViewModel = hiltViewModel(),
+    onIdleClick: () -> Unit
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -109,7 +111,10 @@ fun HomeScreen(
                                     vertical = Dimens.M
                                 ),
                             color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                            iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary
+                            iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                            onLongClick = {
+                                onIdleClick()
+                            }
                         )
                     },
                     modifier = Modifier
@@ -147,7 +152,7 @@ fun HomeScreen(
 private fun HomeContent(
     modifier: Modifier = Modifier,
     filterButtons: List<FilterButtonData>,
-    sections: List<CategorySection>
+    sections: List<CategorySection>,
 ) {
     Column(
         modifier = modifier
