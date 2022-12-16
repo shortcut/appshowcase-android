@@ -3,9 +3,12 @@ package io.shortcut.showcase.data.repository
 import io.shortcut.showcase.data.local.ShowcaseDatabase
 import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
+import io.shortcut.showcase.data.mapper.toShowcaseBannerUI
 import io.shortcut.showcase.data.remote.FirebaseServiceImpl
+import io.shortcut.showcase.domain.model.ShowcaseBannerAPI
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -79,6 +82,26 @@ class HomeScreenRepositoryImpl @Inject constructor(
             }
 
             // Just for safety, we emit another loading false signal.
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun fetchBanners(): Flow<Resource<List<ShowcaseBannerUI>>> {
+        return flow {
+            emit(Resource.Loading(isLoading = true))
+
+            val remoteBanners = try {
+                firebaseServiceImpl.getBanners()
+            } catch (error: IOException) {
+                emit(Resource.Error("Couldn't fetch banners from remote."))
+                null
+            }
+
+            remoteBanners?.let { banners ->
+                emit(Resource.Success(data = banners.map { it?.toShowcaseBannerUI() ?: return@flow }))
+                emit(Resource.Loading(false))
+            }
+
             emit(Resource.Loading(false))
         }
     }

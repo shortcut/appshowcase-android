@@ -7,6 +7,7 @@ import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 
 fun genMockShowcaseAppUI(): ShowcaseAppUI {
     return ShowcaseAppUI(
@@ -49,11 +50,11 @@ fun genMockShowcaseAppUI(): ShowcaseAppUI {
 
 fun genMockShowcaseAppUIList(count: Int = 10) = List(count) { genMockShowcaseAppUI() }
 
-fun genMockBanners(): List<String> {
+fun genMockBanners(): List<ShowcaseBannerUI> {
     return buildList {
-        add("https://images.unsplash.com/photo-1669707357879-2daffd3ef7f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1665&q=80")
-        add("https://images.unsplash.com/photo-1669705746675-18a4dd315e93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3272&q=80")
-        add("https://images.unsplash.com/photo-1669573234406-00c9e3f6ab34?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80")
+        add(ShowcaseBannerUI(id = "0", imageUrl = "https://images.unsplash.com/photo-1669707357879-2daffd3ef7f9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1665&q=80"))
+        add(ShowcaseBannerUI(id = "1", imageUrl = "https://images.unsplash.com/photo-1669705746675-18a4dd315e93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3272&q=80"))
+        add(ShowcaseBannerUI(id = "2", imageUrl = "https://images.unsplash.com/photo-1669573234406-00c9e3f6ab34?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=3270&q=80"))
     }
 }
 
