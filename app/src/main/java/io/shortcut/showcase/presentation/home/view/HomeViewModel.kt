@@ -12,12 +12,9 @@ import io.shortcut.showcase.data.repository.HomeScreenRepositoryImpl
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.util.resource.Resource
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,7 +24,7 @@ class HomeViewModel @Inject constructor(
 
     var homeViewState by mutableStateOf(HomeViewState())
 
-    private val _viewEffects = MutableSharedFlow<HomeViewEffects>()
+    private val _viewEffects = MutableSharedFlow<HomeViewEffect>()
     val viewEffects = _viewEffects.asSharedFlow()
 
     init {
@@ -36,7 +33,7 @@ class HomeViewModel @Inject constructor(
         genFilterButtons()
     }
 
-    private fun sendViewEffect(effect: HomeViewEffects) {
+    private fun sendViewEffect(effect: HomeViewEffect) {
         viewModelScope.launch {
             _viewEffects.emit(effect)
         }
@@ -53,9 +50,11 @@ class HomeViewModel @Inject constructor(
                             )
                         }
                     }
+
                     is Resource.Loading -> {
                         homeViewState = homeViewState.copy(refreshing = result.isLoading)
                     }
+
                     is Resource.Error -> {
                         /*TODO*/
                     }
@@ -78,7 +77,7 @@ class HomeViewModel @Inject constructor(
                                         homeViewState = homeViewState.copy(
                                             appInView = app
                                         )
-                                        sendViewEffect(HomeViewEffects.OpenBottomSheet)
+                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
                                     }
                                 )
                             }
@@ -119,7 +118,7 @@ class HomeViewModel @Inject constructor(
                                         homeViewState = homeViewState.copy(
                                             appInView = app
                                         )
-                                        sendViewEffect(HomeViewEffects.OpenBottomSheet)
+                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
                                     }
                                 )
                             }

@@ -1,7 +1,11 @@
 package io.shortcut.showcase.presentation.idle.view
 
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -70,24 +74,19 @@ fun Carousel(
             .fillMaxSize(),
         count = Int.MAX_VALUE,
         state = pagerState,
-        itemSpacing = 100.dp,
+        contentPadding = PaddingValues(horizontal = 90.dp),
+        itemSpacing = 20.dp,
+        verticalAlignment = Alignment.Bottom
     ) { index ->
-        val page = (index - startIndex).floorMod(pageCount)
+        val appIndex = (index - startIndex).floorMod(pageCount)
 
-        CarouselItem(
-            modifier = Modifier
-                .padding(
-                    start = Dimens.M,
-                    top = Dimens.M,
-                    end = Dimens.M,
-                    bottom = Dimens.L
-
-                ),
-            appIconURL = apps[page].iconURL,
-            appTitle = apps[page].title,
-            appCategory = apps[page].generalCategory.category,
-            shortDescription = apps[page].shortDescription,
-            expanded = page == pagerState.currentPage
+        CarouselItemBeta(
+            iconURL = apps[appIndex].iconURL,
+            title = apps[appIndex].title,
+            category = apps[appIndex].generalCategory.category,
+            shortDescription = apps[appIndex].shortDescription,
+            animationSpeed = 500,
+            expanded = pagerState.currentPage == index
         )
     }
 }
@@ -154,7 +153,6 @@ private fun CarouselItem(
         }
     }
 }
-
 
 @Composable
 private fun IconCollapsed(

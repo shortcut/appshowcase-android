@@ -59,7 +59,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onIdleClick: () -> Unit
+    onIdleClick: () -> Unit,
+    onScreenshotClick: (Int) -> Unit,
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -77,8 +78,11 @@ fun HomeScreen(
 
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
-            HomeViewEffects.OpenBottomSheet -> launch { modalBottomSheetState.show() }
-            HomeViewEffects.HideBottomSheet -> launch { modalBottomSheetState.hide() }
+            HomeViewEffect.OpenBottomSheet -> launch { modalBottomSheetState.show() }
+            HomeViewEffect.HideBottomSheet -> launch { modalBottomSheetState.hide() }
+            is HomeViewEffect.naviateToGallery -> {
+                onScreenshotClick(it.startIndex)
+            }
         }
     }
 
@@ -89,7 +93,8 @@ fun HomeScreen(
             HomeSheetContent(
                 childModifier = Modifier
                     .padding(horizontal = Dimens.M),
-                app = appInView
+                app = appInView,
+                onScreenshotClick = onScreenshotClick
             )
         },
     ) {
@@ -171,7 +176,6 @@ private fun HomeContent(
         )
         Spacer(modifier = Modifier.height(Dimens.L))
         sections.forEach { section ->
-
             HomeCategoryRow(
                 modifier = Modifier
                     .padding(horizontal = Dimens.S),
@@ -220,7 +224,7 @@ private fun HomeScreenPager(
                 .fillMaxSize(),
             model = images[page].imageUrl,
             contentDescription = null,
-            contentScale = ContentScale.FillWidth
+            contentScale = ContentScale.FillHeight
         )
     }
 }

@@ -23,6 +23,7 @@ data class HomeViewState(
     val isTimerRunning: Boolean = true,
 
     val appInView: ShowcaseAppUI = genMockShowcaseAppUI(),
+    val screenshotGalleryIndex: Int = 0,
 
     val filterButtons: List<FilterButtonData> = emptyList(),
     val activeCountryFilter: Country = Country.Norway

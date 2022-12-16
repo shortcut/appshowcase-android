@@ -11,3 +11,8 @@ object Home: ShowcaseDestination {
 object Idle: ShowcaseDestination {
     override val route = "idle"
 }
+
+object ScreenshotGallery: ShowcaseDestination {
+    override val route = "screenshot_gallery/{startIndex}"
+}
+

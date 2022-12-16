@@ -7,17 +7,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -244,7 +242,7 @@ private fun Screenshots(
     screenshots: List<String>,
     horizontalContentPadding: Dp = Dimens.M,
     itemSpacing: Dp = Dimens.S,
-    // onClick: () -> Unit = {}
+    onScreenshotClick: (Int) -> Unit,
 ) {
     // TODO: Fix padding and modifiers.
     val lazyListState = rememberLazyListState()
@@ -257,15 +255,15 @@ private fun Screenshots(
         state = lazyListState,
         contentPadding = PaddingValues(horizontal = horizontalContentPadding),
     ) {
-        items(screenshots) { imageURL ->
+        itemsIndexed(screenshots) { index, imageURL ->
             AsyncImage(
                 modifier = Modifier
                     .width(92.dp)
                     .height(160.dp)
                     .clip(shape = RoundedCornerShape(6.dp))
-                    /*.clickable {
-                        onClick()
-                    }*/,
+                    .clickable {
+                        onScreenshotClick(index)
+                    },
                 model = imageURL,
                 contentDescription = null,
                 contentScale = ContentScale.FillWidth,
@@ -278,7 +276,8 @@ private fun Screenshots(
 fun HomeSheetContent(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
-    app: ShowcaseAppUI
+    app: ShowcaseAppUI,
+    onScreenshotClick: (Int) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -308,7 +307,10 @@ fun HomeSheetContent(
             shortDescription = app.shortDescription
         )
         Spacer(modifier = Modifier.height(Dimens.S))
-        Screenshots(screenshots = app.screenshots.imageURLs)
+        Screenshots(
+            screenshots = app.screenshots.imageURLs,
+            onScreenshotClick = onScreenshotClick
+        )
         Spacer(modifier = Modifier.height(Dimens.XL))
     }
 }
@@ -358,8 +360,9 @@ private fun ScreenshotsPreview() {
     ExtendedShowcaseTheme {
         Screenshots(
             screenshots = app.screenshots.imageURLs,
-            horizontalContentPadding = Dimens.M,
-            itemSpacing = Dimens.S
+            horizontalContentPadding = Dimens.S,
+            itemSpacing = Dimens.XS,
+            onScreenshotClick = {}
         )
     }
 }
@@ -370,8 +373,10 @@ private fun HomeSheetContentPreview() {
     val app = genMockShowcaseAppUI()
     ExtendedShowcaseTheme {
         HomeSheetContent(
-            childModifier = Modifier.padding(horizontal = Dimens.S),
-            app = app
+            childModifier = Modifier
+                .padding(horizontal = Dimens.M),
+            app = app,
+            onScreenshotClick = {}
         )
     }
 }
