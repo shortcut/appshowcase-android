@@ -1,8 +1,5 @@
 package io.shortcut.showcase.presentation.idle.view
 
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,16 +29,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.idle.data.CarouselApp
 import io.shortcut.showcase.presentation.idle.data.carouselAppList
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
@@ -80,12 +74,12 @@ fun Carousel(
     ) { index ->
         val appIndex = (index - startIndex).floorMod(pageCount)
 
-        CarouselItemBeta(
+        CarouselItemV2(
             iconURL = apps[appIndex].iconURL,
             title = apps[appIndex].title,
             category = apps[appIndex].generalCategory.category,
             shortDescription = apps[appIndex].shortDescription,
-            animationSpeed = 500,
+            animationSpeed = 1000,
             expanded = pagerState.currentPage == index
         )
     }
@@ -220,7 +214,7 @@ private fun Int.floorMod(other: Int): Int = when (other) {
 
 // Helper function for ViewEffects
 @Composable
-fun <T> ViewEffects(
+private fun <T> ViewEffects(
     viewEffects: SharedFlow<T>,
     block: suspend CoroutineScope.(T) -> Unit
 ) {

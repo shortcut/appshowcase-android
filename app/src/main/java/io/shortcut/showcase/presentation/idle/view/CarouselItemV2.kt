@@ -7,7 +7,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.core.updateTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -21,9 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,7 +37,7 @@ import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import java.util.Locale
 
 @Composable
-fun CarouselItemBeta(
+fun CarouselItemV2(
     modifier: Modifier = Modifier,
     iconURL: String,
     title: String,
@@ -194,11 +190,11 @@ fun CarouselItemBeta(
 
 @Preview
 @Composable
-private fun CarouselItemBetaPreview() {
+private fun CarouselItemV2Preview() {
     val mockApp = genMockShowcaseAppUI()
-    val speed = 500
+    val speed = 1000
     ExtendedShowcaseTheme {
-        CarouselItemBeta(
+        CarouselItemV2(
             iconURL = mockApp.iconUrl,
             title = mockApp.title,
             category = mockApp.generalCategory.category,
