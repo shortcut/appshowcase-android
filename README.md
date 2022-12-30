@@ -5,7 +5,7 @@ It is built as a native Android app, and is best paired with a vertical screen s
 
 There is also an instant app module within the project, adding instant app support. This is a part of the welcome to shorcut project. Details details details.
 
-Built With
+Built with
 
 * Compose UI
 * RoomDB
@@ -22,7 +22,7 @@ If you need access to Firebase, reach out to @Kristian Kofoed on Slack.
 
 Welcome to shortcut is an instant app enabled feature contained within the Showcase app. This is a tool aimed to be used as a digital business card, showcasing what Shortcut can offer.
 
-Built With
+Built with
 
 * Compose UI
 * Instant App SDK
