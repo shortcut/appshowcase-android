@@ -5,14 +5,14 @@ It is built as a native Android app, and is best paired with a vertical screen s
 
 There is also an instant app module within the project, adding instant app support. This is a part of the "Welcome to Shortcut" - project.
 
-Built with
+### Built with
 
 * Compose UI
 * RoomDB
 * Hilt
 * Bunch of accompanist stuff
 
-Contributing
+### Contributing
 
 There is a dedicated Firebase back-end for this project, called Showcase backend. It follows similar functionality to the ReviewManager backend, where data is scraped, formatted and stored in a DB. 
 
@@ -22,7 +22,7 @@ If you need access to Firebase, reach out to @Kristian Kofoed on Slack.
 
 Welcome to Shortcut is an instant app enabled feature contained within the Showcase app. This is a tool aimed to be used as a digital business card, showcasing what Shortcut can offer.
 
-Built with
+### Built with
 
 * Compose UI
 * Instant App SDK
