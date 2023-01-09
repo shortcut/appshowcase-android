@@ -3,8 +3,6 @@
 App Showcase is an interactive internal tool where we display all our apps/projects Shortcut either works on or has worked on. It is meant to be a tool to give an overview of what Shortcut has done and what we have achieved.
 It is built as a native Android app, and is best paired with a vertical screen such as the Samsung 43" The Sero 4K QLED smart-TV QE43LS05TAUXXC.
 
-There is also an instant app module within the project, adding instant app support. This is a part of the "Welcome to Shortcut" - project.
-
 ### Built with
 
 * Compose UI
