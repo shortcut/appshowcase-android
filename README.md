@@ -17,13 +17,3 @@ There is also an instant app module within the project, adding instant app suppo
 There is a dedicated Firebase back-end for this project, called Showcase backend. It follows similar functionality to the ReviewManager backend, where data is scraped, formatted and stored in a DB. 
 
 If you need access to Firebase, reach out to @Kristian Kofoed on Slack.
-
-## Welcome to Shortcut
-
-Welcome to Shortcut is an instant app enabled feature contained within the Showcase app. This is a tool aimed to be used as a digital business card, showcasing what Shortcut can offer.
-
-### Built with
-
-* Compose UI
-* Instant App SDK
-
