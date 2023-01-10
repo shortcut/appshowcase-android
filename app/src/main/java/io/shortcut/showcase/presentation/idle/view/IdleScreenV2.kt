@@ -2,6 +2,7 @@ package io.shortcut.showcase.presentation.idle.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -35,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.systemuicontroller.SystemUiController
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.R
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
 import io.shortcut.showcase.presentation.idle.data.CarouselApp
@@ -51,7 +54,13 @@ import java.util.Locale
 fun IdleScreenV2(
     onScreenClick: () -> Unit
 ) {
-    IdleContentV2(apps = carouselAppList)
+    val systemUiController: SystemUiController = rememberSystemUiController()
+    systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+    systemUiController.isNavigationBarVisible = false
+    IdleContentV2(
+        modifier = Modifier.clickable { onScreenClick() },
+        apps = carouselAppList
+    )
 }
 
 @OptIn(ExperimentalPagerApi::class)
@@ -82,14 +91,15 @@ private fun IdleContentV2(
             val vector = ImageVector.vectorResource(id = R.drawable.image)
             val painter = rememberVectorPainter(image = vector)
 
-            Image(
+            // Doesn't fit design, currently disabled.
+            /*Image(
                 modifier = Modifier
                     .fillMaxSize(),
                 painter = painter,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
                 colorFilter = ColorFilter.tint(color = Color.White)
-            )
+            )*/
 
             HorizontalPager(
                 modifier = Modifier
@@ -114,11 +124,12 @@ private fun IdleContentV2(
             }
         }
         Spacer(modifier = Modifier.height(Dimens.L))
-        AppDetails(
+        // Doesn't work as expected.
+        /*AppDetails(
             appTitle = "Placeholder",
             appCategory = "Placeholder",
             categoryColor = ShowcaseThemeCustom.colors.ShowcaseCategoryOther
-        )
+        )*/
     }
 }
 

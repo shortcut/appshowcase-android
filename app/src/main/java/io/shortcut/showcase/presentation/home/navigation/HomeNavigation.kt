@@ -12,6 +12,7 @@ import io.shortcut.showcase.presentation.home.view.HomeScreen
 import io.shortcut.showcase.presentation.home.view.HomeViewModel
 import io.shortcut.showcase.presentation.home.view.ScreenshotScreen
 import io.shortcut.showcase.presentation.idle.view.IdleScreen
+import io.shortcut.showcase.presentation.idle.view.IdleScreenV2
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -36,8 +37,8 @@ fun MainNavigation(
             )
         }
         composable(route = Idle.route) {
-            IdleScreen(
-                onBackClick = { navController.popBackStack() }
+            IdleScreenV2(
+                onScreenClick = { navController.popBackStack() }
             )
         }
         composable(route = ScreenshotGallery.route) { backstackEntry ->

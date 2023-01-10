@@ -14,4 +14,6 @@
     <string name="details_downloadsTitle">Downloads</string>
     <string name="details_categoryTitle">Category</string>
     <string name="details_shortDescriptionTitle">Short description</string>
+
+    <string name="title_welcometoshortcut">welcometoshortcut</string>
 </resources>
