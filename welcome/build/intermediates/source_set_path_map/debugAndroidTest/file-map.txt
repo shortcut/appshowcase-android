@@ -1,0 +1,9 @@
+io.shortcut.welcometoshortcut.test.welcome-annotation-experimental-1.3.0-0 /Users/kristiankofoed/.gradle/caches/transforms-3/189f8e57539ce435d5651607f0b7be73/transformed/annotation-experimental-1.3.0/res
+io.shortcut.welcometoshortcut.test.welcome-core-1.5.0-1 /Users/kristiankofoed/.gradle/caches/transforms-3/5831f03620df904716d19a30321347eb/transformed/core-1.5.0/res
+io.shortcut.welcometoshortcut.test.welcome-androidTest-2 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/generated/res/resValues/androidTest/debug
+io.shortcut.welcometoshortcut.test.welcome-androidTest-3 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/generated/res/rs/androidTest/debug
+io.shortcut.welcometoshortcut.test.welcome-mergeDebugAndroidTestResources-4 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/merged.dir
+io.shortcut.welcometoshortcut.test.welcome-mergeDebugAndroidTestResources-5 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/incremental/debugAndroidTest/mergeDebugAndroidTestResources/stripped.dir
+io.shortcut.welcometoshortcut.test.welcome-merged_res-6 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/merged_res/debugAndroidTest
+io.shortcut.welcometoshortcut.test.welcome-androidTest-7 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/src/androidTest/res
+io.shortcut.welcometoshortcut.test.welcome-androidTestDebug-8 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/src/androidTestDebug/res

@@ -1,0 +1,5 @@
+int drawable shortcut_logo_medium_instant 0x7e010000
+int font gothambold 0x7e020000
+int font gothambook 0x7e020001
+int string shortcut_name 0x7e030000
+int string shortcut_slogan 0x7e030001
