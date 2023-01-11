@@ -14,3 +14,4 @@
 .cxx
 local.properties
 /.bash_profile
+/keystore/keystore.properties
