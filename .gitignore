@@ -15,3 +15,6 @@
 local.properties
 /.bash_profile
 /keystore/keystore.properties
+/.idea/
+/fastlane/README.md
+/fastlane/report.xml
