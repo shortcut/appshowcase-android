@@ -1,5 +1,0 @@
-io.shortcut.showcase:font/gothambook = 0x7e020001
-io.shortcut.showcase:string/shortcut_name = 0x7e030000
-io.shortcut.showcase:font/gothambold = 0x7e020000
-io.shortcut.showcase:string/shortcut_slogan = 0x7e030001
-io.shortcut.showcase:drawable/shortcut_logo_medium_instant = 0x7e010000

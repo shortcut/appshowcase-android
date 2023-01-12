@@ -1,8 +1,0 @@
-io.shortcut.welcometoshortcut.welcome-pngs-0 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/generated/res/pngs/debug
-io.shortcut.welcometoshortcut.welcome-resValues-1 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/generated/res/resValues/debug
-io.shortcut.welcometoshortcut.welcome-rs-2 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/generated/res/rs/debug
-io.shortcut.welcometoshortcut.welcome-packageDebugResources-3 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/incremental/debug/packageDebugResources/merged.dir
-io.shortcut.welcometoshortcut.welcome-packageDebugResources-4 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/incremental/debug/packageDebugResources/stripped.dir
-io.shortcut.welcometoshortcut.welcome-merged_res-5 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/build/intermediates/merged_res/debug
-io.shortcut.welcometoshortcut.welcome-debug-6 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/src/debug/res
-io.shortcut.welcometoshortcut.welcome-main-7 /Users/kristiankofoed/AndroidStudioProjects/appshowcase-android/welcome/src/main/res

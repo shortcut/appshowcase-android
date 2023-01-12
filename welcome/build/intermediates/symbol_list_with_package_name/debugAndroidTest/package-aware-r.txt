@@ -1,3 +1,0 @@
-io.shortcut.welcometoshortcut.test
-style WhiteBackgroundDialogTheme
-style WhiteBackgroundTheme
