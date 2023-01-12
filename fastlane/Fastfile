@@ -25,10 +25,21 @@ platform :android do
   lane :beta do
     gradle(task: "clean assembleRelease")
     crashlytics
-  
+
     # sh "your_script.sh"
     # You can also use other beta testing services here
   end
+
+  desc "Distributing the app through fírebase"
+      lane :distribute do
+          gradle(task: "clean assembleRelease")
+          firebase_app_distribution(
+              app: "1:836297389341:android:0f4c9711bb3bdbf2189df4",
+              android_artifact_type: "APK",
+              firebase_cli_token: "1//0coanuMswLO4bCgYIARAAGAwSNwF-L9IrYQxheDM8maWmC5LexRQPweJuZlRYAQPtJ-ocwmq8kKc5ouDw32UQVpBwN4uaCIYkI-w",
+              release_notes_file: "release_note.txt"
+          )
+      end
 
   desc "Deploy a new version to the Google Play"
   lane :deploy do

@@ -72,10 +72,6 @@ android {
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            firebaseAppDistribution {
-                appId = "1:836297389341:android:0f4c9711bb3bdbf2189df4"
-                artifactType = "apk"
-            }
             signingConfig signingConfigs.release
         }
     }
