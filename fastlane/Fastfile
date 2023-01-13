@@ -31,16 +31,25 @@ platform :android do
 
    desc "Distributing the app through fírebase"
      lane :build do
-         gradle(task: "clean assembleRelease")
+          gradle(task: "clean assemble",
+              build_type: "release",
+              print_command: true,
+              properties: {
+                  "android.injected.signing.store.file" = ENV["KEYSTORE_FILE"],
+                  "android.injected.signing.store.password" = ENV["KEYSTORE_PASSWORD"],
+                  "android.injected.signing.key.alias" = ENV["KEY_ALIAS"],
+                  "android.injected.signing.key.password" = ENV["KEY_PASSWORD"],
+              }
+          )
      end
 
   desc "Distributing the app through fírebase"
-      lane :distribute do
-          gradle(task: "clean assembleRelease")
-          firebase_app_distribution(
-              app: "1:836297389341:android:0f4c9711bb3bdbf2189df4",
-              android_artifact_type: "APK",
-              release_notes_file: "release_note.txt"
-          )
-      end
+        lane :distribute do
+            gradle(task: "clean assembleRelease")
+            firebase_app_distribution(
+                app: "1:836297389341:android:0f4c9711bb3bdbf2189df4",
+                android_artifact_type: "APK",
+                release_notes_file: "release_note.txt"
+            )
+        end
 end
