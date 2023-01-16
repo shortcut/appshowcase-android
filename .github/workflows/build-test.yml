@@ -1,4 +1,4 @@
-name: android-build-test-apk
+name: android-build-apk
 on:
   push:
     branches:
@@ -14,16 +14,9 @@ jobs:
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: 2.4
 
-      - name: install firebase tool
-        run: |
-          yarn global add firebase-tools
-          echo "::add-path::$(yarn global bin)"
-      - name: setup fastlane
-        run: bundle install
-      - name: distribute to firebase
-        run: bundle exec fastlane build_test
-        env:
-          FIREBASE_CLI_TOKEN: ${{ secrets.FIREBASE_CLI_TOKEN }}
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+      - name: Build and test
+        uses: maierj/fastlane-action@v2.0.0
+        with:
+          lane: "build_test"
