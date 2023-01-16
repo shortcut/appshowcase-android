@@ -1,7 +1,6 @@
 default_platform(:android)
 
 platform :android do
-
   #PUBLIC 
   desc "build and test application"
   lane :build_test do
