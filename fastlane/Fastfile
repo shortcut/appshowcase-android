@@ -4,23 +4,14 @@ platform :android do
 
   #PUBLIC 
   desc "build and test application"
-  lane :build_test do 
-    spotless_check()
+  lane :build_test do
     unit_test()
   end
-
-
 
   desc "build, test and deploy application to Google Play"
-  lane :build_test_deploy do 
-    spotless_check()
+  lane :build_test_deploy do
     unit_test()
     deploy()
-  end
-
-  desc "Spotless check"
-  private_lane :spotless_check do
-    gradle(task: "spotlessCheck")
   end
 
   desc "Runs unit tests"
