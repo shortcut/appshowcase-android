@@ -26,7 +26,8 @@ platform :android do
         print_command: true,
     )
     firebase_app_distribution(
-        app: ENV["FIREBASE_APP_ID"],
+        service_credentials_file: "service_credentials_file.json",
+        app: ENV['FIREBASE_APP_ID'],
         android_artifact_type: "APK",
         release_notes_file: "release_note.txt"
     )

@@ -1,1 +1,1 @@
-Testing the distribution with fastlane
+Test release with service account

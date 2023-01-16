@@ -15,7 +15,15 @@ jobs:
         with:
           ruby-version: 3.2
 
+      - name: Create Firebase Service Credentials file
+        run: |
+          echo "$SERVICE_CREDENTIALS_FILE" > service_credentials.json.b64
+          base64 -d -i service_credentials.json.b64 > service_credentials_file.json
+        env:
+          SERVICE_CREDENTIALS_FILE: ${{ secrets.SERVICE_CREDENTIALS_FILE }}
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
       - name: Build and test
         uses: maierj/fastlane-action@v2.0.0
         with:
-          lane: "build_test"
+          lane: "build_test_deploy"
