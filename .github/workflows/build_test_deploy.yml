@@ -27,6 +27,23 @@ jobs:
         env:
           SERVICE_CREDENTIALS_FILE: ${{ secrets.SERVICE_CREDENTIALS_FILE }}
 
+      - name: Setup keystore properties
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_FILE_NAME: ${{ secrets.KEYSTORE_FILE_NAME }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          printf 'keyAlias=%s\nkeyPassword=%s\nstoreFile=%s\nstorePassword=%s' \
+          ${KEY_ALIAS} ${KEY_PASSWORD} ${STORE_FILE_NAME} ${STORE_PASSWORD} > keystore.properties
+
+      - name: Decode keystore file
+        env:
+          KEYSTORE_FILE_NAME: ${{ secrets.KEYSTORE_FILE_NAME }}
+          KEYSTORE_FILE: $KEYSTORE_FILE
+        run: |
+          echo ${KEYSTORE_FILE} | base64 -d > ${KEYSTORE_FILE_NAME}
+
       - name: Distribute app with 🔥 App Distribution 🚀
         run: bundle exec fastlane build_test_deploy
         env:
