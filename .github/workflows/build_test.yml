@@ -1,10 +1,11 @@
-name: build test and deploy android app
+name: Build and test android app
+
 on:
+  push:
   pull_request:
-    types:
-      - [opened, reopened]
     branches:
-      - 'develop'
+      - develop
+
 jobs:
   build:
     runs-on: ubuntu-latest
