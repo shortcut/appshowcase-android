@@ -4,7 +4,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
@@ -20,20 +19,18 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 
-
 @Composable
 fun FilterRow(
     modifier: Modifier = Modifier,
     buttons: List<FilterButtonData>,
     buttonSpacing: Dp,
-    horizontalContentPadding: Dp,
+    horizontalContentPadding: Dp
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -88,7 +85,7 @@ private fun FilterButtonPreview() {
     ExtendedShowcaseTheme {
         FilterButton(
             text = "Norway",
-            color = ShowcaseThemeCustom.colors.ShowcasePrimary,
+            color = ShowcaseThemeCustom.colors.ShowcasePrimary
         )
     }
 }

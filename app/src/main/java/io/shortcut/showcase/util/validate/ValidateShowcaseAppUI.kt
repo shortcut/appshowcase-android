@@ -2,7 +2,6 @@ package io.shortcut.showcase.util.validate
 
 import io.shortcut.showcase.domain.model.ShowcaseAppAPI
 
-
 fun showcaseAppAPIContainsNull(app: ShowcaseAppAPI?): Boolean {
     if (app == null) {
         return true

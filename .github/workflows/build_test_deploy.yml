@@ -2,7 +2,7 @@ name: build test and deploy android app
 on:
   push:
     branches:
-      - develop
+      - main
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -22,8 +22,7 @@ jobs:
 
       - name: Create Service Credentials file
         run: |
-          echo "$SERVICE_CREDENTIALS_FILE" > service_credentials.json.b64
-          base64 -d -i service_credentials.json.b64 > service_credentials_file.json
+          echo ${SERVICE_CREDENTIALS_FILE} | base64 -d > service_credentials_file.json
         env:
           SERVICE_CREDENTIALS_FILE: ${{ secrets.SERVICE_CREDENTIALS_FILE }}
 

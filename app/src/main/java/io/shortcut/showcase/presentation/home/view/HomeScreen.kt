@@ -60,7 +60,7 @@ import kotlinx.coroutines.launch
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onIdleClick: () -> Unit,
-    onScreenshotClick: (Int) -> Unit,
+    onScreenshotClick: (Int) -> Unit
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -160,7 +160,7 @@ private fun HomeContent(
     modifier: Modifier = Modifier,
     banners: List<ShowcaseBannerUI>,
     filterButtons: List<FilterButtonData>,
-    sections: List<CategorySection>,
+    sections: List<CategorySection>
 ) {
     Column(
         modifier = modifier
@@ -192,7 +192,7 @@ private fun HomeContent(
 @Composable
 private fun HomeScreenPager(
     modifier: Modifier = Modifier,
-    images: List<ShowcaseBannerUI>,
+    images: List<ShowcaseBannerUI>
 ) {
     val pageCount: Int = images.size
     val startIndex = pageCount / 2

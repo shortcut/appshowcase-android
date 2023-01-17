@@ -11,5 +11,5 @@ enum class GeneralCategory(
     ENTERTAINMENT("Entertainment"),
     EDUCATION("Education"),
     BUSINESS("Business"),
-    OTHER("Other"),
+    OTHER("Other")
 }

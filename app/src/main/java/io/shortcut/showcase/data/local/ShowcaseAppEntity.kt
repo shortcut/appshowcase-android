@@ -34,5 +34,5 @@ data class Screenshots(
 
 @Serializable
 data class Histogram(
-    val histogramData: Map<String, Int>,
+    val histogramData: Map<String, Int>
 )

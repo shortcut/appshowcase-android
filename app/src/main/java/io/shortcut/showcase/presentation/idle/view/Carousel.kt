@@ -1,8 +1,5 @@
 package io.shortcut.showcase.presentation.idle.view
 
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,16 +29,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
-import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.idle.data.CarouselApp
 import io.shortcut.showcase.presentation.idle.data.carouselAppList
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.SharedFlow
@@ -51,7 +45,7 @@ import java.util.Locale
 @Composable
 fun Carousel(
     modifier: Modifier = Modifier,
-    apps: List<CarouselApp>,
+    apps: List<CarouselApp>
 ) {
     val pageCount: Int = apps.size
     val startIndex = pageCount / 2
@@ -99,7 +93,7 @@ private fun CarouselItem(
     appTitle: String,
     appCategory: String,
     shortDescription: String,
-    expanded: Boolean,
+    expanded: Boolean
 ) {
     Card(
         modifier = Modifier
@@ -157,7 +151,7 @@ private fun CarouselItem(
 @Composable
 private fun IconCollapsed(
     modifier: Modifier = Modifier,
-    appIconURL: String,
+    appIconURL: String
 ) {
     AsyncImage(
         modifier = modifier

@@ -38,4 +38,3 @@ abstract class FirebaseService {
 
     abstract suspend fun getBanners(): List<ShowcaseBannerAPI?>?
 }
-

@@ -7,6 +7,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlinx-serialization'
     id 'com.google.firebase.appdistribution'
+    id 'org.jmailen.kotlinter'
 }
 android {
     namespace 'io.shortcut.showcase'
@@ -132,6 +133,13 @@ dependencies {
 
     // Kotlin serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+}
+
+kotlinter {
+    ignoreFailures = false
+    reporters = ['checkstyle', 'plain']
+    experimentalRules = false
+    disabledRules = ["no-wildcard-imports", 'import-ordering', 'final-newline', 'trailing-comma-on-call-site']
 }
 
 kapt {
