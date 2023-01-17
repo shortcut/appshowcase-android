@@ -2,17 +2,24 @@ default_platform(:android)
 
 platform :android do
   #PUBLIC 
-  desc "build and test application"
+  desc "Build and test application"
   lane :build_test do
+    lintKotlin()
     unit_test()
   end
 
   desc "Build, test and deploy application to Google Play"
   lane :build_test_deploy do
+    lintKotlin()
     increment_vc()
     unit_test()
     deploy()
   end
+
+  desc "Run Kotlinter for lint checks"
+    lane :lintKotlin do
+      gradle(task: "lintKotlin")
+    end
 
   desc "Increment version code"
      private_lane :increment_vc do
