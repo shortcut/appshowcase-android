@@ -1,9 +1,6 @@
 name: Build and test android app
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
     branches:
       - develop
