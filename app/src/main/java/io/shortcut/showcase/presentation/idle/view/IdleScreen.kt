@@ -58,7 +58,6 @@ private fun IdleBackground() {
     Column(modifier = Modifier.fillMaxSize()) {
         val vector = ImageVector.vectorResource(id = R.drawable.image)
         val painter = rememberVectorPainter(image = vector)
-
         Image(
             modifier = Modifier
                 .fillMaxSize(),
