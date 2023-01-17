@@ -33,7 +33,7 @@ jobs:
           KEYSTORE_FILE: $KEYSTORE_FILE
         run: |
           echo "$KEYSTORE_FILE" > release.keystore.b64
-          base64 -d -i release.keystore.b64 > release.keystore
+          base64 -d -i release.keystore.b64 > ${{ secrets.KEYSTORE_FILE_NAME }}
 
       - name: Setup keystore properties
         env:
@@ -43,7 +43,7 @@ jobs:
           KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
         run: |
           printf 'keyAlias=%s\nkeyPassword=%s\nstoreFile=%s\nstorePassword=%s' \
-          ${KEY_ALIAS} ${KEY_PASSWORD} ${STORE_FILE_NAME} ${STORE_PASSWORD} > keystore.properties
+          ${KEY_ALIAS} ${KEY_PASSWORD} ${STORE_FILE_NAME} ${STORE_PASSWORD} > keystore/keystore.properties
 
       - name: Distribute app with 🔥 App Distribution 🚀
         run: bundle exec fastlane build_test_deploy
