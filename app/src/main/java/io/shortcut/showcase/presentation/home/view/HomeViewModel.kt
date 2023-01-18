@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     init {
         fetchAppsDataFromRemote()
         fetchBanners()
-        genFilterButtons(homeViewState.value.activeCountryFilter)
+        genFilterButtons()
     }
 
     private fun sendViewEffect(effect: HomeViewEffect) {
@@ -144,7 +144,7 @@ class HomeViewModel @Inject constructor(
         sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
-    private fun genFilterButtons(activeFilter: Country) {
+    private fun genFilterButtons(activeFilter: Country = homeViewState.value.activeCountryFilter) {
         val countryFilter = Country.values()
         _homeViewStateFlow.update {
             it.copy(

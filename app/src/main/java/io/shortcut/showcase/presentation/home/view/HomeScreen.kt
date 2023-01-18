@@ -49,12 +49,11 @@ import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
+import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockBanners
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -76,15 +75,25 @@ fun HomeScreen(
 
     val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = true
+        skipHalfExpanded = false
     )
 
     val appInView = homeViewState.appInView
 
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
-            HomeViewEffect.OpenBottomSheet -> launch { modalBottomSheetState.show() }
-            HomeViewEffect.HideBottomSheet -> launch { modalBottomSheetState.hide() }
+            HomeViewEffect.OpenBottomSheet -> launch {
+                modalBottomSheetState.animateTo(
+                    ModalBottomSheetValue.HalfExpanded
+                )
+            }
+
+            HomeViewEffect.HideBottomSheet -> launch {
+                modalBottomSheetState.animateTo(
+                    ModalBottomSheetValue.Hidden
+                )
+            }
+
             is HomeViewEffect.NavigateToGallery -> {
                 onScreenshotClick(it.startIndex, it.imageList)
             }
@@ -274,15 +283,4 @@ private fun HomeCategoryRowPreview() {
 private fun Int.floorMod(other: Int): Int = when (other) {
     0 -> this
     else -> this - floorDiv(other) * other
-}
-
-// Helper function for ViewEffects
-@Composable
-fun <T> ViewEffects(
-    viewEffects: SharedFlow<T>,
-    block: suspend CoroutineScope.(T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        viewEffects.collect { block(it) }
-    }
 }
