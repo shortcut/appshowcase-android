@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
     val viewEffects = _viewEffects.asSharedFlow()
 
     init {
-        fetchDataFromRemote()
+        fetchAppsDataFromRemote()
         fetchBanners()
         genFilterButtons()
     }
@@ -69,19 +69,20 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchDataFromRemote() {
+    fun fetchAppsDataFromRemote() {
         viewModelScope.launch {
-            repository.fetchAppsFromRemote().collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { data ->
-                            // Attach on click listener
-                            val appsWithOnClick = data.map { app ->
-                                app.copy(
-                                    onClick = {
-                                        viewModelScope.launch {
-                                            _homeViewStateFlow.update {
-                                                it.copy(appInView = app, refreshing = false)
+            repository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.data?.let { data ->
+                                // Attach on click listener
+                                val appsWithOnClick = data.map { app ->
+                                    app.copy(
+                                        onClick = {
+                                            viewModelScope.launch {
+                                                _homeViewStateFlow.update {
+                                                    it.copy(appInView = app, refreshing = false)
                                             }
                                         }
                                         sendViewEffect(HomeViewEffect.OpenBottomSheet)
@@ -114,27 +115,24 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchDataFromDatabase() {
         viewModelScope.launch {
-            repository.fetchAppsFromDatabase().collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { apps ->
-
-                            // Attach on click listener
-                            val appsWithOnClick = apps.map { app ->
-                                app.copy(
-                                    onClick = {
-                                        _homeViewStateFlow.update {
-                                            it.copy(appInView = app, refreshing = false)
-                                        }
+            repository.fetchAppsFromDatabase(_homeViewStateFlow.value.activeCountryFilter)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            result.data?.let { apps ->
+                                // Attach on click listener
+                                val appsWithOnClick = apps.map { app ->
+                                    app.copy(
+                                        onClick = {
+                                            _homeViewStateFlow.update {
+                                                it.copy(appInView = app, refreshing = false)
+                                            }
                                         sendViewEffect(HomeViewEffect.OpenBottomSheet)
                                     }
                                 )
                             }
-
-                            val filteredApps =
-                                buildList { addAll(appsWithOnClick.filter { it.country == _homeViewStateFlow.value.activeCountryFilter }) }
                             _homeViewStateFlow.update { state ->
-                                state.copy(apps = filteredApps, refreshing = false)
+                                state.copy(apps = appsWithOnClick, refreshing = false)
                             }
                         }
                         genSections()

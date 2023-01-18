@@ -7,7 +7,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 class MapConverter {
-
     @TypeConverter
     fun histogramToJson(value: Histogram) = Json.encodeToString(value)
 

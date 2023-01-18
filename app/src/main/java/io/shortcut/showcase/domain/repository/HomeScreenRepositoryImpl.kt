@@ -1,6 +1,7 @@
 package io.shortcut.showcase.domain.repository
 
 import io.shortcut.showcase.data.local.ShowcaseDAO
+import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.data.mapper.toShowcaseBannerUI
@@ -20,7 +21,7 @@ class HomeScreenRepositoryImpl @Inject constructor(
     private val firebaseService: FirebaseService
 ) : HomeScreenRepository {
 
-    override suspend fun fetchAppsFromRemote(): Flow<Resource<List<ShowcaseAppUI>>> {
+    override suspend fun fetchAppsFromRemote(selectedCountry: Country): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
             // The flow starts by emitting a loading signal.
@@ -38,16 +39,20 @@ class HomeScreenRepositoryImpl @Inject constructor(
                 dao.deleteAllApps()
                 // Update the data to view
                 val entityList = apps.mapNotNull { it?.toShowcaseAppEntity() }
-                emit(Resource.Success(data = entityList.map { it.toShowcaseAppUI() }))
                 // Once we are done, we emit a signal that loading is done.
                 emit(Resource.Loading(false))
                 // Here we insert the new data and map it to an entity form.
                 dao.insertApps(entityList)
+                emit(
+                    Resource.Success(
+                        data = dao.fetchAppsWithCountry(selectedCountry.name)
+                            .map { it.toShowcaseAppUI() })
+                )
             }
         }
     }
 
-    override suspend fun fetchAppsFromDatabase(): Flow<Resource<List<ShowcaseAppUI>>> {
+    override suspend fun fetchAppsFromDatabase(activeCountryFilter: Country): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
             // The flow starts by emitting a loading signal.
@@ -67,7 +72,11 @@ class HomeScreenRepositoryImpl @Inject constructor(
             } else {
                 // If it isn't empty, we fetch the data, map the objects -
                 // then set loading to false.
-                emit(Resource.Success(data = dao.fetchAllApps().map { it.toShowcaseAppUI() }))
+                emit(
+                    Resource.Success(
+                        data = dao.fetchAppsWithCountry(activeCountryFilter.name)
+                            .map { it.toShowcaseAppUI() })
+                )
                 emit(Resource.Loading(false))
             }
 
