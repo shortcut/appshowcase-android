@@ -4,15 +4,14 @@ interface ShowcaseDestination {
     val route: String
 }
 
-object Home: ShowcaseDestination {
+object Home : ShowcaseDestination {
     override val route = "home"
 }
 
-object Idle: ShowcaseDestination {
+object Idle : ShowcaseDestination {
     override val route = "idle"
 }
 
-object ScreenshotGallery: ShowcaseDestination {
+object ScreenshotGallery : ShowcaseDestination {
     override val route = "screenshot_gallery/{startIndex}"
 }
-

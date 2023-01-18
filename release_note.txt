@@ -1,1 +1,4 @@
-Testing the distribution with fastlane
+- With these changes in this release, the app can be accessed from firebase distribution
+- The project now has automated CI/CD pipeline that pushes release
+- Uses fastlane and github actions for the CI/CD pipeline
+- Fix for some lint issues.

@@ -40,6 +40,6 @@ fun ModularBottomSheet(
                 sheetContent()
             }
         },
-        content = content,
+        content = content
     )
 }

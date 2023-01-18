@@ -25,7 +25,7 @@ fun ShowcaseAppAPI.toShowcaseAppEntity(): ShowcaseAppEntity {
     )
 }
 
-fun ShowcaseAppEntity.toShowcaseAppUI() : ShowcaseAppUI {
+fun ShowcaseAppEntity.toShowcaseAppUI(): ShowcaseAppUI {
     return ShowcaseAppUI(
         id = id,
 

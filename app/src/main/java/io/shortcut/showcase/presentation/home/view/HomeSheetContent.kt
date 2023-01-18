@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -41,7 +40,6 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
-
 
 @Composable
 private fun Header(
@@ -94,14 +92,13 @@ private fun Header(
     }
 }
 
-
 @Composable
 private fun Stats(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
     appRating: String,
     appDownloads: String,
-    appCategory: String,
+    appCategory: String
 ) {
     Row(
         modifier = modifier
@@ -210,7 +207,7 @@ private fun Stats(
 private fun ShortDescription(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
-    shortDescription: String,
+    shortDescription: String
 ) {
     Column(
         modifier = modifier
@@ -242,7 +239,7 @@ private fun Screenshots(
     screenshots: List<String>,
     horizontalContentPadding: Dp = Dimens.M,
     itemSpacing: Dp = Dimens.S,
-    onScreenshotClick: (Int) -> Unit,
+    onScreenshotClick: (Int) -> Unit
 ) {
     // TODO: Fix padding and modifiers.
     val lazyListState = rememberLazyListState()

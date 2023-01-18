@@ -1,6 +1,5 @@
 package io.shortcut.showcase.presentation.data
 
-import io.shortcut.showcase.data.local.Histogram
 import io.shortcut.showcase.data.local.Screenshots
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory

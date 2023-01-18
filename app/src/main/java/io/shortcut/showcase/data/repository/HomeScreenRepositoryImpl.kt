@@ -5,7 +5,6 @@ import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.data.mapper.toShowcaseBannerUI
 import io.shortcut.showcase.data.remote.FirebaseServiceImpl
-import io.shortcut.showcase.domain.model.ShowcaseBannerAPI
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
@@ -59,7 +58,6 @@ class HomeScreenRepositoryImpl @Inject constructor(
     override suspend fun fetchAppsFromDatabase(): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
-
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
 
@@ -105,5 +103,4 @@ class HomeScreenRepositoryImpl @Inject constructor(
             emit(Resource.Loading(false))
         }
     }
-
 }

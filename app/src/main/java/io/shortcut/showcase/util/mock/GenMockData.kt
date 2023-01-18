@@ -1,7 +1,5 @@
 package io.shortcut.showcase.util.mock
 
-
-import io.shortcut.showcase.data.local.Histogram
 import io.shortcut.showcase.data.local.Screenshots
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
@@ -65,4 +63,3 @@ fun genMockFilterButtons(): List<FilterButtonData> {
         add(FilterButtonData(type = Country.Denmark, selected = false, onClick = {}))
     }
 }
-

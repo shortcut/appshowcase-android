@@ -5,9 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
-import org.w3c.dom.Text
 import javax.annotation.concurrent.Immutable
 
 @Immutable
@@ -18,7 +16,7 @@ data class ShowcaseTypography(
     val body: TextStyle,
     val bodySmall: TextStyle,
     val bodySmallItalic: TextStyle,
-    val button: TextStyle,
+    val button: TextStyle
 )
 
 val LocalShowcaseTypography = staticCompositionLocalOf {

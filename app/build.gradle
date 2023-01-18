@@ -7,6 +7,7 @@ plugins {
     id 'com.google.gms.google-services'
     id 'kotlinx-serialization'
     id 'com.google.firebase.appdistribution'
+    id 'org.jmailen.kotlinter'
 }
 android {
     namespace 'io.shortcut.showcase'
@@ -16,7 +17,7 @@ android {
         applicationId "io.shortcut.showcase"
         minSdk 24
         targetSdk 33
-        versionCode 2
+        versionCode 3
         versionName "1.0.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -72,7 +73,7 @@ android {
             minifyEnabled false
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
         }
     }
 }
@@ -132,6 +133,13 @@ dependencies {
 
     // Kotlin serialization
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1"
+}
+
+kotlinter {
+    ignoreFailures = false
+    reporters = ['checkstyle', 'plain']
+    experimentalRules = false
+    disabledRules = ["no-wildcard-imports", 'import-ordering', 'final-newline', 'trailing-comma-on-call-site']
 }
 
 kapt {

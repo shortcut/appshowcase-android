@@ -76,5 +76,3 @@ private fun GradientOverlayOverColumnPreview() {
         }
     }
 }
-
-
