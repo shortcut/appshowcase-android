@@ -6,5 +6,4 @@ sealed class HomeViewEffect {
 
     data class NavigateToGallery(val startIndex: Int, val imageList: List<String>) :
         HomeViewEffect()
-
 }

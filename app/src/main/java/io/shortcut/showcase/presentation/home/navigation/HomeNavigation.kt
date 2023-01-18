@@ -55,7 +55,7 @@ fun MainNavigation(
 fun NavHostController.navigateToScreenshotGallery(startIndex: Int, images: List<String>) {
     val stringListSerializer = ListSerializer(String.serializer())
     val data = Json.encodeToString(stringListSerializer, images)
-    navigate(route = "screenshot_gallery/?startIndex=${startIndex}&imageList=${data}")
+    navigate(route = "screenshot_gallery/?startIndex=$startIndex&imageList=$data")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) =

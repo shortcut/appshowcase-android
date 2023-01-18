@@ -46,7 +46,8 @@ class HomeScreenRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         data = dao.fetchAppsWithCountry(selectedCountry.name)
-                            .map { it.toShowcaseAppUI() })
+                            .map { it.toShowcaseAppUI() }
+                    )
                 )
             }
         }
@@ -75,7 +76,8 @@ class HomeScreenRepositoryImpl @Inject constructor(
                 emit(
                     Resource.Success(
                         data = dao.fetchAppsWithCountry(activeCountryFilter.name)
-                            .map { it.toShowcaseAppUI() })
+                            .map { it.toShowcaseAppUI() }
+                    )
                 )
                 emit(Resource.Loading(false))
             }
