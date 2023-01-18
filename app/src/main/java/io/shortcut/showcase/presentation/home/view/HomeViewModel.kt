@@ -118,22 +118,15 @@ class HomeViewModel @Inject constructor(
     private fun setUpHomeViewState(result: Resource<List<ShowcaseAppUI>>) {
         result.data?.let { apps ->
             // Attach on click listener
-            val appsWithOnClick = apps.map { app ->
-                app.copy(
-                    onClick = {
-                        _homeViewStateFlow.update {
-                            it.copy(appInView = app, refreshing = false)
-                        }
-                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
-                    }
-                )
-            }
-            val categorizedApps = appsWithOnClick
-                .groupBy { it.generalCategory }
+            val categorizedApps = apps.groupBy { it.generalCategory }
                 .map {
                     CategorySection(
                         generalCategory = it.key,
-                        apps = it.value,
+                        apps = it.value.map { app ->
+                            app.copy(
+                                onClick = { clickToOpenBottomSheet(app) }
+                            )
+                        },
                         onClickShowAll = {}
                     )
                 }
@@ -142,6 +135,13 @@ class HomeViewModel @Inject constructor(
                 state.copy(categorizedApps = categorizedApps, refreshing = false)
             }
         }
+    }
+
+    private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
+        _homeViewStateFlow.update {
+            it.copy(appInView = app, refreshing = false)
+        }
+        sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
     private fun genFilterButtons(activeFilter: Country) {
