@@ -148,17 +148,15 @@ class HomeViewModel @Inject constructor(
         val countryFilter = Country.values()
         _homeViewStateFlow.update {
             it.copy(
-                filterButtons = buildList {
-                    countryFilter.forEach { country ->
-                        if (country != Country.Unknown) {
-                            add(
-                                FilterButtonData(
-                                    type = country,
-                                    selected = activeFilter == country,
-                                    onClick = { setCountryFilter(country) }
-                                )
-                            )
-                        }
+                filterButtons = countryFilter.mapNotNull { country ->
+                    if (country != Country.Unknown) {
+                        FilterButtonData(
+                            type = country,
+                            selected = activeFilter == country,
+                            onClick = { setCountryFilter(country) }
+                        )
+                    } else {
+                        null
                     }
                 }
             )
