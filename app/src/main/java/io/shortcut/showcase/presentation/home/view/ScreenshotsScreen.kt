@@ -16,7 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
@@ -31,15 +30,12 @@ import io.shortcut.showcase.util.dimens.Dimens
 @Composable
 fun ScreenshotScreen(
     onBackArrowClick: () -> Unit,
-    viewModel: HomeViewModel = hiltViewModel(),
+    images: List<String>,
     startIndex: Int
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
-
-    val viewState = viewModel.homeViewState
-    val images = viewState.appInView.screenshots.imageURLs
 
     val pageCount: Int = images.size
     val pagerState = rememberPagerState(
@@ -107,7 +103,8 @@ private fun ScreenshotScreenPreview() {
     ExtendedShowcaseTheme {
         ScreenshotScreen(
             onBackArrowClick = {},
-            startIndex = 0
+            startIndex = 0,
+            images = emptyList()
         )
     }
 }

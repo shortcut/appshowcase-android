@@ -4,8 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import io.shortcut.showcase.data.repository.HomeScreenRepositoryImpl
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
+import io.shortcut.showcase.domain.repository.HomeScreenRepositoryImpl
 import javax.inject.Singleton
 
 @Module

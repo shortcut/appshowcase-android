@@ -1,24 +1,22 @@
 package io.shortcut.showcase.presentation.home.navigation
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.presentation.home.view.HomeScreen
-import io.shortcut.showcase.presentation.home.view.HomeViewModel
 import io.shortcut.showcase.presentation.home.view.ScreenshotScreen
 import io.shortcut.showcase.presentation.idle.view.IdleScreen
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
+import kotlinx.serialization.builtins.ListSerializer
+import kotlinx.serialization.builtins.serializer
+import kotlinx.serialization.json.Json
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun MainNavigation(
-    navController: NavHostController,
-    viewModel: HomeViewModel = hiltViewModel()
+    navController: NavHostController
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -30,9 +28,10 @@ fun MainNavigation(
     ) {
         composable(route = Home.route) {
             HomeScreen(
-                viewModel = viewModel,
                 onIdleClick = { navController.navigateSingleTopTo(Idle.route) },
-                onScreenshotClick = { navController.navigateToScreenshotGallery(it) }
+                onScreenshotClick = { index, list ->
+                    navController.navigateToScreenshotGallery(index, list)
+                }
             )
         }
         composable(route = Idle.route) {
@@ -42,16 +41,22 @@ fun MainNavigation(
         }
         composable(route = ScreenshotGallery.route) { backstackEntry ->
             ScreenshotScreen(
-                viewModel = viewModel,
                 onBackArrowClick = { navController.popBackStack() },
-                startIndex = backstackEntry.arguments?.getString("startIndex")?.toIntOrNull() ?: 0
+                startIndex = backstackEntry.arguments?.getString("startIndex")?.toIntOrNull() ?: 0,
+                images = backstackEntry.arguments?.getString("imageList")?.let {
+                    val stringListSerializer = ListSerializer(String.serializer())
+                    Json.decodeFromString(stringListSerializer, it)
+                } ?: emptyList()
             )
         }
     }
 }
 
-fun NavHostController.navigateToScreenshotGallery(startIndex: Int) =
-    navigate(route = "screenshot_gallery/$startIndex")
+fun NavHostController.navigateToScreenshotGallery(startIndex: Int, images: List<String>) {
+    val stringListSerializer = ListSerializer(String.serializer())
+    val data = Json.encodeToString(stringListSerializer, images)
+    navigate(route = "screenshot_gallery/?startIndex=${startIndex}&imageList=${data}")
+}
 
 fun NavHostController.navigateSingleTopTo(route: String) =
     this.navigate(route) { launchSingleTop = true }

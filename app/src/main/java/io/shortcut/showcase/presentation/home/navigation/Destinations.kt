@@ -13,5 +13,5 @@ object Idle : ShowcaseDestination {
 }
 
 object ScreenshotGallery : ShowcaseDestination {
-    override val route = "screenshot_gallery/{startIndex}"
+    override val route = "screenshot_gallery/?startIndex={startIndex}&imageList={imageList}"
 }

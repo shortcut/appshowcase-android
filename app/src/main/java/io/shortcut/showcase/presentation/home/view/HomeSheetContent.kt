@@ -239,7 +239,7 @@ private fun Screenshots(
     screenshots: List<String>,
     horizontalContentPadding: Dp = Dimens.M,
     itemSpacing: Dp = Dimens.S,
-    onScreenshotClick: (Int) -> Unit
+    onScreenshotClick: (Int, List<String>) -> Unit
 ) {
     // TODO: Fix padding and modifiers.
     val lazyListState = rememberLazyListState()
@@ -259,7 +259,7 @@ private fun Screenshots(
                     .height(160.dp)
                     .clip(shape = RoundedCornerShape(6.dp))
                     .clickable {
-                        onScreenshotClick(index)
+                        onScreenshotClick(index, screenshots)
                     },
                 model = imageURL,
                 contentDescription = null,
@@ -274,7 +274,7 @@ fun HomeSheetContent(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
     app: ShowcaseAppUI,
-    onScreenshotClick: (Int) -> Unit
+    onScreenshotClick: (Int, List<String>) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -359,7 +359,8 @@ private fun ScreenshotsPreview() {
             screenshots = app.screenshots.imageURLs,
             horizontalContentPadding = Dimens.S,
             itemSpacing = Dimens.XS,
-            onScreenshotClick = {}
+            onScreenshotClick = { _, _ ->
+            }
         )
     }
 }
@@ -373,7 +374,7 @@ private fun HomeSheetContentPreview() {
             childModifier = Modifier
                 .padding(horizontal = Dimens.M),
             app = app,
-            onScreenshotClick = {}
+            onScreenshotClick = { _, _ -> }
         )
     }
 }

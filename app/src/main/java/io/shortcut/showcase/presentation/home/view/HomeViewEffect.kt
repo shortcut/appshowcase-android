@@ -4,5 +4,7 @@ sealed class HomeViewEffect {
     object OpenBottomSheet : HomeViewEffect()
     object HideBottomSheet : HomeViewEffect()
 
-    data class naviateToGallery(val startIndex: Int) : HomeViewEffect()
+    data class NavigateToGallery(val startIndex: Int, val imageList: List<String>) :
+        HomeViewEffect()
+
 }

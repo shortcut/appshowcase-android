@@ -1,13 +1,18 @@
-package io.shortcut.showcase.data.remote
+package io.shortcut.showcase.domain.remote
 
 import com.google.firebase.firestore.FirebaseFirestore
-import io.shortcut.showcase.di.FirebaseService
 import io.shortcut.showcase.domain.model.ShowcaseAppAPI
 import io.shortcut.showcase.domain.model.ShowcaseBannerAPI
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
-class FirebaseServiceImpl @Inject constructor() : FirebaseService() {
+interface FirebaseService {
+    suspend fun getApps(): List<ShowcaseAppAPI?>?
+
+    suspend fun getBanners(): List<ShowcaseBannerAPI?>?
+}
+
+class FirebaseServiceImpl @Inject constructor() : FirebaseService {
     private val firebaseDatabase = FirebaseFirestore.getInstance()
 
     override suspend fun getApps(): List<ShowcaseAppAPI?> {
@@ -16,7 +21,8 @@ class FirebaseServiceImpl @Inject constructor() : FirebaseService() {
     }
 
     override suspend fun getBanners(): List<ShowcaseBannerAPI?> {
-        val snapshot = firebaseDatabase.collection(FirebaseCollection.BANNERS.collection).get().await()
+        val snapshot =
+            firebaseDatabase.collection(FirebaseCollection.BANNERS.collection).get().await()
         return snapshot.toObjects(ShowcaseBannerAPI::class.java)
     }
 }
