@@ -75,7 +75,6 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let { data ->
-
                             // Attach on click listener
                             val appsWithOnClick = data.map { app ->
                                 app.copy(

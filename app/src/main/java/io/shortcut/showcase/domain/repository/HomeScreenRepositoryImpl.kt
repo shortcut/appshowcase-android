@@ -1,6 +1,6 @@
 package io.shortcut.showcase.domain.repository
 
-import io.shortcut.showcase.data.local.ShowcaseDatabase
+import io.shortcut.showcase.data.local.ShowcaseDAO
 import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.data.mapper.toShowcaseBannerUI
@@ -16,12 +16,9 @@ import javax.inject.Singleton
 
 @Singleton
 class HomeScreenRepositoryImpl @Inject constructor(
-    private val database: ShowcaseDatabase,
+    private val dao: ShowcaseDAO,
     private val firebaseService: FirebaseService
 ) : HomeScreenRepository {
-
-    // The data access object used to access data from the database.
-    private val dao = database.dao
 
     override suspend fun fetchAppsFromRemote(): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.

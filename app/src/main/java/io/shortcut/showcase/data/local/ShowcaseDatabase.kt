@@ -10,5 +10,5 @@ import io.shortcut.showcase.util.converters.ScreenshotsConverter
 @Database(entities = [ShowcaseAppEntity::class], version = 1)
 @TypeConverters(ScreenshotsConverter::class, MapConverter::class, LongConverter::class)
 abstract class ShowcaseDatabase : RoomDatabase() {
-    abstract val dao: ShowcaseDAO
+    abstract val showcaseDAO: ShowcaseDAO
 }
