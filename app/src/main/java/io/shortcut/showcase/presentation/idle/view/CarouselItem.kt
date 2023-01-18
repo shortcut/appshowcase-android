@@ -46,7 +46,7 @@ fun CarouselItem(
     animationSpeed: Int,
     expanded: Boolean
 ) {
-    //var expanded by remember { mutableStateOf(true) } // .clickable { expanded = !expanded }
+    // var expanded by remember { mutableStateOf(true) } // .clickable { expanded = !expanded }
 
     /** General transition **/
     val transition = updateTransition(
@@ -112,7 +112,6 @@ fun CarouselItem(
     }
 
     /** Text stuff **/
-
 
     /** End of all digusting variables. **/
     Card(

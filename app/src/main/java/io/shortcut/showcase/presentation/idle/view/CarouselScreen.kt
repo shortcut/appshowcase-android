@@ -63,7 +63,7 @@ fun CarouselScreen(
 private fun CarouselContent(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
-    apps: List<CarouselApp>,
+    apps: List<CarouselApp>
 ) {
     Column(
         modifier = modifier
@@ -134,7 +134,7 @@ private fun AppDetails(
     childModifier: Modifier = Modifier,
     appTitle: String,
     appCategory: String,
-    categoryColor: Color,
+    categoryColor: Color
 ) {
     Column(
         modifier = modifier
