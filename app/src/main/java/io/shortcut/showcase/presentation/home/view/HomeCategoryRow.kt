@@ -105,7 +105,7 @@ private fun CategoryRowItem(
     imageURL: String,
     appTitle: String,
     appRating: String,
-    onAppIconClick: () -> Unit = {},
+    onAppIconClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier

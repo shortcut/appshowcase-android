@@ -7,9 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,7 +31,7 @@ fun TopBar(
         modifier = modifier
             .fillMaxWidth()
             .background(color = color),
-        verticalAlignment = Alignment.CenterVertically,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
             modifier = Modifier
@@ -42,9 +39,7 @@ fun TopBar(
                     onLongClick = {
                         onLongClick()
                     }
-                ) {
-
-                },
+                ) {},
             painter = painterResource(id = R.drawable.shortcut_logo_small),
             contentDescription = null,
             tint = iconTint

@@ -1,0 +1,52 @@
+default_platform(:android)
+
+platform :android do
+  #PUBLIC 
+  desc "Build and test application"
+  lane :build_test do
+    lintKotlin()
+    unit_test()
+  end
+
+  desc "Build, test and deploy application to Google Play"
+  lane :build_test_deploy do
+    lintKotlin()
+    increment_vc()
+    unit_test()
+    deploy()
+  end
+
+  desc "Run Kotlinter for lint checks"
+    lane :lintKotlin do
+      gradle(task: "lintKotlin")
+    end
+
+  desc "Increment version code"
+     private_lane :increment_vc do
+     increment_version_code(
+           gradle_file_path: "./app/build.gradle",
+
+     )
+     end
+
+  desc "Runs unit tests"
+  private_lane :unit_test do
+    gradle(task: "testDebugUnitTest")
+  end
+
+  desc "Deploy a new version to the Google Play"
+  private_lane :deploy do
+    gradle(
+        task: "clean assemble",
+        build_type: "release",
+        print_command: true,
+    )
+    firebase_app_distribution(
+        service_credentials_file: "service_credentials_file.json",
+        app: ENV['FIREBASE_APP_ID'],
+        android_artifact_type: "APK",
+        release_notes_file: "release_note.txt"
+    )
+  end
+
+end
