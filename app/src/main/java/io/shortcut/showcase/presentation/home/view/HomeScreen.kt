@@ -70,7 +70,7 @@ fun HomeScreen(
     val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
     val refreshState =
         rememberPullRefreshState(refreshing = homeViewState.refreshing, onRefresh = {
-            viewModel.fetchAppsDataFromRemote()
+            viewModel.refreshAppsList()
         })
 
     val modalBottomSheetState = rememberModalBottomSheetState(

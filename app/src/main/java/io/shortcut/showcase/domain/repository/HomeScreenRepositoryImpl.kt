@@ -35,8 +35,6 @@ class HomeScreenRepositoryImpl @Inject constructor(
             }
             // Null handling of the dataset (apps)
             remoteApps?.let { apps ->
-                // We delete the previous apps and insert the new data.
-                dao.deleteAllApps()
                 // Update the data to view
                 val entityList = apps.mapNotNull { it?.toShowcaseAppEntity() }
                 // Once we are done, we emit a signal that loading is done.

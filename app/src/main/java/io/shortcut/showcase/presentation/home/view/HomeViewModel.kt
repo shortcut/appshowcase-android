@@ -29,7 +29,7 @@ class HomeViewModel @Inject constructor(
     val viewEffects = _viewEffects.asSharedFlow()
 
     init {
-        fetchAppsDataFromRemote()
+        refreshAppsList()
         fetchBanners()
         genFilterButtons()
     }
@@ -69,7 +69,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchAppsDataFromRemote() {
+    fun refreshAppsList() {
         viewModelScope.launch {
             repository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
                 .collect { result ->
