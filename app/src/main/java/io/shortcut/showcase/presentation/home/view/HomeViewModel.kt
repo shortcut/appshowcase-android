@@ -4,9 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.shortcut.showcase.data.mapper.Country
-import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
     init {
         fetchAppsDataFromRemote()
         fetchBanners()
-        genFilterButtons()
+        genFilterButtons(homeViewState.value.activeCountryFilter)
     }
 
     private fun sendViewEffect(effect: HomeViewEffect) {
@@ -75,85 +75,76 @@ class HomeViewModel @Inject constructor(
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
-                            result.data?.let { data ->
-                                // Attach on click listener
-                                val appsWithOnClick = data.map { app ->
-                                    app.copy(
-                                        onClick = {
-                                            viewModelScope.launch {
-                                                _homeViewStateFlow.update {
-                                                    it.copy(appInView = app, refreshing = false)
-                                            }
-                                        }
-                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
-                                    }
-                                )
-                            }
+                            setUpHomeViewState(result)
+                        }
 
-                            _homeViewStateFlow.update { state ->
-                                val filteredApps =
-                                    buildList { addAll(appsWithOnClick.filter { it.country == state.activeCountryFilter }) }
-                                state.copy(apps = filteredApps)
+                        is Resource.Loading -> {
+                            _homeViewStateFlow.update {
+                                it.copy(refreshing = result.isLoading)
                             }
                         }
-                        genSections()
-                    }
 
-                    is Resource.Loading -> {
-                        _homeViewStateFlow.update {
-                            it.copy(refreshing = result.isLoading)
+                        is Resource.Error -> {
+                            /* TODO */
                         }
-                    }
-
-                    is Resource.Error -> {
-                        /* TODO */
                     }
                 }
-            }
         }
     }
 
-    private fun fetchDataFromDatabase() {
+    private fun fetchDataFromDatabase(country: Country) {
         viewModelScope.launch {
-            repository.fetchAppsFromDatabase(_homeViewStateFlow.value.activeCountryFilter)
+            repository.fetchAppsFromDatabase(country)
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
-                            result.data?.let { apps ->
-                                // Attach on click listener
-                                val appsWithOnClick = apps.map { app ->
-                                    app.copy(
-                                        onClick = {
-                                            _homeViewStateFlow.update {
-                                                it.copy(appInView = app, refreshing = false)
-                                            }
-                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
-                                    }
-                                )
-                            }
-                            _homeViewStateFlow.update { state ->
-                                state.copy(apps = appsWithOnClick, refreshing = false)
+                            setUpHomeViewState(result)
+                        }
+
+                        is Resource.Loading -> {
+                            _homeViewStateFlow.update {
+                                it.copy(loading = result.isLoading)
                             }
                         }
-                        genSections()
-                    }
 
-                    is Resource.Loading -> {
-                        _homeViewStateFlow.update {
-                            it.copy(loading = result.isLoading)
+                        is Resource.Error -> {
+                            /* TODO */
                         }
-                    }
-
-                    is Resource.Error -> {
-                        /* TODO */
                     }
                 }
+        }
+    }
+
+    private fun setUpHomeViewState(result: Resource<List<ShowcaseAppUI>>) {
+        result.data?.let { apps ->
+            // Attach on click listener
+            val appsWithOnClick = apps.map { app ->
+                app.copy(
+                    onClick = {
+                        _homeViewStateFlow.update {
+                            it.copy(appInView = app, refreshing = false)
+                        }
+                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
+                    }
+                )
+            }
+            val categorizedApps = appsWithOnClick
+                .groupBy { it.generalCategory }
+                .map {
+                    CategorySection(
+                        generalCategory = it.key,
+                        apps = it.value,
+                        onClickShowAll = {}
+                    )
+                }
+
+            _homeViewStateFlow.update { state ->
+                state.copy(categorizedApps = categorizedApps, refreshing = false)
             }
         }
     }
 
-    private fun genFilterButtons() {
-        val activeFilter = _homeViewStateFlow.value.activeCountryFilter
+    private fun genFilterButtons(activeFilter: Country) {
         val countryFilter = Country.values()
         _homeViewStateFlow.update {
             it.copy(
@@ -174,32 +165,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun genSections() {
-        viewModelScope.launch {
-            _homeViewStateFlow.update { state ->
-                state.copy(
-                    categorySections = buildList {
-                        GeneralCategory.values().forEach { generalCategory ->
-                            val appList = state.apps.filter {
-                                it.generalCategory == generalCategory
-                            }
-
-                            if (appList.isNotEmpty()) {
-                                add(
-                                    CategorySection(
-                                        generalCategory = generalCategory,
-                                        apps = appList,
-                                        onClickShowAll = {}
-                                    )
-                                )
-                            }
-                        }
-                    }
-                )
-            }
-        }
-    }
-
     private fun setCountryFilter(country: Country) {
         viewModelScope.launch {
             _homeViewStateFlow.update { state ->
@@ -207,9 +172,8 @@ class HomeViewModel @Inject constructor(
                     activeCountryFilter = country
                 )
             }
-            genFilterButtons()
-            fetchDataFromDatabase()
-            genSections()
+            genFilterButtons(country)
+            fetchDataFromDatabase(country)
         }
     }
 }

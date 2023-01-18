@@ -138,7 +138,7 @@ fun HomeScreen(
                         HomeContent(
                             banners = homeViewState.banners,
                             filterButtons = homeViewState.filterButtons,
-                            sections = homeViewState.categorySections
+                            sections = homeViewState.categorizedApps
                         )
                     }
                 }
