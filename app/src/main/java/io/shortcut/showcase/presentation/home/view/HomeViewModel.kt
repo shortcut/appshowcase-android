@@ -118,7 +118,7 @@ class HomeViewModel @Inject constructor(
     private fun setUpHomeViewState(result: Resource<List<ShowcaseAppUI>>) {
         result.data?.let { apps ->
             // Attach on click listener
-            val categorizedApps = apps.groupBy { it.generalCategory }
+            val categorizedApps = apps.toSet().groupBy { it.generalCategory }
                 .map {
                     CategorySection(
                         generalCategory = it.key,
