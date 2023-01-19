@@ -1,5 +1,7 @@
 package io.shortcut.showcase.data.mapper
 
+import androidx.room.TypeConverter
+
 enum class GeneralCategory(
     val category: String
 ) {
@@ -11,5 +13,13 @@ enum class GeneralCategory(
     ENTERTAINMENT("Entertainment"),
     EDUCATION("Education"),
     BUSINESS("Business"),
-    OTHER("Other")
+    OTHER("Other");
+}
+
+class GeneralCategoryTypeConverter {
+    @TypeConverter
+    fun toGeneralCategoryType(value: String): GeneralCategory = enumValueOf(value)
+
+    @TypeConverter
+    fun fromGeneralCategoryType(value: GeneralCategory): String = value.name
 }

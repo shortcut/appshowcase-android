@@ -21,7 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
@@ -30,9 +30,9 @@ import io.shortcut.showcase.util.mock.genMockFilterButtons
 @Composable
 fun FilterRow(
     modifier: Modifier = Modifier,
-    buttons: List<FilterButtonData>,
-    buttonSpacing: Dp,
-    horizontalContentPadding: Dp
+    buttons: List<CountryFilter>,
+    buttonSpacing: Dp = Dimens.S,
+    horizontalContentPadding: Dp = Dimens.S
 ) {
     Box(modifier = modifier) {
         val lazyListState = rememberLazyListState()

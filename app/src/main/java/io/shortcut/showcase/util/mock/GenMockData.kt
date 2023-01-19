@@ -3,7 +3,7 @@ package io.shortcut.showcase.util.mock
 import io.shortcut.showcase.data.local.Screenshots
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 
@@ -55,10 +55,10 @@ fun genMockBanners(): List<ShowcaseBannerUI> {
     }
 }
 
-fun genMockFilterButtons(): List<FilterButtonData> {
+fun genMockFilterButtons(): List<CountryFilter> {
     return buildList {
-        add(FilterButtonData(type = Country.Norway, selected = false, onClick = {}))
-        add(FilterButtonData(type = Country.Sweden, selected = false, onClick = {}))
-        add(FilterButtonData(type = Country.Denmark, selected = false, onClick = {}))
+        add(CountryFilter(type = Country.Norway, selected = false, onClick = {}))
+        add(CountryFilter(type = Country.Sweden, selected = false, onClick = {}))
+        add(CountryFilter(type = Country.Denmark, selected = false, onClick = {}))
     }
 }

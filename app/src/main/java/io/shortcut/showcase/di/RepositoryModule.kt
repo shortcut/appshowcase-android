@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.shortcut.showcase.domain.repository.AppsRepository
+import io.shortcut.showcase.domain.repository.AppsRepositoryImpl
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.domain.repository.HomeScreenRepositoryImpl
 import javax.inject.Singleton
@@ -17,4 +19,10 @@ abstract class RepositoryModule {
     abstract fun bindHomeScreenRepository(
         homeScreenRepositoryImpl: HomeScreenRepositoryImpl
     ): HomeScreenRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindAppsRepository(
+        appsRepo: AppsRepositoryImpl
+    ): AppsRepository
 }

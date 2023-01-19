@@ -41,11 +41,12 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.TopBar
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
+import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
@@ -60,8 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onIdleClick: () -> Unit,
-    onScreenshotClick: (Int, List<String>) -> Unit
+    onNavDestinations: (HomeScreenDestinations) -> Unit
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -95,8 +95,20 @@ fun HomeScreen(
             }
 
             is HomeViewEffect.NavigateToGallery -> {
-                onScreenshotClick(it.startIndex, it.imageList)
+                onNavDestinations(
+                    HomeScreenDestinations.ScreenshotGallery(
+                        imageIndex = it.startIndex,
+                        imageUrls = it.imageList
+                    )
+                )
             }
+
+            is HomeViewEffect.NavigateToShowAllApps -> onNavDestinations(
+                HomeScreenDestinations.ShowAllAppsScreen(
+                    country = it.country,
+                    category = it.category
+                )
+            )
         }
     }
 
@@ -108,7 +120,14 @@ fun HomeScreen(
                 childModifier = Modifier
                     .padding(horizontal = Dimens.M),
                 app = appInView,
-                onScreenshotClick = onScreenshotClick
+                onScreenshotClick = { startIndex, list ->
+                    onNavDestinations(
+                        HomeScreenDestinations.ScreenshotGallery(
+                            imageIndex = startIndex,
+                            imageUrls = list
+                        )
+                    )
+                }
             )
         },
     ) {
@@ -130,7 +149,7 @@ fun HomeScreen(
                         color = ShowcaseThemeCustom.colors.ShowcaseBackground,
                         iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
                         onLongClick = {
-                            onIdleClick()
+                            onNavDestinations(HomeScreenDestinations.IdleScreen)
                         }
                     )
                 },
@@ -174,7 +193,7 @@ fun HomeScreen(
 private fun HomeContent(
     modifier: Modifier = Modifier,
     banners: List<ShowcaseBannerUI>,
-    filterButtons: List<FilterButtonData>,
+    filterButtons: List<CountryFilter>,
     sections: List<CategorySection>
 ) {
     Column(
