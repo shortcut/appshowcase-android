@@ -185,6 +185,7 @@ private fun HomeContent(
         HomeScreenPager(images = banners)
         Spacer(modifier = Modifier.height(Dimens.L))
         FilterRow(
+            modifier = Modifier.fillMaxWidth(),
             buttons = filterButtons,
             buttonSpacing = Dimens.S,
             horizontalContentPadding = Dimens.S

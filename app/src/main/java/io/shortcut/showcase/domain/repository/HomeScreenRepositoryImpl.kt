@@ -43,8 +43,7 @@ class HomeScreenRepositoryImpl @Inject constructor(
                 dao.insertApps(entityList)
                 emit(
                     Resource.Success(
-                        data = dao.fetchAppsWithCountry(selectedCountry.name)
-                            .map { it.toShowcaseAppUI() }
+                        data = getDataFromDatabase(activeCountryFilter = selectedCountry)
                     )
                 )
             }
@@ -56,7 +55,6 @@ class HomeScreenRepositoryImpl @Inject constructor(
         return flow {
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
-
             // Here we create a variable for fetching all the apps (unsorted).
             val localApps = dao.fetchAllApps()
 
@@ -73,8 +71,7 @@ class HomeScreenRepositoryImpl @Inject constructor(
                 // then set loading to false.
                 emit(
                     Resource.Success(
-                        data = dao.fetchAppsWithCountry(activeCountryFilter.name)
-                            .map { it.toShowcaseAppUI() }
+                        data = getDataFromDatabase(activeCountryFilter)
                     )
                 )
                 emit(Resource.Loading(false))
@@ -83,6 +80,14 @@ class HomeScreenRepositoryImpl @Inject constructor(
             // Just for safety, we emit another loading false signal.
             emit(Resource.Loading(false))
         }
+    }
+
+    private suspend fun getDataFromDatabase(activeCountryFilter: Country): List<ShowcaseAppUI> {
+        return if (activeCountryFilter == Country.All) {
+            dao.fetchAllApps()
+        } else {
+            dao.fetchAppsWithCountry(activeCountryFilter.name)
+        }.map { it.toShowcaseAppUI() }
     }
 
     override suspend fun fetchBanners(): Flow<Resource<List<ShowcaseBannerUI>>> {
