@@ -7,12 +7,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -239,7 +239,7 @@ private fun Screenshots(
     screenshots: List<String>,
     horizontalContentPadding: Dp = Dimens.M,
     itemSpacing: Dp = Dimens.S,
-    onScreenshotClick: (Int) -> Unit
+    onScreenshotClick: (Int, List<String>) -> Unit
 ) {
     // TODO: Fix padding and modifiers.
     val lazyListState = rememberLazyListState()
@@ -259,7 +259,7 @@ private fun Screenshots(
                     .height(160.dp)
                     .clip(shape = RoundedCornerShape(6.dp))
                     .clickable {
-                        onScreenshotClick(index)
+                        onScreenshotClick(index, screenshots)
                     },
                 model = imageURL,
                 contentDescription = null,
@@ -274,12 +274,12 @@ fun HomeSheetContent(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
     app: ShowcaseAppUI,
-    onScreenshotClick: (Int) -> Unit
+    onScreenshotClick: (Int, List<String>) -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .wrapContentHeight()
+            .fillMaxHeight()
             .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
         verticalArrangement = Arrangement.Top
     ) {
@@ -359,7 +359,8 @@ private fun ScreenshotsPreview() {
             screenshots = app.screenshots.imageURLs,
             horizontalContentPadding = Dimens.S,
             itemSpacing = Dimens.XS,
-            onScreenshotClick = {}
+            onScreenshotClick = { _, _ ->
+            }
         )
     }
 }
@@ -373,7 +374,7 @@ private fun HomeSheetContentPreview() {
             childModifier = Modifier
                 .padding(horizontal = Dimens.M),
             app = app,
-            onScreenshotClick = {}
+            onScreenshotClick = { _, _ -> }
         )
     }
 }

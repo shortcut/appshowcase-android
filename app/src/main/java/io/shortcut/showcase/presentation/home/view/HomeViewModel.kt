@@ -1,34 +1,35 @@
 package io.shortcut.showcase.presentation.home.view
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.shortcut.showcase.data.mapper.Country
-import io.shortcut.showcase.data.mapper.GeneralCategory
-import io.shortcut.showcase.data.repository.HomeScreenRepositoryImpl
+import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: HomeScreenRepositoryImpl
+    private val repository: HomeScreenRepository
 ) : ViewModel() {
 
-    var homeViewState by mutableStateOf(HomeViewState())
+    private val _homeViewStateFlow = MutableStateFlow(HomeViewState())
+    val homeViewState = _homeViewStateFlow.asStateFlow()
 
     private val _viewEffects = MutableSharedFlow<HomeViewEffect>()
     val viewEffects = _viewEffects.asSharedFlow()
 
     init {
-        fetchDataFromDatabase()
+        refreshAppsList()
         fetchBanners()
         genFilterButtons()
     }
@@ -45,14 +46,19 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let { banners ->
-                            homeViewState = homeViewState.copy(
-                                banners = banners
-                            )
+                            _homeViewStateFlow.update {
+                                it.copy(
+                                    banners = banners,
+                                    refreshing = false
+                                )
+                            }
                         }
                     }
 
                     is Resource.Loading -> {
-                        homeViewState = homeViewState.copy(refreshing = result.isLoading)
+                        _homeViewStateFlow.update {
+                            it.copy(refreshing = result.isLoading)
+                        }
                     }
 
                     is Resource.Error -> {
@@ -63,140 +69,109 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun fetchDataFromRemote() {
+    fun refreshAppsList() {
         viewModelScope.launch {
-            repository.fetchAppsFromRemote().collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { apps ->
-
-                            // Attach on click listener
-                            val appsWithOnClick = apps.map { app ->
-                                app.copy(
-                                    onClick = {
-                                        homeViewState = homeViewState.copy(
-                                            appInView = app
-                                        )
-                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
-                                    }
-                                )
-                            }
-
-                            val filteredApps =
-                                buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
-
-                            homeViewState = homeViewState.copy(
-                                apps = filteredApps
-                            )
+            repository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            setUpHomeViewState(result)
                         }
-                        genSections()
-                    }
 
-                    is Resource.Loading -> {
-                        homeViewState = homeViewState.copy(refreshing = result.isLoading)
-                    }
+                        is Resource.Loading -> {
+                            _homeViewStateFlow.update {
+                                it.copy(refreshing = result.isLoading)
+                            }
+                        }
 
-                    is Resource.Error -> {
-                        /* TODO */
+                        is Resource.Error -> {
+                            /* TODO */
+                        }
                     }
                 }
+        }
+    }
+
+    private fun fetchDataFromDatabase(country: Country) {
+        viewModelScope.launch {
+            repository.fetchAppsFromDatabase(country)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            setUpHomeViewState(result)
+                        }
+
+                        is Resource.Loading -> {
+                            _homeViewStateFlow.update {
+                                it.copy(loading = result.isLoading)
+                            }
+                        }
+
+                        is Resource.Error -> {
+                            /* TODO */
+                        }
+                    }
+                }
+        }
+    }
+
+    private fun setUpHomeViewState(result: Resource<List<ShowcaseAppUI>>) {
+        result.data?.let { apps ->
+            // Attach on click listener
+            val categorizedApps = apps.groupBy { it.generalCategory }
+                .map {
+                    CategorySection(
+                        generalCategory = it.key,
+                        apps = it.value.map { app ->
+                            app.copy(
+                                onClick = { clickToOpenBottomSheet(app) }
+                            )
+                        },
+                        onClickShowAll = {}
+                    )
+                }
+
+            _homeViewStateFlow.update { state ->
+                state.copy(categorizedApps = categorizedApps, refreshing = false)
             }
         }
     }
 
-    private fun fetchDataFromDatabase() {
-        viewModelScope.launch {
-            repository.fetchAppsFromDatabase().collect { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        result.data?.let { apps ->
-
-                            // Attach on click listener
-                            val appsWithOnClick = apps.map { app ->
-                                app.copy(
-                                    onClick = {
-                                        homeViewState = homeViewState.copy(
-                                            appInView = app
-                                        )
-                                        sendViewEffect(HomeViewEffect.OpenBottomSheet)
-                                    }
-                                )
-                            }
-
-                            val filteredApps =
-                                buildList { addAll(appsWithOnClick.filter { it.country == homeViewState.activeCountryFilter }) }
-
-                            homeViewState = homeViewState.copy(
-                                apps = filteredApps
-                            )
-                        }
-                        genSections()
-                    }
-
-                    is Resource.Loading -> {
-                        homeViewState = homeViewState.copy(loading = result.isLoading)
-                    }
-
-                    is Resource.Error -> {
-                        /* TODO */
-                    }
-                }
-            }
+    private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
+        _homeViewStateFlow.update {
+            it.copy(appInView = app, refreshing = false)
         }
+        sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
-    private fun genFilterButtons() {
-        val activeFilter = homeViewState.activeCountryFilter
+    private fun genFilterButtons(activeFilter: Country = homeViewState.value.activeCountryFilter) {
         val countryFilter = Country.values()
-
-        homeViewState = homeViewState.copy(
-            filterButtons = buildList {
-                countryFilter.forEach { country ->
+        _homeViewStateFlow.update {
+            it.copy(
+                filterButtons = countryFilter.mapNotNull { country ->
                     if (country != Country.Unknown) {
-                        add(
-                            FilterButtonData(
-                                type = country,
-                                selected = activeFilter == country,
-                                onClick = { setCountryFilter(country) }
-                            )
+                        FilterButtonData(
+                            type = country,
+                            selected = activeFilter == country,
+                            onClick = { setCountryFilter(country) }
                         )
+                    } else {
+                        null
                     }
                 }
-            }
-        )
-    }
-
-    private fun genSections() {
-        homeViewState = homeViewState.copy(
-            categorySections = buildList {
-                GeneralCategory.values().forEach { generalCategory ->
-                    val appList = homeViewState.apps.filter {
-                        it.generalCategory == generalCategory
-                    }
-
-                    if (appList.isNotEmpty()) {
-                        add(
-                            CategorySection(
-                                generalCategory = generalCategory,
-                                apps = appList,
-                                onClickShowAll = {}
-                            )
-                        )
-                    }
-                }
-            }
-        )
+            )
+        }
     }
 
     private fun setCountryFilter(country: Country) {
         viewModelScope.launch {
-            homeViewState = homeViewState.copy(
-                activeCountryFilter = country
-            )
-
-            genFilterButtons()
-            fetchDataFromDatabase()
-            genSections()
+            _homeViewStateFlow.update { state ->
+                state.copy(
+                    activeCountryFilter = country
+                )
+            }
+            genFilterButtons(country)
+            fetchDataFromDatabase(country)
         }
     }
 }

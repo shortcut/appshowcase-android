@@ -1,11 +1,11 @@
-package io.shortcut.showcase.data.repository
+package io.shortcut.showcase.domain.repository
 
-import io.shortcut.showcase.data.local.ShowcaseDatabase
+import io.shortcut.showcase.data.local.ShowcaseDAO
+import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.data.mapper.toShowcaseBannerUI
-import io.shortcut.showcase.data.remote.FirebaseServiceImpl
-import io.shortcut.showcase.domain.repository.HomeScreenRepository
+import io.shortcut.showcase.domain.remote.FirebaseService
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.util.resource.Resource
@@ -17,45 +17,41 @@ import javax.inject.Singleton
 
 @Singleton
 class HomeScreenRepositoryImpl @Inject constructor(
-    private val database: ShowcaseDatabase,
-    private val firebaseServiceImpl: FirebaseServiceImpl
+    private val dao: ShowcaseDAO,
+    private val firebaseService: FirebaseService
 ) : HomeScreenRepository {
 
-    // The data access object used to access data from the database.
-    private val dao = database.dao
-
-    override suspend fun fetchAppsFromRemote(): Flow<Resource<List<ShowcaseAppUI>>> {
+    override suspend fun fetchAppsFromRemote(selectedCountry: Country): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
-
             // Variable tries to fetch all the apps.
             val remoteApps = try {
-                firebaseServiceImpl.getApps()
+                firebaseService.getApps()
             } catch (error: IOException) {
                 emit(Resource.Error("Error, couldn't fetch apps from remote."))
                 null
             }
-
             // Null handling of the dataset (apps)
             remoteApps?.let { apps ->
-                // We delete the previous apps and insert the new data.
-                dao.deleteAllApps()
-
-                // Here we insert the new data and map it to an entity form.
-                dao.insertApps(apps.map { it?.toShowcaseAppEntity() ?: return@flow })
-
-                // We emit a success signal, then fetch and re-map the data to a displayable form.
-                emit(Resource.Success(data = dao.fetchAllApps().map { it.toShowcaseAppUI() }))
-
+                // Update the data to view
+                val entityList = apps.mapNotNull { it?.toShowcaseAppEntity() }
                 // Once we are done, we emit a signal that loading is done.
                 emit(Resource.Loading(false))
+                // Here we insert the new data and map it to an entity form.
+                dao.insertApps(entityList)
+                emit(
+                    Resource.Success(
+                        data = dao.fetchAppsWithCountry(selectedCountry.name)
+                            .map { it.toShowcaseAppUI() }
+                    )
+                )
             }
         }
     }
 
-    override suspend fun fetchAppsFromDatabase(): Flow<Resource<List<ShowcaseAppUI>>> {
+    override suspend fun fetchAppsFromDatabase(activeCountryFilter: Country): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
             // The flow starts by emitting a loading signal.
@@ -75,7 +71,12 @@ class HomeScreenRepositoryImpl @Inject constructor(
             } else {
                 // If it isn't empty, we fetch the data, map the objects -
                 // then set loading to false.
-                emit(Resource.Success(data = dao.fetchAllApps().map { it.toShowcaseAppUI() }))
+                emit(
+                    Resource.Success(
+                        data = dao.fetchAppsWithCountry(activeCountryFilter.name)
+                            .map { it.toShowcaseAppUI() }
+                    )
+                )
                 emit(Resource.Loading(false))
             }
 
@@ -89,7 +90,7 @@ class HomeScreenRepositoryImpl @Inject constructor(
             emit(Resource.Loading(isLoading = true))
 
             val remoteBanners = try {
-                firebaseServiceImpl.getBanners()
+                firebaseService.getBanners()
             } catch (error: IOException) {
                 emit(Resource.Error("Couldn't fetch banners from remote."))
                 null

@@ -9,9 +9,7 @@ import io.shortcut.showcase.util.mock.genMockBanners
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 data class HomeViewState(
-    // Data
-    val apps: List<ShowcaseAppUI> = emptyList(),
-    val categorySections: List<CategorySection> = emptyList(),
+    val categorizedApps: List<CategorySection> = emptyList(),
 
     val banners: List<ShowcaseBannerUI> = genMockBanners(),
 
