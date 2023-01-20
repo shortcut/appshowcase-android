@@ -65,7 +65,7 @@ private fun FilterButton(
 ) {
     Text(
         modifier = modifier
-            .defaultMinSize(minWidth = 60.dp)
+            .defaultMinSize(minWidth = 6.dp)
             .clickable {
                 onClick()
             }

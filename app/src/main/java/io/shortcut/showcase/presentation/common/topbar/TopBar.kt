@@ -1,4 +1,4 @@
-package io.shortcut.showcase.presentation.common
+package io.shortcut.showcase.presentation.common.topbar
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

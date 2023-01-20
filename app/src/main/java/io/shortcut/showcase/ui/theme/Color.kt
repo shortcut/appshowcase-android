@@ -33,6 +33,7 @@ data class ShowcaseColors(
     val ShowcaseCategoryOther: Color
 )
 
+
 val LocalShowcaseColors = staticCompositionLocalOf {
     ShowcaseColors(
         ShowcaseBackground = Color.Unspecified,

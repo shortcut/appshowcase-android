@@ -30,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.shortcut.showcase.R
@@ -103,6 +104,7 @@ fun HomeCategoryRow(
 @Composable
 fun CategoryRowItem(
     modifier: Modifier = Modifier,
+    appIconSize: Dp = 106.dp,
     imageURL: String,
     appTitle: String,
     appRating: String,
@@ -117,7 +119,7 @@ fun CategoryRowItem(
     ) {
         AsyncImage(
             modifier = Modifier
-                .size(106.dp)
+                .size(appIconSize)
                 .clip(shape = RoundedCornerShape(Dimens.XS)),
             model = imageURL,
             contentDescription = null,

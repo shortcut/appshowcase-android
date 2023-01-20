@@ -49,7 +49,11 @@ class AppsRepositoryImpl @Inject constructor(
                 dao.insertApps(entityList)
                 emit(
                     Resource.Success(
-                        data = getDataFromDatabase(activeCountryFilter = selectedCountry)
+                        data = dao.fetchAppsWithCountry(
+                            countries = makeListOfCountriesForQuery(
+                                selectedCountry
+                            )
+                        ).map { it.toShowcaseAppUI() }
                     )
                 )
             }
@@ -76,7 +80,11 @@ class AppsRepositoryImpl @Inject constructor(
                 // then set loading to false.
                 emit(
                     Resource.Success(
-                        data = getDataFromDatabase(activeCountryFilter)
+                        data = dao.fetchAppsWithCountry(
+                            countries = makeListOfCountriesForQuery(
+                                activeCountryFilter
+                            )
+                        ).map { it.toShowcaseAppUI() }
                     )
                 )
             }
@@ -108,8 +116,11 @@ class AppsRepositoryImpl @Inject constructor(
                 // then set loading to false.
                 emit(
                     Resource.Success(
-                        data = dao.fetchAppsWithCountry(activeCountryFilter.name, seleCategory.name)
-                            .map { it.toShowcaseAppUI() }
+                        data = dao.fetchAppsWithCountry(
+                            countries = makeListOfCountriesForQuery(
+                                activeCountryFilter
+                            ), seleCategory.name
+                        ).map { it.toShowcaseAppUI() }
                     )
                 )
             }
@@ -119,12 +130,13 @@ class AppsRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun getDataFromDatabase(activeCountryFilter: Country): List<ShowcaseAppUI> {
-        return if (activeCountryFilter == Country.All) {
-            dao.fetchAllApps()
+    private suspend fun makeListOfCountriesForQuery(activeCountryFilter: Country): List<String> {
+        val countries = if (activeCountryFilter == Country.All) {
+            Country.values().map { it.name }
         } else {
-            dao.fetchAppsWithCountry(activeCountryFilter.name)
-        }.map { it.toShowcaseAppUI() }
+            listOf(activeCountryFilter.name)
+        }
+        return countries
     }
 
 }

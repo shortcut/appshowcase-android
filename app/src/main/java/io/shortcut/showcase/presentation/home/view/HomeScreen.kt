@@ -40,10 +40,10 @@ import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.ModularBottomSheet
-import io.shortcut.showcase.presentation.common.TopBar
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
+import io.shortcut.showcase.presentation.common.topbar.TopBar
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
