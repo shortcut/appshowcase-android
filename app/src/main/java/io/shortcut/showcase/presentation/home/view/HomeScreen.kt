@@ -203,7 +203,6 @@ fun HomeScreenContentList(
             Modifier.align(Alignment.TopCenter)
         )
     }
-
 }
 
 @Composable

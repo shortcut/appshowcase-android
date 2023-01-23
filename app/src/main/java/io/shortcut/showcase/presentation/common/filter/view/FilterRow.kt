@@ -52,8 +52,6 @@ fun FilterRow(
             }
         }
     }
-
-
 }
 
 @Composable

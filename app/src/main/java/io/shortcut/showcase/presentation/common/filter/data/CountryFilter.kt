@@ -25,6 +25,5 @@ data class CountryFilter(
                 }
             }
         }
-
     }
 }

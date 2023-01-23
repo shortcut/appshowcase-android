@@ -13,7 +13,6 @@ sealed class ShowcaseDestination(val route: String) {
         ShowcaseDestination(route = "screenshot_gallery/?startIndex={startIndex}&imageList={imageList}")
 }
 
-
 sealed class HomeScreenDestinations {
     object IdleScreen : HomeScreenDestinations()
     data class ScreenshotGallery(val imageUrls: List<String>, val imageIndex: Int) :

@@ -40,9 +40,12 @@ class ShowAllViewModel @Inject constructor(
 
     init {
         _showAppListSState.update { state ->
-            state.copy(countryFilter = CountryFilter.getCountryFilterList(initialCountrySelected) {
-                setCountryFilter(it)
-            }, selectedCategory = initialCategorySelected)
+            state.copy(
+                countryFilter = CountryFilter.getCountryFilterList(initialCountrySelected) {
+                    setCountryFilter(it)
+                },
+                selectedCategory = initialCategorySelected
+            )
         }
         fetchAppsList(initialCountrySelected, initialCategorySelected)
     }
@@ -73,13 +76,13 @@ class ShowAllViewModel @Inject constructor(
                                         app.copy(
                                             onClick = { clickToOpenBottomSheet(app) }
                                         )
-
                                     },
                                     countryFilter = CountryFilter.getCountryFilterList(
                                         countrySelected
                                     ) {
                                         setCountryFilter(it)
-                                    })
+                                    }
+                                )
                             }
                         }
                     }

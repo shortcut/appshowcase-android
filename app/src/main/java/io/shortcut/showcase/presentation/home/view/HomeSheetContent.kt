@@ -350,9 +350,7 @@ fun HomeSheetContent(
             )
             Spacer(modifier = Modifier.height(Dimens.XL))
         }
-
     }
-
 }
 
 @Preview(backgroundColor = 0xFF161616, showBackground = true)

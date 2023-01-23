@@ -106,7 +106,8 @@ fun ShowAllScreen(
                     navigationIcon = { NavigationIcon(onBackClick) },
                     actions = {
                         AboutActionIcon()
-                    }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+                    },
+                    colors = TopAppBarDefaults.mediumTopAppBarColors(
                         containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
                         scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
                         navigationIconContentColor = Color.White,
@@ -140,7 +141,6 @@ fun ShowAllScreen(
                 }
             }
         }
-
     }
 
     ViewEffects(viewEffects = showAllViewModel.viewEffects) { event ->
@@ -153,7 +153,6 @@ fun ShowAllScreen(
     }
 }
 
-
 @Composable
 private fun ShowAllScreenContent(state: ShowAllAppsState) {
     Column(
@@ -164,7 +163,6 @@ private fun ShowAllScreenContent(state: ShowAllAppsState) {
         Spacer(modifier = Modifier.height(Dimens.M))
         FilterRow(buttons = state.countryFilter)
         Spacer(modifier = Modifier.height(Dimens.S))
-
     }
 }
 
@@ -178,14 +176,14 @@ fun NavigationIcon(onBackClick: () -> Unit) {
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = null
         )
-
     }
 }
 
 @Composable
 fun AboutActionIcon() {
     IconButton(
-        onClick = { }) {
+        onClick = { }
+    ) {
         Icon(
             imageVector = Icons.Filled.Search,
             contentDescription = null

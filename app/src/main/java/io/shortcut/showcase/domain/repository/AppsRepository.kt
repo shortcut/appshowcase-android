@@ -119,7 +119,8 @@ class AppsRepositoryImpl @Inject constructor(
                         data = dao.fetchAppsWithCountry(
                             countries = makeListOfCountriesForQuery(
                                 activeCountryFilter
-                            ), seleCategory.name
+                            ),
+                            seleCategory.name
                         ).map { it.toShowcaseAppUI() }
                     )
                 )
@@ -138,5 +139,4 @@ class AppsRepositoryImpl @Inject constructor(
         }
         return countries
     }
-
 }
