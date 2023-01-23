@@ -25,23 +25,24 @@ class ShowAllViewModel @Inject constructor(
         MutableStateFlow(ShowAllAppsState())
     val showAppListSState = _showAppListSState.asStateFlow()
 
+    private val initialCountrySelected = savedStateHandle.get<String>("country")?.let {
+        enumValueOf(it)
+    } ?: Country.All
+    private val initialCategorySelected = savedStateHandle.get<String>("category")?.let {
+        enumValueOf(it)
+    } ?: GeneralCategory.BUSINESS
+
     init {
-        val countrySelected = savedStateHandle.get<String>("country")?.let {
-            enumValueOf(it)
-        } ?: Country.All
-        val categorySelected = savedStateHandle.get<String>("category")?.let {
-            enumValueOf(it)
-        } ?: GeneralCategory.BUSINESS
         _showAppListSState.update { state ->
-            state.copy(countryFilter = CountryFilter.getCountryFilterList(countrySelected) {
+            state.copy(countryFilter = CountryFilter.getCountryFilterList(initialCountrySelected) {
                 setCountryFilter(it)
-            }, selectedCategory = categorySelected)
+            }, selectedCategory = initialCategorySelected)
         }
-        fetchAppsList(countrySelected, categorySelected)
+        fetchAppsList(initialCountrySelected, initialCategorySelected)
     }
 
     private fun setCountryFilter(countrySelected: Country) {
-        TODO("Not yet implemented")
+        fetchAppsList(countrySelected, initialCategorySelected)
     }
 
     private fun fetchAppsList(countrySelected: Country, categorySelected: GeneralCategory) {
@@ -61,7 +62,13 @@ class ShowAllViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let { apps ->
                             _showAppListSState.update { state ->
-                                state.copy(apps = apps)
+                                state.copy(
+                                    apps = apps,
+                                    countryFilter = CountryFilter.getCountryFilterList(
+                                        countrySelected
+                                    ) {
+                                        setCountryFilter(it)
+                                    })
                             }
                         }
                     }

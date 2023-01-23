@@ -17,6 +17,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -48,7 +49,6 @@ fun ShowAllScreen(
     onBackClick: () -> Boolean,
     showAllViewModel: ShowAllViewModel = hiltViewModel()
 ) {
-    val stateTopBar = rememberTopAppBarState()
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -60,9 +60,9 @@ fun ShowAllScreen(
         topBar = {
             TopAppBar(
                 title = {
-
+                    Text(text = state.selectedCategory.category, color = Color.White)
                 },
-                navigationIcon = { NavigationIcon() },
+                navigationIcon = { NavigationIcon(onBackClick) },
                 actions = {
                     AboutActionIcon()
                 }, colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -83,7 +83,7 @@ fun ShowAllScreen(
             LazyVerticalGrid(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(start = Dimens.S, end = Dimens.S),
+                    .padding(start = 14.dp, end = 14.dp),
                 columns = GridCells.Fixed(3),
             ) {
                 items(state.apps) { app ->
@@ -92,7 +92,7 @@ fun ShowAllScreen(
                         appTitle = app.title,
                         appRating = app.highestRating,
                         appIconSize = 80.dp,
-                        modifier = Modifier.padding(16.dp)
+                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
                     )
                 }
             }
@@ -118,9 +118,9 @@ private fun ShowAllScreenContent(state: ShowAllAppsState) {
 }
 
 @Composable
-fun NavigationIcon() {
+fun NavigationIcon(onBackClick: () -> Boolean) {
     IconButton(
-        onClick = { }) {
+        onClick = { onBackClick() }) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = null

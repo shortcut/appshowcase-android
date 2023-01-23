@@ -114,7 +114,8 @@ fun CategoryRowItem(
         modifier = modifier
             .clickable {
                 onAppIconClick()
-            },
+            }
+            .padding(8.dp),
         horizontalAlignment = Alignment.Start
     ) {
         AsyncImage(
