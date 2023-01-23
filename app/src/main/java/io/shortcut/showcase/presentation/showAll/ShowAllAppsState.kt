@@ -11,3 +11,7 @@ data class ShowAllAppsState(
     val allCategories: List<GeneralCategory> = GeneralCategory.values().toList(),
     val isLoading: Boolean = true
 )
+
+sealed class ShowAllAppEvent {
+    data class ShowAppInformation(val app: ShowcaseAppUI) : ShowAllAppEvent()
+}

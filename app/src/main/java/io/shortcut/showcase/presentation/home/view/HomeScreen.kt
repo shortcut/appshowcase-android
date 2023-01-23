@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
@@ -131,62 +132,73 @@ fun HomeScreen(
             )
         },
     ) {
-        Box(
+        HomeScreenContentList(refreshState, onNavDestinations, homeViewState)
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContentList(
+    refreshState: PullRefreshState,
+    onNavDestinations: (HomeScreenDestinations) -> Unit,
+    homeViewState: HomeViewState
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(refreshState)
+            .background(color = Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimens.S,
+                            vertical = Dimens.M
+                        ),
+                    color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                    iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                    onLongClick = {
+                        onNavDestinations(HomeScreenDestinations.IdleScreen)
+                    }
+                )
+            },
             modifier = Modifier
                 .fillMaxSize()
-                .pullRefresh(refreshState)
-                .background(color = Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Scaffold(
-                topBar = {
-                    TopBar(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = Dimens.S,
-                                vertical = Dimens.M
-                            ),
-                        color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                        iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
-                        onLongClick = {
-                            onNavDestinations(HomeScreenDestinations.IdleScreen)
-                        }
-                    )
-                },
+        ) { paddingValues ->
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-            ) { paddingValues ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
-                        .padding(paddingValues)
-                ) {
-                    item {
-                        HomeContent(
-                            banners = homeViewState.banners,
-                            filterButtons = homeViewState.filterButtons,
-                            sections = homeViewState.categorizedApps
-                        )
-                    }
+                    .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+                    .padding(paddingValues)
+            ) {
+                item {
+                    HomeContent(
+                        banners = homeViewState.banners,
+                        filterButtons = homeViewState.filterButtons,
+                        sections = homeViewState.categorizedApps
+                    )
                 }
             }
-
-            GradientOverlay(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.15f)
-                    .align(Alignment.BottomCenter),
-                topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
-                bottomColor = Color.Transparent
-            )
-            PullRefreshIndicator(
-                homeViewState.refreshing,
-                refreshState,
-                Modifier.align(Alignment.TopCenter)
-            )
         }
+
+        GradientOverlay(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.15f)
+                .align(Alignment.BottomCenter),
+            topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
+            bottomColor = Color.Transparent
+        )
+        PullRefreshIndicator(
+            homeViewState.refreshing,
+            refreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
     }
+
 }
 
 @Composable

@@ -273,9 +273,12 @@ private fun Screenshots(
 fun HomeSheetContent(
     modifier: Modifier = Modifier,
     childModifier: Modifier = Modifier,
-    app: ShowcaseAppUI,
+    app: ShowcaseAppUI?,
     onScreenshotClick: (Int, List<String>) -> Unit
 ) {
+    if (app == null) {
+        return
+    }
     Column(
         modifier = modifier
             .fillMaxWidth()

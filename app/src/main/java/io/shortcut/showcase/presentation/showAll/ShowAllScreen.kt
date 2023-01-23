@@ -10,14 +10,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.rememberTopAppBarState
@@ -34,16 +36,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.Country
+import io.shortcut.showcase.presentation.common.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
+import io.shortcut.showcase.presentation.home.view.HomeSheetContent
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
+import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ShowAllScreen(
     onBackClick: () -> Boolean,
@@ -54,50 +59,77 @@ fun ShowAllScreen(
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
     val state by showAllViewModel.showAppListSState.collectAsState()
-    Scaffold(
-        contentColor = Color.White,
-        containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = state.selectedCategory.category, color = Color.White)
-                },
-                navigationIcon = { NavigationIcon(onBackClick) },
-                actions = {
-                    AboutActionIcon()
-                }, colors = TopAppBarDefaults.mediumTopAppBarColors(
-                    containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                    scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                    navigationIconContentColor = Color.White,
-                    actionIconContentColor = Color.White
-                ),
-                scrollBehavior = scrollBehavior
+
+    val modalBottomSheetState = rememberModalBottomSheetState(
+        initialValue = ModalBottomSheetValue.Hidden,
+        skipHalfExpanded = false
+    )
+
+    ModularBottomSheet(
+        state = modalBottomSheetState,
+        sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+        sheetContent = {
+            HomeSheetContent(
+                childModifier = Modifier
+                    .padding(horizontal = Dimens.M),
+                app = null,
+                onScreenshotClick = { startIndex, list ->
+                    /*onNavDestinations(
+                        HomeScreenDestinations.ScreenshotGallery(
+                            imageIndex = startIndex,
+                            imageUrls = list
+                        )
+                    )*/
+                }
             )
         },
-        modifier = Modifier
-            .nestedScroll(scrollBehavior.nestedScrollConnection)
-            .background(ShowcaseThemeCustom.colors.ShowcaseBackground),
     ) {
-        Column(modifier = Modifier.padding(it)) {
-            FilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
-            LazyVerticalGrid(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(start = 14.dp, end = 14.dp),
-                columns = GridCells.Fixed(3),
-            ) {
-                items(state.apps) { app ->
-                    CategoryRowItem(
-                        imageURL = app.iconUrl,
-                        appTitle = app.title,
-                        appRating = app.highestRating,
-                        appIconSize = 80.dp,
-                        modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
-                    )
+        Scaffold(
+            contentColor = Color.White,
+            containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+            topBar = {
+                TopAppBar(
+                    title = {},
+                    navigationIcon = { NavigationIcon(onBackClick) },
+                    actions = {
+                        AboutActionIcon()
+                    }, colors = TopAppBarDefaults.mediumTopAppBarColors(
+                        containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                        scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                        navigationIconContentColor = Color.White,
+                        actionIconContentColor = Color.White
+                    ),
+                    scrollBehavior = scrollBehavior
+                )
+            },
+            modifier = Modifier
+                .nestedScroll(scrollBehavior.nestedScrollConnection)
+                .background(ShowcaseThemeCustom.colors.ShowcaseBackground),
+        ) {
+            Column(modifier = Modifier.padding(it)) {
+                FilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
+                LazyVerticalGrid(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(start = 14.dp, end = 14.dp),
+                    columns = GridCells.Fixed(3),
+                ) {
+                    items(state.apps) { app ->
+                        CategoryRowItem(
+                            imageURL = app.iconUrl,
+                            appTitle = app.title,
+                            appRating = app.highestRating,
+                            appIconSize = 80.dp,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                        )
+                    }
                 }
             }
         }
 
+    }
+
+    ViewEffects(viewEffects = showAllViewModel.viewEffects) {
 
     }
 }
