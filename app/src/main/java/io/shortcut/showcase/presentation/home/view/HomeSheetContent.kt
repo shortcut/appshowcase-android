@@ -276,6 +276,7 @@ fun HomeSheetContent(
     app: ShowcaseAppUI?,
     onScreenshotClick: (Int, List<String>) -> Unit
 ) {
+    Spacer(modifier = Modifier.height(1.dp))
     if (app == null) {
         return
     }

@@ -1,5 +1,6 @@
-package io.shortcut.showcase.presentation.common
+package io.shortcut.showcase.presentation.common.bottomsheet
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.defaultMinSize
@@ -8,10 +9,12 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetLayout
 import androidx.compose.material.ModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import io.shortcut.showcase.util.dimens.Dimens
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
@@ -22,6 +25,7 @@ fun ModularBottomSheet(
     sheetContent: @Composable ColumnScope.() -> Unit,
     content: @Composable () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
     ModalBottomSheetLayout(
         sheetState = state,
         modifier = modifier,
@@ -42,4 +46,12 @@ fun ModularBottomSheet(
         },
         content = content
     )
+
+    BackHandler {
+        coroutineScope.launch {
+            if (state.isVisible) {
+                state.hide() // will trigger the LaunchedEffect
+            }
+        }
+    }
 }

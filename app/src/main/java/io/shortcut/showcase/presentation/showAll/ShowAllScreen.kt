@@ -26,6 +26,9 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,16 +39,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.Country
-import io.shortcut.showcase.presentation.common.ModularBottomSheet
+import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
+import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
 import io.shortcut.showcase.presentation.home.view.HomeSheetContent
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.ViewEffects
+import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
+import kotlinx.coroutines.launch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
@@ -65,6 +71,9 @@ fun ShowAllScreen(
         skipHalfExpanded = false
     )
 
+    var appSelectedForBottomSheet: ShowcaseAppUI by remember {
+        mutableStateOf(genMockShowcaseAppUI())
+    }
     ModularBottomSheet(
         state = modalBottomSheetState,
         sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
@@ -72,7 +81,7 @@ fun ShowAllScreen(
             HomeSheetContent(
                 childModifier = Modifier
                     .padding(horizontal = Dimens.M),
-                app = null,
+                app = appSelectedForBottomSheet,
                 onScreenshotClick = { startIndex, list ->
                     /*onNavDestinations(
                         HomeScreenDestinations.ScreenshotGallery(
@@ -80,7 +89,7 @@ fun ShowAllScreen(
                             imageUrls = list
                         )
                     )*/
-                }
+                },
             )
         },
     ) {
@@ -120,7 +129,8 @@ fun ShowAllScreen(
                             appTitle = app.title,
                             appRating = app.highestRating,
                             appIconSize = 80.dp,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp)
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                            onAppIconClick = app.onClick
                         )
                     }
                 }
@@ -129,8 +139,13 @@ fun ShowAllScreen(
 
     }
 
-    ViewEffects(viewEffects = showAllViewModel.viewEffects) {
-
+    ViewEffects(viewEffects = showAllViewModel.viewEffects) { event ->
+        when (event) {
+            is ShowAllAppEvent.ShowAppInformation -> launch {
+                appSelectedForBottomSheet = event.app
+                modalBottomSheetState.animateTo(ModalBottomSheetValue.HalfExpanded)
+            }
+        }
     }
 }
 
