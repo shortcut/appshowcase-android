@@ -32,28 +32,16 @@ fun MainNavigation(
         composable(route = ShowcaseDestination.Home.route) {
             HomeScreen(
                 onNavDestinations = { destinations ->
-                    when (destinations) {
-                        HomeScreenDestinations.IdleScreen -> navController.navigateSingleTopTo(
-                            ShowcaseDestination.Idle.route
-                        )
-
-                        is HomeScreenDestinations.ScreenshotGallery -> navController.navigateToScreenshotGallery(
-                            destinations.imageIndex,
-                            destinations.imageUrls
-                        )
-
-                        is HomeScreenDestinations.ShowAllAppsScreen -> navController.navigateToShowAllAppsScreen(
-                            destinations.country,
-                            destinations.category
-                        )
-                    }
+                    homeNavigation(destinations, navController)
                 }
             )
         }
-        composable(route = ShowcaseDestination.ShowAllApps.route) { backstackEntry ->
-
+        composable(route = ShowcaseDestination.ShowAllApps.route) { _ ->
             ShowAllScreen(
                 onBackClick = { navController.popBackStack() },
+                onNavDestinations = { destinations ->
+                    homeNavigation(destinations, navController)
+                }
             )
         }
         composable(route = ShowcaseDestination.Idle.route) {
@@ -71,6 +59,27 @@ fun MainNavigation(
                 } ?: emptyList()
             )
         }
+    }
+}
+
+private fun homeNavigation(
+    destinations: HomeScreenDestinations,
+    navController: NavHostController
+) {
+    when (destinations) {
+        HomeScreenDestinations.IdleScreen -> navController.navigateSingleTopTo(
+            ShowcaseDestination.Idle.route
+        )
+
+        is HomeScreenDestinations.ScreenshotGallery -> navController.navigateToScreenshotGallery(
+            destinations.imageIndex,
+            destinations.imageUrls
+        )
+
+        is HomeScreenDestinations.ShowAllAppsScreen -> navController.navigateToShowAllAppsScreen(
+            destinations.country,
+            destinations.category
+        )
     }
 }
 

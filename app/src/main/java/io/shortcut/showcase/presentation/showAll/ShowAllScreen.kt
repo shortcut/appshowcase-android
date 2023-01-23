@@ -3,12 +3,13 @@ package io.shortcut.showcase.presentation.showAll
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
@@ -19,6 +20,7 @@ import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
@@ -43,6 +45,7 @@ import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
 import io.shortcut.showcase.presentation.home.view.HomeSheetContent
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
@@ -57,8 +60,9 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
 @Composable
 fun ShowAllScreen(
-    onBackClick: () -> Boolean,
-    showAllViewModel: ShowAllViewModel = hiltViewModel()
+    onBackClick: () -> Unit,
+    showAllViewModel: ShowAllViewModel = hiltViewModel(),
+    onNavDestinations: (HomeScreenDestinations) -> Unit
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val systemUiController: SystemUiController = rememberSystemUiController()
@@ -79,17 +83,17 @@ fun ShowAllScreen(
         sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
         sheetContent = {
             HomeSheetContent(
-                childModifier = Modifier
-                    .padding(horizontal = Dimens.M),
+                modifier = Modifier,
                 app = appSelectedForBottomSheet,
                 onScreenshotClick = { startIndex, list ->
-                    /*onNavDestinations(
+                    onNavDestinations(
                         HomeScreenDestinations.ScreenshotGallery(
                             imageIndex = startIndex,
                             imageUrls = list
                         )
-                    )*/
+                    )
                 },
+                sheetState = it
             )
         },
     ) {
@@ -117,11 +121,11 @@ fun ShowAllScreen(
         ) {
             Column(modifier = Modifier.padding(it)) {
                 FilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
-                LazyVerticalGrid(
+                LazyHorizontalGrid(
                     modifier = Modifier
-                        .fillMaxSize()
-                        .padding(start = 14.dp, end = 14.dp),
-                    columns = GridCells.Fixed(3),
+                        .fillMaxSize(),
+                    rows = GridCells.Adaptive(154.dp),
+                    contentPadding = PaddingValues(start = 14.dp, end = 14.dp)
                 ) {
                     items(state.apps) { app ->
                         CategoryRowItem(
@@ -165,13 +169,16 @@ private fun ShowAllScreenContent(state: ShowAllAppsState) {
 }
 
 @Composable
-fun NavigationIcon(onBackClick: () -> Boolean) {
+fun NavigationIcon(onBackClick: () -> Unit) {
     IconButton(
-        onClick = { onBackClick() }) {
+        onClick = { onBackClick() },
+        colors = IconButtonDefaults.iconButtonColors(contentColor = Color.White)
+    ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
             contentDescription = null
         )
+
     }
 }
 

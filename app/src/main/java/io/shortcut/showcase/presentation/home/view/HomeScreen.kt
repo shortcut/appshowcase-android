@@ -123,8 +123,7 @@ fun HomeScreen(
         sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
         sheetContent = {
             HomeSheetContent(
-                childModifier = Modifier
-                    .padding(horizontal = Dimens.M),
+                modifier = Modifier,
                 app = appSelectedForBottomSheet,
                 onScreenshotClick = { startIndex, list ->
                     onNavDestinations(
@@ -133,7 +132,8 @@ fun HomeScreen(
                             imageUrls = list
                         )
                     )
-                }
+                },
+                sheetState = it
             )
         },
     ) {
