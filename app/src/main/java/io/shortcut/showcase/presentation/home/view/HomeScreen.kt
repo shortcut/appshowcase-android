@@ -42,7 +42,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
-import io.shortcut.showcase.presentation.common.filter.view.FilterRow
+import io.shortcut.showcase.presentation.common.filter.view.CountryFilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
 import io.shortcut.showcase.presentation.common.topbar.TopBar
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
@@ -215,7 +215,7 @@ private fun HomeContent(
     ) {
         HomeScreenPager(images = banners)
         Spacer(modifier = Modifier.height(Dimens.L))
-        FilterRow(
+        CountryFilterRow(
             modifier = Modifier.fillMaxWidth(),
             buttons = filterButtons,
             buttonSpacing = Dimens.S,

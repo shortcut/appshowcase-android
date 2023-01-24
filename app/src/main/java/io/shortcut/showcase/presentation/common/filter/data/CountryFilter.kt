@@ -10,7 +10,7 @@ data class CountryFilter(
     companion object {
         fun getCountryFilterList(
             activeFilter: Country,
-            onEvent: (Country) -> Unit
+            onEvent: (Country) -> Unit = {}
         ): List<CountryFilter> {
             val countryFilter = Country.values()
             return countryFilter.mapNotNull { country ->

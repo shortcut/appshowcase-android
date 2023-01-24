@@ -40,7 +40,7 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
-import io.shortcut.showcase.presentation.common.filter.view.FilterRow
+import io.shortcut.showcase.presentation.common.filter.view.CountryFilterRow
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
 import io.shortcut.showcase.presentation.home.view.HomeSheetContent
@@ -117,7 +117,7 @@ fun ShowAllScreen(
                 .background(ShowcaseThemeCustom.colors.ShowcaseBackground),
         ) {
             Column(modifier = Modifier.padding(it)) {
-                FilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
+                CountryFilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
                 LazyHorizontalGrid(
                     modifier = Modifier
                         .fillMaxSize(),
@@ -160,7 +160,7 @@ private fun ShowAllScreenContent(state: ShowAllAppsState) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(Dimens.M))
-        FilterRow(buttons = state.countryFilter)
+        CountryFilterRow(buttons = state.countryFilter)
         Spacer(modifier = Modifier.height(Dimens.S))
     }
 }
