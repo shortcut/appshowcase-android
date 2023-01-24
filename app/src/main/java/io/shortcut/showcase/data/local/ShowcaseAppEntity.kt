@@ -9,8 +9,8 @@ import kotlinx.serialization.Serializable
 
 @Entity
 data class ShowcaseAppEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey
+    val id: String = "",
 
     val title: String,
     val iconUrl: String,

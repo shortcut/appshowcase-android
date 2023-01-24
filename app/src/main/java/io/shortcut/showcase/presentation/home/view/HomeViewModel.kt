@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.shortcut.showcase.data.mapper.Country
+import io.shortcut.showcase.domain.repository.AppsRepository
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.util.resource.Resource
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: HomeScreenRepository
+    private val repository: HomeScreenRepository,
+    private val appRepository: AppsRepository
 ) : ViewModel() {
 
     private val _homeViewStateFlow = MutableStateFlow(HomeViewState())
@@ -71,7 +73,7 @@ class HomeViewModel @Inject constructor(
 
     fun refreshAppsList() {
         viewModelScope.launch {
-            repository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
+            appRepository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -94,7 +96,7 @@ class HomeViewModel @Inject constructor(
 
     private fun fetchDataFromDatabase(country: Country) {
         viewModelScope.launch {
-            repository.fetchAppsFromDatabase(country)
+            appRepository.fetchAppsFromDatabase(country)
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -127,7 +129,14 @@ class HomeViewModel @Inject constructor(
                                 onClick = { clickToOpenBottomSheet(app) }
                             )
                         },
-                        onClickShowAll = {}
+                        onClickShowAll = {
+                            sendViewEffect(
+                                HomeViewEffect.NavigateToShowAllApps(
+                                    country = homeViewState.value.activeCountryFilter,
+                                    category = it.key
+                                )
+                            )
+                        }
                     )
                 }
 
@@ -138,26 +147,17 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
-        _homeViewStateFlow.update {
-            it.copy(appInView = app, refreshing = false)
+        _homeViewStateFlow.update { state ->
+            state.copy(appSelectedForSheets = app)
         }
         sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
     private fun genFilterButtons(activeFilter: Country = homeViewState.value.activeCountryFilter) {
-        val countryFilter = Country.values()
-        _homeViewStateFlow.update {
-            it.copy(
-                filterButtons = countryFilter.mapNotNull { country ->
-                    if (country != Country.Unknown) {
-                        FilterButtonData(
-                            type = country,
-                            selected = activeFilter == country,
-                            onClick = { setCountryFilter(country) }
-                        )
-                    } else {
-                        null
-                    }
+        _homeViewStateFlow.update { state ->
+            state.copy(
+                filterButtons = CountryFilter.getCountryFilterList(activeFilter) {
+                    setCountryFilter(it)
                 }
             )
         }
@@ -173,5 +173,9 @@ class HomeViewModel @Inject constructor(
             genFilterButtons(country)
             fetchDataFromDatabase(country)
         }
+    }
+
+    fun hideBottomSheet() {
+        sendViewEffect(HomeViewEffect.HideBottomSheet)
     }
 }

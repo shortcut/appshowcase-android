@@ -3,6 +3,7 @@ package io.shortcut.showcase.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import io.shortcut.showcase.data.mapper.GeneralCategoryTypeConverter
 import io.shortcut.showcase.util.converters.LongConverter
 import io.shortcut.showcase.util.converters.MapConverter
 import io.shortcut.showcase.util.converters.ScreenshotsConverter
@@ -12,7 +13,8 @@ import io.shortcut.showcase.util.converters.ScreenshotsConverter
     ScreenshotsConverter::class,
     MapConverter::class,
     LongConverter::class,
-    CountryTypeConverter::class
+    CountryTypeConverter::class,
+    GeneralCategoryTypeConverter::class
 )
 abstract class ShowcaseDatabase : RoomDatabase() {
     abstract val showcaseDAO: ShowcaseDAO

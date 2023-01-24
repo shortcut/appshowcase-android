@@ -6,9 +6,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import io.shortcut.showcase.data.mapper.Country
+import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.home.view.HomeScreen
 import io.shortcut.showcase.presentation.home.view.ScreenshotScreen
 import io.shortcut.showcase.presentation.idle.view.IdleScreen
+import io.shortcut.showcase.presentation.showAll.ShowAllScreen
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
@@ -24,22 +27,29 @@ fun MainNavigation(
 
     NavHost(
         navController = navController,
-        startDestination = Home.route
+        startDestination = ShowcaseDestination.Home.route
     ) {
-        composable(route = Home.route) {
+        composable(route = ShowcaseDestination.Home.route) {
             HomeScreen(
-                onIdleClick = { navController.navigateSingleTopTo(Idle.route) },
-                onScreenshotClick = { index, list ->
-                    navController.navigateToScreenshotGallery(index, list)
+                onNavDestinations = { destinations ->
+                    homeNavigation(destinations, navController)
                 }
             )
         }
-        composable(route = Idle.route) {
+        composable(route = ShowcaseDestination.ShowAllApps.route) { _ ->
+            ShowAllScreen(
+                onBackClick = { navController.popBackStack() },
+                onNavDestinations = { destinations ->
+                    homeNavigation(destinations, navController)
+                }
+            )
+        }
+        composable(route = ShowcaseDestination.Idle.route) {
             IdleScreen(
                 onBackClick = { navController.popBackStack() }
             )
         }
-        composable(route = ScreenshotGallery.route) { backstackEntry ->
+        composable(route = ShowcaseDestination.ScreenshotGallery.route) { backstackEntry ->
             ScreenshotScreen(
                 onBackArrowClick = { navController.popBackStack() },
                 startIndex = backstackEntry.arguments?.getString("startIndex")?.toIntOrNull() ?: 0,
@@ -52,10 +62,35 @@ fun MainNavigation(
     }
 }
 
+private fun homeNavigation(
+    destinations: HomeScreenDestinations,
+    navController: NavHostController
+) {
+    when (destinations) {
+        HomeScreenDestinations.IdleScreen -> navController.navigateSingleTopTo(
+            ShowcaseDestination.Idle.route
+        )
+
+        is HomeScreenDestinations.ScreenshotGallery -> navController.navigateToScreenshotGallery(
+            destinations.imageIndex,
+            destinations.imageUrls
+        )
+
+        is HomeScreenDestinations.ShowAllAppsScreen -> navController.navigateToShowAllAppsScreen(
+            destinations.country,
+            destinations.category
+        )
+    }
+}
+
 fun NavHostController.navigateToScreenshotGallery(startIndex: Int, images: List<String>) {
     val stringListSerializer = ListSerializer(String.serializer())
     val data = Json.encodeToString(stringListSerializer, images)
     navigate(route = "screenshot_gallery/?startIndex=$startIndex&imageList=$data")
+}
+
+fun NavHostController.navigateToShowAllAppsScreen(country: Country, category: GeneralCategory) {
+    navigate(route = "show_all_apps/?country=${country.name}&category=${category.name}")
 }
 
 fun NavHostController.navigateSingleTopTo(route: String) =

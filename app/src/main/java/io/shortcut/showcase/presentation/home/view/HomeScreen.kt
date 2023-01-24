@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.PullRefreshState
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material.rememberModalBottomSheetState
@@ -39,13 +40,14 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.GeneralCategory
-import io.shortcut.showcase.presentation.common.ModularBottomSheet
-import io.shortcut.showcase.presentation.common.TopBar
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
+import io.shortcut.showcase.presentation.common.topbar.TopBar
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
+import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
@@ -60,8 +62,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
-    onIdleClick: () -> Unit,
-    onScreenshotClick: (Int, List<String>) -> Unit
+    onNavDestinations: (HomeScreenDestinations) -> Unit
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
@@ -78,11 +79,9 @@ fun HomeScreen(
         skipHalfExpanded = false
     )
 
-    val appInView = homeViewState.appInView
-
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
-            HomeViewEffect.OpenBottomSheet -> launch {
+            is HomeViewEffect.OpenBottomSheet -> launch {
                 modalBottomSheetState.animateTo(
                     ModalBottomSheetValue.HalfExpanded
                 )
@@ -95,8 +94,20 @@ fun HomeScreen(
             }
 
             is HomeViewEffect.NavigateToGallery -> {
-                onScreenshotClick(it.startIndex, it.imageList)
+                onNavDestinations(
+                    HomeScreenDestinations.ScreenshotGallery(
+                        imageIndex = it.startIndex,
+                        imageUrls = it.imageList
+                    )
+                )
             }
+
+            is HomeViewEffect.NavigateToShowAllApps -> onNavDestinations(
+                HomeScreenDestinations.ShowAllAppsScreen(
+                    country = it.country,
+                    category = it.category
+                )
+            )
         }
     }
 
@@ -105,68 +116,88 @@ fun HomeScreen(
         sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
         sheetContent = {
             HomeSheetContent(
-                childModifier = Modifier
-                    .padding(horizontal = Dimens.M),
-                app = appInView,
-                onScreenshotClick = onScreenshotClick
+                modifier = Modifier,
+                app = homeViewState.appSelectedForSheets,
+                onScreenshotClick = { startIndex, list ->
+                    onNavDestinations(
+                        HomeScreenDestinations.ScreenshotGallery(
+                            imageIndex = startIndex,
+                            imageUrls = list
+                        )
+                    )
+                },
+                sheetState = it,
+                onBackClick = {
+                    viewModel.hideBottomSheet()
+                }
             )
         },
     ) {
-        Box(
+        HomeScreenContentList(refreshState, onNavDestinations, homeViewState)
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
+@Composable
+fun HomeScreenContentList(
+    refreshState: PullRefreshState,
+    onNavDestinations: (HomeScreenDestinations) -> Unit,
+    homeViewState: HomeViewState
+) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .pullRefresh(refreshState)
+            .background(color = Color.White),
+        contentAlignment = Alignment.Center
+    ) {
+        Scaffold(
+            topBar = {
+                TopBar(
+                    modifier = Modifier
+                        .padding(
+                            horizontal = Dimens.S,
+                            vertical = Dimens.M
+                        ),
+                    color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                    iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                    onLongClick = {
+                        onNavDestinations(HomeScreenDestinations.IdleScreen)
+                    }
+                )
+            },
             modifier = Modifier
                 .fillMaxSize()
-                .pullRefresh(refreshState)
-                .background(color = Color.White),
-            contentAlignment = Alignment.Center
-        ) {
-            Scaffold(
-                topBar = {
-                    TopBar(
-                        modifier = Modifier
-                            .padding(
-                                horizontal = Dimens.S,
-                                vertical = Dimens.M
-                            ),
-                        color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                        iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
-                        onLongClick = {
-                            onIdleClick()
-                        }
-                    )
-                },
+        ) { paddingValues ->
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-            ) { paddingValues ->
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
-                        .padding(paddingValues)
-                ) {
-                    item {
-                        HomeContent(
-                            banners = homeViewState.banners,
-                            filterButtons = homeViewState.filterButtons,
-                            sections = homeViewState.categorizedApps
-                        )
-                    }
+                    .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+                    .padding(paddingValues)
+            ) {
+                item {
+                    HomeContent(
+                        banners = homeViewState.banners,
+                        filterButtons = homeViewState.filterButtons,
+                        sections = homeViewState.categorizedApps
+                    )
                 }
             }
-
-            GradientOverlay(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(0.15f)
-                    .align(Alignment.BottomCenter),
-                topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
-                bottomColor = Color.Transparent
-            )
-            PullRefreshIndicator(
-                homeViewState.refreshing,
-                refreshState,
-                Modifier.align(Alignment.TopCenter)
-            )
         }
+
+        GradientOverlay(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.15f)
+                .align(Alignment.BottomCenter),
+            topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
+            bottomColor = Color.Transparent
+        )
+        PullRefreshIndicator(
+            homeViewState.refreshing,
+            refreshState,
+            Modifier.align(Alignment.TopCenter)
+        )
     }
 }
 
@@ -174,7 +205,7 @@ fun HomeScreen(
 private fun HomeContent(
     modifier: Modifier = Modifier,
     banners: List<ShowcaseBannerUI>,
-    filterButtons: List<FilterButtonData>,
+    filterButtons: List<CountryFilter>,
     sections: List<CategorySection>
 ) {
     Column(
@@ -185,6 +216,7 @@ private fun HomeContent(
         HomeScreenPager(images = banners)
         Spacer(modifier = Modifier.height(Dimens.L))
         FilterRow(
+            modifier = Modifier.fillMaxWidth(),
             buttons = filterButtons,
             buttonSpacing = Dimens.S,
             horizontalContentPadding = Dimens.S

@@ -2,6 +2,7 @@ package io.shortcut.showcase.presentation.home.view
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -21,6 +22,7 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.shortcut.showcase.R
@@ -63,8 +66,7 @@ fun HomeCategoryRow(
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
             )
             Spacer(modifier = Modifier.weight(1f))
-            // TODO: Disabled show all.
-            /*Text(
+            Text(
                 modifier = Modifier
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -75,7 +77,7 @@ fun HomeCategoryRow(
                 text = stringResource(id = R.string.home_showAll),
                 style = ShowcaseThemeCustom.typography.bodySmall,
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
-            )*/
+            )
         }
         LazyRow(
             modifier = childModifier
@@ -100,8 +102,9 @@ fun HomeCategoryRow(
 }
 
 @Composable
-private fun CategoryRowItem(
+fun CategoryRowItem(
     modifier: Modifier = Modifier,
+    appIconSize: Dp = 106.dp,
     imageURL: String,
     appTitle: String,
     appRating: String,
@@ -111,12 +114,13 @@ private fun CategoryRowItem(
         modifier = modifier
             .clickable {
                 onAppIconClick()
-            },
+            }
+            .padding(8.dp),
         horizontalAlignment = Alignment.Start
     ) {
         AsyncImage(
             modifier = Modifier
-                .size(106.dp)
+                .size(appIconSize)
                 .clip(shape = RoundedCornerShape(Dimens.XS)),
             model = imageURL,
             contentDescription = null,
@@ -168,7 +172,6 @@ private fun CategoryRowItem(
 @Composable
 private fun CategoryRowItemPreview() {
     val app = genMockShowcaseAppUI()
-
     ExtendedShowcaseTheme {
         CategoryRowItem(
             imageURL = app.iconUrl,

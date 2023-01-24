@@ -5,7 +5,7 @@ import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
 
 data class ShowcaseAppUI(
-    val id: Int,
+    val id: String,
 
     val title: String,
     val iconUrl: String,
