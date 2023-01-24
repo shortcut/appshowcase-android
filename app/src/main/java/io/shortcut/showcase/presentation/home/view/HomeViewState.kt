@@ -20,7 +20,7 @@ data class HomeViewState(
     val totalTimerTime: Long = 30000L, // 30: Seconds
     val isTimerRunning: Boolean = true,
 
-    val appInView: ShowcaseAppUI = genMockShowcaseAppUI(),
+    val appSelectedForSheets: ShowcaseAppUI = genMockShowcaseAppUI(),
     val screenshotGalleryIndex: Int = 0,
 
     val filterButtons: List<CountryFilter> = emptyList(),

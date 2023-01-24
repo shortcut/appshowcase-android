@@ -98,6 +98,13 @@ class ShowAllViewModel @Inject constructor(
     }
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
+        _showAppListSState.update {
+            it.copy(appSelectedForBottomSheet = app)
+        }
         sendViewEffect(ShowAllAppEvent.ShowAppInformation(app))
+    }
+
+    fun dismissAppInformation() {
+        sendViewEffect(ShowAllAppEvent.DismissAppInformation)
     }
 }

@@ -45,7 +45,6 @@ import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
 import io.shortcut.showcase.presentation.common.topbar.TopBar
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
@@ -55,7 +54,6 @@ import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockBanners
 import io.shortcut.showcase.util.mock.genMockFilterButtons
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -81,14 +79,9 @@ fun HomeScreen(
         skipHalfExpanded = false
     )
 
-    var appSelectedForBottomSheet: ShowcaseAppUI by remember {
-        mutableStateOf(genMockShowcaseAppUI())
-    }
-
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
             is HomeViewEffect.OpenBottomSheet -> launch {
-                appSelectedForBottomSheet = it.app
                 modalBottomSheetState.animateTo(
                     ModalBottomSheetValue.HalfExpanded
                 )
@@ -124,7 +117,7 @@ fun HomeScreen(
         sheetContent = {
             HomeSheetContent(
                 modifier = Modifier,
-                app = appSelectedForBottomSheet,
+                app = homeViewState.appSelectedForSheets,
                 onScreenshotClick = { startIndex, list ->
                     onNavDestinations(
                         HomeScreenDestinations.ScreenshotGallery(
@@ -133,7 +126,10 @@ fun HomeScreen(
                         )
                     )
                 },
-                sheetState = it
+                sheetState = it,
+                onBackClick = {
+                    viewModel.hideBottomSheet()
+                }
             )
         },
     ) {

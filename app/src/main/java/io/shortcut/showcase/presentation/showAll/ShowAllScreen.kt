@@ -28,9 +28,6 @@ import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,7 +41,6 @@ import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.FilterRow
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
 import io.shortcut.showcase.presentation.home.view.HomeSheetContent
@@ -52,7 +48,6 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.ViewEffects
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.launch
 
@@ -75,9 +70,7 @@ fun ShowAllScreen(
         skipHalfExpanded = false
     )
 
-    var appSelectedForBottomSheet: ShowcaseAppUI by remember {
-        mutableStateOf(genMockShowcaseAppUI())
-    }
+    val appSelectedForBottomSheet = state.appSelectedForBottomSheet
     ModularBottomSheet(
         state = modalBottomSheetState,
         sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
@@ -93,7 +86,10 @@ fun ShowAllScreen(
                         )
                     )
                 },
-                sheetState = it
+                sheetState = it,
+                onBackClick = {
+                    showAllViewModel.dismissAppInformation()
+                }
             )
         },
     ) {
@@ -146,9 +142,12 @@ fun ShowAllScreen(
     ViewEffects(viewEffects = showAllViewModel.viewEffects) { event ->
         when (event) {
             is ShowAllAppEvent.ShowAppInformation -> launch {
-                appSelectedForBottomSheet = event.app
                 modalBottomSheetState.animateTo(ModalBottomSheetValue.HalfExpanded)
             }
+
+            is ShowAllAppEvent.DismissAppInformation -> modalBottomSheetState.animateTo(
+                ModalBottomSheetValue.Hidden
+            )
         }
     }
 }

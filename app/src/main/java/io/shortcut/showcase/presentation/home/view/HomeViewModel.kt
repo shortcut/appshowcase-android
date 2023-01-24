@@ -147,7 +147,10 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
-        sendViewEffect(HomeViewEffect.OpenBottomSheet(app))
+        _homeViewStateFlow.update { state ->
+            state.copy(appSelectedForSheets = app)
+        }
+        sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
     private fun genFilterButtons(activeFilter: Country = homeViewState.value.activeCountryFilter) {
@@ -170,5 +173,9 @@ class HomeViewModel @Inject constructor(
             genFilterButtons(country)
             fetchDataFromDatabase(country)
         }
+    }
+
+    fun hideBottomSheet() {
+        sendViewEffect(HomeViewEffect.HideBottomSheet)
     }
 }

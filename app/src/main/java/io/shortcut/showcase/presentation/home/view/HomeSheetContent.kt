@@ -283,6 +283,7 @@ fun HomeSheetContent(
     modifier: Modifier = Modifier,
     app: ShowcaseAppUI,
     onScreenshotClick: (Int, List<String>) -> Unit,
+    onBackClick: () -> Unit,
     sheetState: ModalBottomSheetValue
 ) {
     val childModifier = Modifier.padding(horizontal = Dimens.L)
@@ -315,8 +316,7 @@ fun HomeSheetContent(
                     .alpha(state)
                     .align(alignment = Alignment.TopStart)
             ) {
-                NavigationIcon(onBackClick = {
-                })
+                NavigationIcon(onBackClick = onBackClick)
             }
         }
 
@@ -416,7 +416,8 @@ private fun HomeSheetContentPreview() {
             modifier = Modifier,
             app = app,
             onScreenshotClick = { _, _ -> },
-            sheetState = ModalBottomSheetValue.Expanded
+            sheetState = ModalBottomSheetValue.Expanded,
+            onBackClick = {}
         )
     }
 }
