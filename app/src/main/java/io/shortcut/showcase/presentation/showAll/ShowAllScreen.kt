@@ -4,8 +4,8 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,29 +24,27 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.Country
-import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.CountryFilterRow
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
+import io.shortcut.showcase.presentation.home.view.AppListWithBottomSheetLayout
+import io.shortcut.showcase.presentation.home.view.BottomSheetContentEvents
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
-import io.shortcut.showcase.presentation.home.view.HomeSheetContent
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
-import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.launch
@@ -67,102 +65,111 @@ fun ShowAllScreen(
 
     val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = false
+        skipHalfExpanded = true
     )
 
-    val appSelectedForBottomSheet = state.appSelectedForBottomSheet
-    ModularBottomSheet(
-        state = modalBottomSheetState,
-        sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-        sheetContent = {
-            HomeSheetContent(
-                modifier = Modifier,
-                app = appSelectedForBottomSheet,
-                onScreenshotClick = { startIndex, list ->
-                    onNavDestinations(
-                        HomeScreenDestinations.ScreenshotGallery(
-                            imageIndex = startIndex,
-                            imageUrls = list
-                        )
+    AppListWithBottomSheetLayout(
+        currentContent = state.bottomSheet,
+        onEvent = { events ->
+            when (events) {
+                is BottomSheetContentEvents.Dismiss -> showAllViewModel.dismissBottomSheet()
+                is BottomSheetContentEvents.Gallery -> onNavDestinations(
+                    HomeScreenDestinations.ScreenshotGallery(
+                        imageIndex = events.startIndex,
+                        imageUrls = events.list
                     )
-                },
-                sheetState = it,
-                onBackClick = {
-                    showAllViewModel.dismissAppInformation()
+                )
+
+                is BottomSheetContentEvents.SortListBy -> {
+                    showAllViewModel.sortListBy(events.sortBy)
                 }
-            )
+            }
+
         },
+        modalBottomSheetState = modalBottomSheetState
     ) {
         Scaffold(
             contentColor = Color.White,
             containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
             topBar = {
-                TopAppBar(
-                    title = {},
-                    navigationIcon = { NavigationIcon(onBackClick) },
-                    actions = {
-                        AboutActionIcon()
-                    },
-                    colors = TopAppBarDefaults.mediumTopAppBarColors(
-                        containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                        scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                        navigationIconContentColor = Color.White,
-                        actionIconContentColor = Color.White
-                    ),
-                    scrollBehavior = scrollBehavior
-                )
+                ToolBarWithSearch(onBackClick, scrollBehavior)
             },
             modifier = Modifier
-                .nestedScroll(scrollBehavior.nestedScrollConnection)
                 .background(ShowcaseThemeCustom.colors.ShowcaseBackground),
         ) {
-            Column(modifier = Modifier.padding(it)) {
-                CountryFilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
-                LazyHorizontalGrid(
-                    modifier = Modifier
-                        .fillMaxSize(),
-                    rows = GridCells.Adaptive(154.dp),
-                    contentPadding = PaddingValues(start = 14.dp, end = 14.dp)
-                ) {
-                    items(state.apps) { app ->
-                        CategoryRowItem(
-                            imageURL = app.iconUrl,
-                            appTitle = app.title,
-                            appRating = app.highestRating,
-                            appIconSize = 80.dp,
-                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                            onAppIconClick = app.onClick
-                        )
-                    }
-                }
-            }
+            ShowAllScreenContent(
+                state = state,
+                modifier = Modifier.padding(it),
+                viewModel = showAllViewModel
+            )
         }
     }
 
     ViewEffects(viewEffects = showAllViewModel.viewEffects) { event ->
         when (event) {
-            is ShowAllAppEvent.ShowAppInformation -> launch {
-                modalBottomSheetState.animateTo(ModalBottomSheetValue.HalfExpanded)
+            is ShowAllAppEvent.ShowBottomSheet -> launch {
+                modalBottomSheetState.show()
             }
 
-            is ShowAllAppEvent.DismissAppInformation -> modalBottomSheetState.animateTo(
-                ModalBottomSheetValue.Hidden
-            )
+            is ShowAllAppEvent.DismissBottomSheet -> modalBottomSheetState.show()
         }
     }
 }
 
 @Composable
-private fun ShowAllScreenContent(state: ShowAllAppsState) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Spacer(modifier = Modifier.height(Dimens.M))
-        CountryFilterRow(buttons = state.countryFilter)
-        Spacer(modifier = Modifier.height(Dimens.S))
+@OptIn(ExperimentalMaterial3Api::class)
+private fun ToolBarWithSearch(
+    onBackClick: () -> Unit,
+    scrollBehavior: TopAppBarScrollBehavior
+) {
+    TopAppBar(
+        title = {},
+        navigationIcon = { NavigationIcon(onBackClick) },
+        actions = {
+            AboutActionIcon()
+        },
+        colors = TopAppBarDefaults.mediumTopAppBarColors(
+            containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+            scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+            navigationIconContentColor = Color.White,
+            actionIconContentColor = Color.White
+        ),
+        scrollBehavior = scrollBehavior
+    )
+}
+
+@Composable
+private fun ShowAllScreenContent(
+    state: ShowAllAppsState,
+    modifier: Modifier = Modifier,
+    viewModel: ShowAllViewModel? = null
+) {
+    Column(modifier = modifier) {
+        CountryFilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
+        SortAndCategoryFilters(onSort = {
+            viewModel?.openSortOrder()
+        }, onFilter = {
+
+        }, modifier = Modifier.fillMaxWidth())
+        LazyHorizontalGrid(
+            modifier = Modifier
+                .fillMaxSize(),
+            rows = GridCells.Adaptive(154.dp),
+            contentPadding = PaddingValues(start = 14.dp, end = 14.dp)
+        ) {
+            items(state.apps) { app ->
+                CategoryRowItem(
+                    imageURL = app.iconUrl,
+                    appTitle = app.title,
+                    appRating = app.highestRating,
+                    appIconSize = 80.dp,
+                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
+                    onAppIconClick = app.onClick
+                )
+            }
+        }
     }
+
 }
 
 @Composable

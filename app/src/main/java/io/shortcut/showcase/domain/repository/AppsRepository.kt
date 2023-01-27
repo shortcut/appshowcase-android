@@ -3,6 +3,7 @@ package io.shortcut.showcase.domain.repository
 import io.shortcut.showcase.data.local.ShowcaseDAO
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
+import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.domain.remote.FirebaseService
@@ -18,7 +19,8 @@ interface AppsRepository {
     suspend fun fetchAppsFromDatabase(activeCountryFilter: Country): Flow<Resource<List<ShowcaseAppUI>>>
     suspend fun fetchAppsFromDatabase(
         activeCountryFilter: Country,
-        selectedCategory: GeneralCategory
+        selectedCategory: GeneralCategory,
+        sortBy: SortOrder
     ): Flow<Resource<List<ShowcaseAppUI>>>
 }
 
@@ -95,36 +97,33 @@ class AppsRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAppsFromDatabase(
         activeCountryFilter: Country,
-        seleCategory: GeneralCategory
+        seleCategory: GeneralCategory,
+        sortBy: SortOrder
     ): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
         return flow {
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
-            // Here we create a variable for fetching all the apps (unsorted).
-            val localApps = dao.fetchAllApps()
-
-            // Variable that checks if the database is empty.
-            val isDbEmpty = localApps.isEmpty()
-
-            // If the database is empty, we emit an error message and -
-            // loading is set to false.
-            if (isDbEmpty) {
-                emit(Resource.Error("Error, couldn't the database."))
-            } else {
-                // If it isn't empty, we fetch the data, map the objects -
-                // then set loading to false.
-                emit(
-                    Resource.Success(
-                        data = dao.fetchAppsWithCountry(
-                            countries = makeListOfCountriesForQuery(
-                                activeCountryFilter
-                            ),
-                            seleCategory.name
-                        ).map { it.toShowcaseAppUI() }
-                    )
-                )
+            val sortOrder = when (sortBy) {
+                SortOrder.Priority -> "country"
+                SortOrder.Alphabetical -> "title"
+                SortOrder.Rating -> "highestRating"
+                SortOrder.Popularity -> "totalInstalls"
             }
+            // If it isn't empty, we fetch the data, map the objects -
+            // then set loading to false.
+            "SELECT * FROM ShowcaseAppEntity WHERE country in (:countries) AND generalCategory = :category ORDER BY  $sortOrder DESC"
+            emit(
+                Resource.Success(
+                    data = dao.fetchAppsWithCountry(
+                        countries = makeListOfCountriesForQuery(
+                            activeCountryFilter
+                        ),
+                        category = seleCategory.name,
+                    ).map { it.toShowcaseAppUI() }
+                )
+            )
+
 
             // Just for safety, we emit another loading false signal.
             emit(Resource.Loading(false))

@@ -29,6 +29,7 @@ fun VerticalRadioButtonGroup(radioOptions: List<String>, onOption: (String) -> U
                         selected = (text == selectedOption),
                         onClick = {
                             onOptionSelected(text)
+                            onOption(text)
                         }
                     ),
                 verticalAlignment = Alignment.CenterVertically,

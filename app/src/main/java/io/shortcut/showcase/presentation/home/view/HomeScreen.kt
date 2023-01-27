@@ -40,7 +40,6 @@ import com.google.accompanist.pager.rememberPagerState
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.data.mapper.GeneralCategory
-import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.common.filter.view.CountryFilterRow
 import io.shortcut.showcase.presentation.common.gradient.GradientOverlay
@@ -58,7 +57,7 @@ import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -76,21 +75,17 @@ fun HomeScreen(
 
     val modalBottomSheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        skipHalfExpanded = false
+        skipHalfExpanded = true
     )
 
     ViewEffects(viewEffects = viewModel.viewEffects) {
         when (it) {
             is HomeViewEffect.OpenBottomSheet -> launch {
-                modalBottomSheetState.animateTo(
-                    ModalBottomSheetValue.HalfExpanded
-                )
+                modalBottomSheetState.show()
             }
 
             HomeViewEffect.HideBottomSheet -> launch {
-                modalBottomSheetState.animateTo(
-                    ModalBottomSheetValue.Hidden
-                )
+                modalBottomSheetState.hide()
             }
 
             is HomeViewEffect.NavigateToGallery -> {
@@ -110,28 +105,24 @@ fun HomeScreen(
             )
         }
     }
-
-    ModularBottomSheet(
-        state = modalBottomSheetState,
-        sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-        sheetContent = {
-            HomeSheetContent(
-                modifier = Modifier,
-                app = homeViewState.appSelectedForSheets,
-                onScreenshotClick = { startIndex, list ->
-                    onNavDestinations(
-                        HomeScreenDestinations.ScreenshotGallery(
-                            imageIndex = startIndex,
-                            imageUrls = list
-                        )
+    AppListWithBottomSheetLayout(
+        currentContent = homeViewState.bottomSheet,
+        onEvent = { events ->
+            when (events) {
+                is BottomSheetContentEvents.Dismiss -> viewModel.hideBottomSheet()
+                is BottomSheetContentEvents.Gallery -> onNavDestinations(
+                    HomeScreenDestinations.ScreenshotGallery(
+                        imageIndex = events.startIndex,
+                        imageUrls = events.list
                     )
-                },
-                sheetState = it,
-                onBackClick = {
-                    viewModel.hideBottomSheet()
+                )
+
+                else -> {
+
                 }
-            )
+            }
         },
+        modalBottomSheetState = modalBottomSheetState
     ) {
         HomeScreenContentList(refreshState, onNavDestinations, homeViewState)
     }

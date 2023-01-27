@@ -1,20 +1,27 @@
 package io.shortcut.showcase.presentation.showAll
 
+import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 data class ShowAllAppsState(
     val countryFilter: List<CountryFilter> = emptyList(),
+    val activeCountryFilter: Country = Country.All,
     val selectedCategory: GeneralCategory = GeneralCategory.BUSINESS,
     val apps: List<ShowcaseAppUI> = emptyList(),
     val allCategories: List<GeneralCategory> = GeneralCategory.values().toList(),
-    val appSelectedForBottomSheet: ShowcaseAppUI = genMockShowcaseAppUI(),
+    val bottomSheet: SheetContent = SheetContent.None,
     val isLoading: Boolean = true
 )
 
 sealed class ShowAllAppEvent {
-    data class ShowAppInformation(val app: ShowcaseAppUI) : ShowAllAppEvent()
-    object DismissAppInformation : ShowAllAppEvent()
+    object ShowBottomSheet : ShowAllAppEvent()
+    object DismissBottomSheet : ShowAllAppEvent()
+}
+
+sealed class SheetContent {
+    data class AppInfo(val app: ShowcaseAppUI) : SheetContent()
+    object Sort : SheetContent()
+    object None : SheetContent()
 }

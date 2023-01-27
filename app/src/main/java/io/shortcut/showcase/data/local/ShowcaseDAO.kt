@@ -20,7 +20,7 @@ interface ShowcaseDAO {
     @Query("SELECT * FROM ShowcaseAppEntity WHERE country in (:countries) AND generalCategory = :category")
     suspend fun fetchAppsWithCountry(
         countries: List<String>,
-        category: String
+        category: String,
     ): List<ShowcaseAppEntity>
 
     @Query("DELETE FROM ShowcaseAppEntity")

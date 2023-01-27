@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
+import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.domain.repository.AppsRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
@@ -54,11 +55,16 @@ class ShowAllViewModel @Inject constructor(
         fetchAppsList(countrySelected, initialCategorySelected)
     }
 
-    private fun fetchAppsList(countrySelected: Country, categorySelected: GeneralCategory) {
+    private fun fetchAppsList(
+        countrySelected: Country,
+        categorySelected: GeneralCategory,
+        sortBy: SortOrder = SortOrder.Rating
+    ) {
         viewModelScope.launch {
             appRepository.fetchAppsFromDatabase(
-                countrySelected,
-                selectedCategory = categorySelected
+                activeCountryFilter = countrySelected,
+                selectedCategory = categorySelected,
+                sortBy = sortBy
             ).collect { result ->
                 when (result) {
                     is Resource.Error -> {}
@@ -99,12 +105,23 @@ class ShowAllViewModel @Inject constructor(
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
         _showAppListSState.update {
-            it.copy(appSelectedForBottomSheet = app)
+            it.copy(bottomSheet = SheetContent.AppInfo(app))
         }
-        sendViewEffect(ShowAllAppEvent.ShowAppInformation(app))
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
     }
 
-    fun dismissAppInformation() {
-        sendViewEffect(ShowAllAppEvent.DismissAppInformation)
+    fun dismissBottomSheet() {
+        sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+    }
+
+    fun openSortOrder() {
+        _showAppListSState.update {
+            it.copy(bottomSheet = SheetContent.Sort)
+        }
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
+    }
+
+    fun sortListBy(sortBy: SortOrder) {
+
     }
 }
