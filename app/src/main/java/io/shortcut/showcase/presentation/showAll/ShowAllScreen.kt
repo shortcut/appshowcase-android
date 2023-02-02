@@ -154,7 +154,7 @@ private fun ShowAllScreenContent(
         LazyHorizontalGrid(
             modifier = Modifier
                 .fillMaxSize(),
-            rows = GridCells.Adaptive(154.dp),
+            rows = GridCells.Adaptive(164.dp),
             contentPadding = PaddingValues(start = 14.dp, end = 14.dp)
         ) {
             items(state.apps) { app ->

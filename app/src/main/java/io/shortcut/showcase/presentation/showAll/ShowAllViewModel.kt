@@ -122,6 +122,12 @@ class ShowAllViewModel @Inject constructor(
     }
 
     fun sortListBy(sortBy: SortOrder) {
-
+        val selectedCountry = _showAppListSState.value.countryFilter.first { it.selected }
+        val category = _showAppListSState.value.selectedCategory
+        fetchAppsList(
+            countrySelected = selectedCountry.type,
+            categorySelected = category,
+            sortBy = sortBy
+        )
     }
 }

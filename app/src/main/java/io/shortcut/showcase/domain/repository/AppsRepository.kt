@@ -8,6 +8,7 @@ import io.shortcut.showcase.data.mapper.toShowcaseAppEntity
 import io.shortcut.showcase.data.mapper.toShowcaseAppUI
 import io.shortcut.showcase.domain.remote.FirebaseService
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.util.extensions.sortAppsList
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -104,26 +105,17 @@ class AppsRepositoryImpl @Inject constructor(
         return flow {
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
-            val sortOrder = when (sortBy) {
-                SortOrder.Priority -> "country"
-                SortOrder.Alphabetical -> "title"
-                SortOrder.Rating -> "highestRating"
-                SortOrder.Popularity -> "totalInstalls"
-            }
-            // If it isn't empty, we fetch the data, map the objects -
-            // then set loading to false.
-            "SELECT * FROM ShowcaseAppEntity WHERE country in (:countries) AND generalCategory = :category ORDER BY  $sortOrder DESC"
-            emit(
-                Resource.Success(
-                    data = dao.fetchAppsWithCountry(
-                        countries = makeListOfCountriesForQuery(
-                            activeCountryFilter
-                        ),
-                        category = seleCategory.name,
-                    ).map { it.toShowcaseAppUI() }
-                )
-            )
 
+            val data = dao.fetchAppsWithCountry(
+                countries = makeListOfCountriesForQuery(
+                    activeCountryFilter
+                ),
+                category = seleCategory.name,
+            ).map { it.toShowcaseAppUI() }
+
+            emit(
+                Resource.Success(data = data.sortAppsList(sortBy))
+            )
 
             // Just for safety, we emit another loading false signal.
             emit(Resource.Loading(false))
