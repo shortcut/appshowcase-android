@@ -53,7 +53,9 @@ class ShowAllViewModel @Inject constructor(
     }
 
     private fun setCountryFilter(countrySelected: Country) {
-        fetchAppsList(countrySelected, initialCategorySelected)
+        val category = _showAppListSState.value.selectedCategory
+        val sortBy = _showAppListSState.value.selectedSortOrder
+        fetchAppsList(countrySelected, categorySelected = category, sortBy = sortBy)
     }
 
     private fun fetchAppsList(
