@@ -8,8 +8,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import io.shortcut.showcase.R
 import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.data.mapper.getAllSortingOrders
 import io.shortcut.showcase.presentation.common.VerticalRadioButtonGroup
@@ -23,7 +25,11 @@ fun AppListSortBy(
 ) {
     Column(modifier = modifier.padding(horizontal = 40.dp)) {
         Spacer(modifier = Modifier.height(40.dp))
-        Text(text = "SortBy", style = ShowcaseThemeCustom.typography.h1, color = Color.White)
+        Text(
+            text = stringResource(R.string.title_sort_by),
+            style = ShowcaseThemeCustom.typography.h1,
+            color = Color.White
+        )
         Spacer(modifier = Modifier.height(32.dp))
         VerticalRadioButtonGroup(radioOptions = getAllSortingOrders().map { it.name }, onOption = {
             onSelectedSortOrder(SortOrder.valueOf(it))
