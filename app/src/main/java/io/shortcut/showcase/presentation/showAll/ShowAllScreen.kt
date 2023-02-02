@@ -174,7 +174,8 @@ private fun ShowAllScreenContent(
                     appRating = app.highestRating,
                     appIconSize = 80.dp,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
-                    onAppIconClick = app.onClick
+                    onAppIconClick = app.onClick,
+                    showInstallationInfo = true
                 )
             }
         }

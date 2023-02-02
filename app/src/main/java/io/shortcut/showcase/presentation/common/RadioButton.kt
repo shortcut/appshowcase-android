@@ -32,14 +32,14 @@ fun VerticalRadioButtonGroup(
         radioOptions.forEach { text ->
             Row(
                 Modifier
-                    .fillMaxWidth()
                     .selectable(
                         selected = (text == selectedOption),
                         onClick = {
                             onOptionSelected(text)
                             onOption(text)
                         }
-                    ),
+                    )
+                    .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
