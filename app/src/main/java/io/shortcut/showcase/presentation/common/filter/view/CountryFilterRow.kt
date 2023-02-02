@@ -28,7 +28,7 @@ import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 
 @Composable
-fun FilterRow(
+fun CountryFilterRow(
     modifier: Modifier = Modifier,
     buttons: List<CountryFilter>,
     buttonSpacing: Dp = Dimens.S,
@@ -98,7 +98,7 @@ private fun FilterButtonPreview() {
 @Composable
 private fun FilterRowPreview() {
     ExtendedShowcaseTheme {
-        FilterRow(
+        CountryFilterRow(
             buttons = genMockFilterButtons(),
             buttonSpacing = Dimens.S,
             horizontalContentPadding = Dimens.S

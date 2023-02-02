@@ -5,6 +5,7 @@
 
     <string name="error_publisherUnknown">No publisher</string>
     <string name="error_ratingUnknown">No rating</string>
+    <string name="error_installation_unknown">Not installed</string>
     <string name="error_dataIsMissing">Sorry about that, data seems to be missing or inconsistent. \n\nTry clicking on Ruter!</string>
 
     <string name="component_showcaseButtonLaunch">Launch</string>
@@ -14,4 +15,6 @@
     <string name="details_downloadsTitle">Downloads</string>
     <string name="details_categoryTitle">Category</string>
     <string name="details_shortDescriptionTitle">Short description</string>
+    <string name="title_category">Category</string>
+    <string name="title_sort_by">SortBy</string>
 </resources>

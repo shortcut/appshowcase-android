@@ -1,7 +1,5 @@
 package io.shortcut.showcase.presentation.home.view
 
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -21,17 +18,14 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
@@ -43,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.shortcut.showcase.R
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
-import io.shortcut.showcase.presentation.showAll.NavigationIcon
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
@@ -283,45 +276,16 @@ fun HomeSheetContent(
     modifier: Modifier = Modifier,
     app: ShowcaseAppUI,
     onScreenshotClick: (Int, List<String>) -> Unit,
-    onBackClick: () -> Unit,
-    sheetState: ModalBottomSheetValue
+    onBackClick: () -> Unit
 ) {
     val childModifier = Modifier.padding(horizontal = Dimens.L)
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .fillMaxHeight()
             .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
     ) {
-        val isExpanded = sheetState == ModalBottomSheetValue.Expanded
-        val state by animateFloatAsState(
-            targetValue = if (isExpanded) {
-                1f
-            } else {
-                0f
-            }
-        )
-
-        val padding by animateDpAsState(
-            targetValue = if (isExpanded) {
-                60.dp
-            } else {
-                32.dp
-            }
-        )
-        if (isExpanded) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .alpha(state)
-                    .align(alignment = Alignment.TopStart)
-            ) {
-                NavigationIcon(onBackClick = onBackClick)
-            }
-        }
-
         Column(
-            modifier = Modifier.padding(top = padding),
+            modifier = Modifier.padding(top = 32.dp),
             verticalArrangement = Arrangement.Top
         ) {
             Header(
@@ -336,7 +300,7 @@ fun HomeSheetContent(
                 modifier = childModifier,
                 appRating = app.highestRating,
                 appDownloads = app.totalInstalls,
-                appCategory = app.generalCategory.category
+                appCategory = app.generalCategory.value
             )
             Spacer(modifier = Modifier.height(Dimens.L))
             ShortDescription(
@@ -375,7 +339,7 @@ private fun StatsPreview() {
         Stats(
             appRating = app.highestRating,
             appDownloads = app.totalInstalls,
-            appCategory = app.generalCategory.category
+            appCategory = app.generalCategory.value
         )
     }
 }
@@ -416,7 +380,6 @@ private fun HomeSheetContentPreview() {
             modifier = Modifier,
             app = app,
             onScreenshotClick = { _, _ -> },
-            sheetState = ModalBottomSheetValue.Expanded,
             onBackClick = {}
         )
     }

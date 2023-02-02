@@ -9,6 +9,7 @@ import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
+import io.shortcut.showcase.presentation.showAll.SheetContent
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -148,7 +149,7 @@ class HomeViewModel @Inject constructor(
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
         _homeViewStateFlow.update { state ->
-            state.copy(appSelectedForSheets = app)
+            state.copy(bottomSheet = SheetContent.AppInfo(app))
         }
         sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }

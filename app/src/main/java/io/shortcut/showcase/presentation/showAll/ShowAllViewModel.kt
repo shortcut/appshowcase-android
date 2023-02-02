@@ -6,10 +6,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
+import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.domain.repository.AppsRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.util.resource.Resource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -51,14 +53,21 @@ class ShowAllViewModel @Inject constructor(
     }
 
     private fun setCountryFilter(countrySelected: Country) {
-        fetchAppsList(countrySelected, initialCategorySelected)
+        val category = _showAppListSState.value.selectedCategory
+        val sortBy = _showAppListSState.value.selectedSortOrder
+        fetchAppsList(countrySelected, categorySelected = category, sortBy = sortBy)
     }
 
-    private fun fetchAppsList(countrySelected: Country, categorySelected: GeneralCategory) {
+    private fun fetchAppsList(
+        countrySelected: Country,
+        categorySelected: GeneralCategory,
+        sortBy: SortOrder = SortOrder.Rating
+    ) {
         viewModelScope.launch {
             appRepository.fetchAppsFromDatabase(
-                countrySelected,
-                selectedCategory = categorySelected
+                activeCountryFilter = countrySelected,
+                selectedCategory = categorySelected,
+                sortBy = sortBy
             ).collect { result ->
                 when (result) {
                     is Resource.Error -> {}
@@ -74,14 +83,16 @@ class ShowAllViewModel @Inject constructor(
                                 state.copy(
                                     apps = apps.map { app ->
                                         app.copy(
-                                            onClick = { clickToOpenBottomSheet(app) }
+                                            onClick = { openAppInfo(app) }
                                         )
                                     },
                                     countryFilter = CountryFilter.getCountryFilterList(
                                         countrySelected
                                     ) {
                                         setCountryFilter(it)
-                                    }
+                                    },
+                                    selectedSortOrder = sortBy,
+                                    selectedCategory = categorySelected
                                 )
                             }
                         }
@@ -97,14 +108,56 @@ class ShowAllViewModel @Inject constructor(
         }
     }
 
-    private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
+    private fun openAppInfo(app: ShowcaseAppUI) {
         _showAppListSState.update {
-            it.copy(appSelectedForBottomSheet = app)
+            it.copy(bottomSheet = SheetContent.AppInfo(app))
         }
-        sendViewEffect(ShowAllAppEvent.ShowAppInformation(app))
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
     }
 
-    fun dismissAppInformation() {
-        sendViewEffect(ShowAllAppEvent.DismissAppInformation)
+    fun dismissBottomSheet() {
+        sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+    }
+
+    fun openSortOrder() {
+        _showAppListSState.update {
+            it.copy(bottomSheet = SheetContent.Sort(it.selectedSortOrder))
+        }
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
+    }
+
+    fun sortListBy(sortBy: SortOrder) {
+        val selectedCountry = _showAppListSState.value.countryFilter.first { it.selected }
+        val category = _showAppListSState.value.selectedCategory
+        fetchAppsList(
+            countrySelected = selectedCountry.type,
+            categorySelected = category,
+            sortBy = sortBy
+        )
+        viewModelScope.launch {
+            delay(500)
+            sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+        }
+    }
+
+    fun openCategoryFilter() {
+        _showAppListSState.update {
+            it.copy(bottomSheet = SheetContent.Category(it.selectedCategory))
+        }
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
+    }
+
+    fun filterByCategory(category: GeneralCategory) {
+        val selectedCountry = _showAppListSState.value.countryFilter.first { it.selected }
+        val sortBy = _showAppListSState.value.selectedSortOrder
+        fetchAppsList(
+            countrySelected = selectedCountry.type,
+            categorySelected = category,
+            sortBy = sortBy
+        )
+        viewModelScope.launch {
+            delay(500)
+            sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+        }
     }
 }

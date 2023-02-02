@@ -61,7 +61,7 @@ fun HomeCategoryRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = rowTitle.category,
+                text = rowTitle.value,
                 style = ShowcaseThemeCustom.typography.h1,
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
             )
@@ -108,7 +108,8 @@ fun CategoryRowItem(
     imageURL: String,
     appTitle: String,
     appRating: String,
-    onAppIconClick: () -> Unit = {}
+    onAppIconClick: () -> Unit = {},
+    showInstallationInfo: Boolean = false
 ) {
     Column(
         modifier = modifier
@@ -160,6 +161,15 @@ fun CategoryRowItem(
             Text(
                 text = stringResource(id = R.string.error_ratingUnknown),
                 style = ShowcaseThemeCustom.typography.h3,
+                color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        if (showInstallationInfo) {
+            Text(
+                text = stringResource(id = R.string.error_installation_unknown),
+                style = ShowcaseThemeCustom.typography.bodySmallItalic,
                 color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
