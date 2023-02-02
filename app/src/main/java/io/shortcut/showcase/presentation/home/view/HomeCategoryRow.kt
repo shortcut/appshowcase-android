@@ -61,7 +61,7 @@ fun HomeCategoryRow(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = rowTitle.category,
+                text = rowTitle.value,
                 style = ShowcaseThemeCustom.typography.h1,
                 color = ShowcaseThemeCustom.colors.ShowcaseSecondary
             )

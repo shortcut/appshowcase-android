@@ -21,10 +21,16 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.shortcut.showcase.R
+import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.util.dimens.Dimens
 
 @Composable
-fun SortAndCategoryFilters(modifier: Modifier, onFilter: () -> Unit, onSort: () -> Unit) {
+fun SortAndCategoryFilters(
+    modifier: Modifier,
+    onFilter: () -> Unit,
+    onSort: () -> Unit,
+    selectedFilter: GeneralCategory
+) {
     Row(modifier = modifier, horizontalArrangement = Arrangement.End) {
         Button(
             onClick = { onFilter() },
@@ -35,7 +41,7 @@ fun SortAndCategoryFilters(modifier: Modifier, onFilter: () -> Unit, onSort: () 
             ),
             modifier = Modifier.defaultMinSize(minHeight = 32.dp)
         ) {
-            Text(text = "Finance")
+            Text(text = selectedFilter.value)
             Spacer(modifier = Modifier.size(Dimens.XS))
             Icon(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_down_triangle_18),
@@ -61,5 +67,10 @@ fun SortAndCategoryFilters(modifier: Modifier, onFilter: () -> Unit, onSort: () 
 @Composable
 @Preview
 fun SortAndCategoryFilterPreview() {
-    SortAndCategoryFilters(modifier = Modifier.fillMaxWidth(), onSort = {}, onFilter = {})
+    SortAndCategoryFilters(
+        modifier = Modifier.fillMaxWidth(),
+        onSort = {},
+        onFilter = {},
+        selectedFilter = GeneralCategory.SHOPPING
+    )
 }

@@ -83,8 +83,13 @@ fun ShowAllScreen(
                 is BottomSheetContentEvents.SortListBy -> {
                     showAllViewModel.sortListBy(events.sortBy)
                 }
-            }
 
+                is BottomSheetContentEvents.ShowCategoryFilter -> {
+                    showAllViewModel.filterByCategory(
+                        events.category
+                    )
+                }
+            }
         },
         modalBottomSheetState = modalBottomSheetState
     ) {
@@ -111,7 +116,7 @@ fun ShowAllScreen(
                 modalBottomSheetState.show()
             }
 
-            is ShowAllAppEvent.DismissBottomSheet -> modalBottomSheetState.show()
+            is ShowAllAppEvent.DismissBottomSheet -> modalBottomSheetState.hide()
         }
     }
 }
@@ -146,11 +151,16 @@ private fun ShowAllScreenContent(
 ) {
     Column(modifier = modifier) {
         CountryFilterRow(buttons = state.countryFilter, modifier = Modifier.height(68.dp))
-        SortAndCategoryFilters(onSort = {
-            viewModel?.openSortOrder()
-        }, onFilter = {
-
-        }, modifier = Modifier.fillMaxWidth())
+        SortAndCategoryFilters(
+            onSort = {
+                viewModel?.openSortOrder()
+            },
+            onFilter = {
+                viewModel?.openCategoryFilter()
+            },
+            modifier = Modifier.fillMaxWidth(),
+            selectedFilter = state.selectedCategory
+        )
         LazyHorizontalGrid(
             modifier = Modifier
                 .fillMaxSize(),
@@ -169,7 +179,6 @@ private fun ShowAllScreenContent(
             }
         }
     }
-
 }
 
 @Composable

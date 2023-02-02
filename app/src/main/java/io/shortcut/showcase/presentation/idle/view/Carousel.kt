@@ -18,7 +18,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,9 +35,7 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.SharedFlow
 import java.util.Locale
 
 @OptIn(ExperimentalPagerApi::class)
@@ -55,7 +52,7 @@ fun Carousel(
     )
 
     // Auto scrolls the carousel
-    var autoscroll by remember { mutableStateOf(false) }
+    val autoscroll by remember { mutableStateOf(false) }
     LaunchedEffect(autoscroll) {
         while (true) {
             pagerState.animateScrollToPage(pagerState.currentPage + 1)
@@ -77,7 +74,7 @@ fun Carousel(
         CarouselItemBeta(
             iconURL = apps[appIndex].iconURL,
             title = apps[appIndex].title,
-            category = apps[appIndex].generalCategory.category,
+            category = apps[appIndex].generalCategory.value,
             shortDescription = apps[appIndex].shortDescription,
             animationSpeed = 500,
             expanded = pagerState.currentPage == index
@@ -178,7 +175,7 @@ private fun CarouselItemPreview() {
                 ),
             appIconURL = app.iconUrl,
             appTitle = app.title,
-            appCategory = app.generalCategory.category,
+            appCategory = app.generalCategory.value,
             shortDescription = app.shortDescription,
             expanded = true
         )
@@ -210,15 +207,4 @@ private fun CarouselPreview() {
 private fun Int.floorMod(other: Int): Int = when (other) {
     0 -> this
     else -> this - floorDiv(other) * other
-}
-
-// Helper function for ViewEffects
-@Composable
-fun <T> ViewEffects(
-    viewEffects: SharedFlow<T>,
-    block: suspend CoroutineScope.(T) -> Unit
-) {
-    LaunchedEffect(key1 = Unit) {
-        viewEffects.collect { block(it) }
-    }
 }

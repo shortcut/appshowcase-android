@@ -20,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -197,7 +196,7 @@ private fun CarouselItemBetaPreview() {
         CarouselItemBeta(
             iconURL = mockApp.iconUrl,
             title = mockApp.title,
-            category = mockApp.generalCategory.category,
+            category = mockApp.generalCategory.value,
             shortDescription = mockApp.shortDescription,
             animationSpeed = speed,
             expanded = true

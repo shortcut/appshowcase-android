@@ -11,6 +11,7 @@ import io.shortcut.showcase.domain.repository.AppsRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.util.resource.Resource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -80,14 +81,16 @@ class ShowAllViewModel @Inject constructor(
                                 state.copy(
                                     apps = apps.map { app ->
                                         app.copy(
-                                            onClick = { clickToOpenBottomSheet(app) }
+                                            onClick = { openAppInfo(app) }
                                         )
                                     },
                                     countryFilter = CountryFilter.getCountryFilterList(
                                         countrySelected
                                     ) {
                                         setCountryFilter(it)
-                                    }
+                                    },
+                                    selectedSortOrder = sortBy,
+                                    selectedCategory = categorySelected
                                 )
                             }
                         }
@@ -103,7 +106,7 @@ class ShowAllViewModel @Inject constructor(
         }
     }
 
-    private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
+    private fun openAppInfo(app: ShowcaseAppUI) {
         _showAppListSState.update {
             it.copy(bottomSheet = SheetContent.AppInfo(app))
         }
@@ -129,5 +132,30 @@ class ShowAllViewModel @Inject constructor(
             categorySelected = category,
             sortBy = sortBy
         )
+        viewModelScope.launch {
+            delay(500)
+            sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+        }
+    }
+
+    fun openCategoryFilter() {
+        _showAppListSState.update {
+            it.copy(bottomSheet = SheetContent.Category)
+        }
+        sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
+    }
+
+    fun filterByCategory(category: GeneralCategory) {
+        val selectedCountry = _showAppListSState.value.countryFilter.first { it.selected }
+        val sortBy = _showAppListSState.value.selectedSortOrder
+        fetchAppsList(
+            countrySelected = selectedCountry.type,
+            categorySelected = category,
+            sortBy = sortBy
+        )
+        viewModelScope.launch {
+            delay(500)
+            sendViewEffect(ShowAllAppEvent.DismissBottomSheet)
+        }
     }
 }

@@ -162,7 +162,7 @@ private fun AppDetailsPreview() {
         val sampleColor = ShowcaseThemeCustom.colors.ShowcaseCategoryBusiness
         AppDetails(
             appTitle = app.title,
-            appCategory = app.generalCategory.category,
+            appCategory = app.generalCategory.value,
             categoryColor = sampleColor
         )
     }

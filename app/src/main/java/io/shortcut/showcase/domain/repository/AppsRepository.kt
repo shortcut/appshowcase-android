@@ -68,28 +68,16 @@ class AppsRepositoryImpl @Inject constructor(
         return flow {
             // The flow starts by emitting a loading signal.
             emit(Resource.Loading(isLoading = true))
-            // Here we create a variable for fetching all the apps (unsorted).
-            val localApps = dao.fetchAllApps()
-
-            // Variable that checks if the database is empty.
-            val isDbEmpty = localApps.isEmpty()
-
-            // If the database is empty, we emit an error message and -
-            // loading is set to false.
-            if (isDbEmpty) {
-                emit(Resource.Error("Error, couldn't the database."))
-            } else {
-                // If it isn't empty, we fetch the data, map the objects -
-                // then set loading to false.
-                emit(
-                    Resource.Success(
-                        data = dao.fetchAppsWithCountry(
-                            countries = makeListOfCountriesForQuery(
-                                activeCountryFilter
-                            )
-                        ).map { it.toShowcaseAppUI() }
-                    )
+            val data = dao.fetchAppsWithCountry(
+                countries = makeListOfCountriesForQuery(
+                    activeCountryFilter
                 )
+            ).map { it.toShowcaseAppUI() }
+
+            if (data.isEmpty()) {
+                emit(Resource.Error(message = "Empty data"))
+            } else {
+                emit(Resource.Success(data))
             }
             // Just for safety, we emit another loading false signal.
             emit(Resource.Loading(false))
@@ -98,7 +86,7 @@ class AppsRepositoryImpl @Inject constructor(
 
     override suspend fun fetchAppsFromDatabase(
         activeCountryFilter: Country,
-        seleCategory: GeneralCategory,
+        selectedCategory: GeneralCategory,
         sortBy: SortOrder
     ): Flow<Resource<List<ShowcaseAppUI>>> {
         // Here starts the data stream.
@@ -110,7 +98,7 @@ class AppsRepositoryImpl @Inject constructor(
                 countries = makeListOfCountriesForQuery(
                     activeCountryFilter
                 ),
-                category = seleCategory.name,
+                category = selectedCategory.name,
             ).map { it.toShowcaseAppUI() }
 
             emit(
@@ -122,7 +110,7 @@ class AppsRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun makeListOfCountriesForQuery(activeCountryFilter: Country): List<String> {
+    private fun makeListOfCountriesForQuery(activeCountryFilter: Country): List<String> {
         val countries = if (activeCountryFilter == Country.All) {
             Country.values().map { it.name }
         } else {

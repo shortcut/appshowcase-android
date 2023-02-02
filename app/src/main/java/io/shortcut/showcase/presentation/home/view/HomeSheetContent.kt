@@ -284,25 +284,6 @@ fun HomeSheetContent(
             .fillMaxWidth()
             .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
     ) {
-
-        /* val state by animateFloatAsState(
-             targetValue = 0f
-         )
-
-         val padding by animateDpAsState(
-             targetValue = 32.dp
-         )
-         if (isExpanded) {
-             Row(
-                 modifier = Modifier
-                     .fillMaxWidth()
-                     .alpha(state)
-                     .align(alignment = Alignment.TopStart)
-             ) {
-                 NavigationIcon(onBackClick = onBackClick)
-             }
-         }*/
-
         Column(
             modifier = Modifier.padding(top = 32.dp),
             verticalArrangement = Arrangement.Top
@@ -319,7 +300,7 @@ fun HomeSheetContent(
                 modifier = childModifier,
                 appRating = app.highestRating,
                 appDownloads = app.totalInstalls,
-                appCategory = app.generalCategory.category
+                appCategory = app.generalCategory.value
             )
             Spacer(modifier = Modifier.height(Dimens.L))
             ShortDescription(
@@ -358,7 +339,7 @@ private fun StatsPreview() {
         Stats(
             appRating = app.highestRating,
             appDownloads = app.totalInstalls,
-            appCategory = app.generalCategory.category
+            appCategory = app.generalCategory.value
         )
     }
 }

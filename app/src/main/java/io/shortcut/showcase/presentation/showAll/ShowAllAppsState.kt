@@ -2,6 +2,7 @@ package io.shortcut.showcase.presentation.showAll
 
 import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.data.mapper.GeneralCategory
+import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 
@@ -12,7 +13,8 @@ data class ShowAllAppsState(
     val apps: List<ShowcaseAppUI> = emptyList(),
     val allCategories: List<GeneralCategory> = GeneralCategory.values().toList(),
     val bottomSheet: SheetContent = SheetContent.None,
-    val isLoading: Boolean = true
+    val isLoading: Boolean = true,
+    val selectedSortOrder: SortOrder = SortOrder.Rating
 )
 
 sealed class ShowAllAppEvent {
@@ -24,4 +26,6 @@ sealed class SheetContent {
     data class AppInfo(val app: ShowcaseAppUI) : SheetContent()
     object Sort : SheetContent()
     object None : SheetContent()
+
+    object Category : SheetContent()
 }
