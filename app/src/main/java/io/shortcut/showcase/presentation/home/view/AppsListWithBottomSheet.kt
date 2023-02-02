@@ -72,16 +72,16 @@ fun SheetLayout(
             )
         }
 
-        SheetContent.Sort -> {
+        is SheetContent.Sort -> {
             AppListSortBy(onSelectedSortOrder = {
                 onEvent(BottomSheetContentEvents.SortListBy(it))
-            })
+            }, selectedSortOrder = bottomSheetContent.by)
         }
 
-        SheetContent.Category -> {
+        is SheetContent.Category -> {
             AppListCategories(onSelectedCategory = {
                 onEvent(BottomSheetContentEvents.ShowCategoryFilter(it))
-            })
+            }, selectedCategory = bottomSheetContent.filter)
         }
     }
 }

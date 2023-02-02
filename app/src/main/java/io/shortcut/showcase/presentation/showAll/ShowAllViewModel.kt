@@ -119,7 +119,7 @@ class ShowAllViewModel @Inject constructor(
 
     fun openSortOrder() {
         _showAppListSState.update {
-            it.copy(bottomSheet = SheetContent.Sort)
+            it.copy(bottomSheet = SheetContent.Sort(it.selectedSortOrder))
         }
         sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
     }
@@ -140,7 +140,7 @@ class ShowAllViewModel @Inject constructor(
 
     fun openCategoryFilter() {
         _showAppListSState.update {
-            it.copy(bottomSheet = SheetContent.Category)
+            it.copy(bottomSheet = SheetContent.Category(it.selectedCategory))
         }
         sendViewEffect(ShowAllAppEvent.ShowBottomSheet)
     }

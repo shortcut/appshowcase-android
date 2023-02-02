@@ -16,14 +16,18 @@ import io.shortcut.showcase.presentation.common.VerticalRadioButtonGroup
 import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 
 @Composable
-fun AppListSortBy(modifier: Modifier = Modifier, onSelectedSortOrder: (SortOrder) -> Unit) {
+fun AppListSortBy(
+    modifier: Modifier = Modifier,
+    onSelectedSortOrder: (SortOrder) -> Unit,
+    selectedSortOrder: SortOrder
+) {
     Column(modifier = modifier.padding(horizontal = 40.dp)) {
         Spacer(modifier = Modifier.height(40.dp))
         Text(text = "SortBy", style = ShowcaseThemeCustom.typography.h1, color = Color.White)
         Spacer(modifier = Modifier.height(32.dp))
         VerticalRadioButtonGroup(radioOptions = getAllSortingOrders().map { it.name }, onOption = {
             onSelectedSortOrder(SortOrder.valueOf(it))
-        })
+        }, selectedOption = selectedSortOrder.name)
         Spacer(modifier = Modifier.height(64.dp))
     }
 }
@@ -31,6 +35,5 @@ fun AppListSortBy(modifier: Modifier = Modifier, onSelectedSortOrder: (SortOrder
 @Composable
 @Preview
 private fun AppListSortByPreview() {
-    AppListSortBy {
-    }
+    AppListSortBy(onSelectedSortOrder = {}, selectedSortOrder = SortOrder.Rating)
 }

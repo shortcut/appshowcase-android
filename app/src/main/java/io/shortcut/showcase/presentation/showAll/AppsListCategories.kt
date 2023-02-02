@@ -19,7 +19,8 @@ import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 @Composable
 fun AppListCategories(
     modifier: Modifier = Modifier,
-    onSelectedCategory: (GeneralCategory) -> Unit
+    onSelectedCategory: (GeneralCategory) -> Unit,
+    selectedCategory: GeneralCategory
 ) {
     Column(modifier = modifier.padding(horizontal = 40.dp)) {
         Spacer(modifier = Modifier.height(40.dp))
@@ -27,7 +28,7 @@ fun AppListCategories(
         Spacer(modifier = Modifier.height(32.dp))
         VerticalRadioButtonGroup(radioOptions = getAllCategories(), onOption = {
             onSelectedCategory(getCategoryEnumFromStringValue(value = it))
-        })
+        }, selectedOption = selectedCategory.value)
         Spacer(modifier = Modifier.height(64.dp))
     }
 }
@@ -35,6 +36,5 @@ fun AppListCategories(
 @Composable
 @Preview
 private fun AppListCategoriesPreview() {
-    AppListCategories {
-    }
+    AppListCategories(onSelectedCategory = {}, selectedCategory = GeneralCategory.SHOPPING)
 }

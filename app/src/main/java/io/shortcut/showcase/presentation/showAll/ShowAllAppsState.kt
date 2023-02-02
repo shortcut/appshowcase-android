@@ -24,8 +24,8 @@ sealed class ShowAllAppEvent {
 
 sealed class SheetContent {
     data class AppInfo(val app: ShowcaseAppUI) : SheetContent()
-    object Sort : SheetContent()
+    data class Sort(val by: SortOrder) : SheetContent()
     object None : SheetContent()
 
-    object Category : SheetContent()
+    data class Category(val filter: GeneralCategory) : SheetContent()
 }

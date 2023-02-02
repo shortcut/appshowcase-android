@@ -18,8 +18,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import io.shortcut.showcase.util.dimens.Dimens
 
 @Composable
-fun VerticalRadioButtonGroup(radioOptions: List<String>, onOption: (String) -> Unit = {}) {
-    val (selectedOption, onOptionSelected) = remember { mutableStateOf(radioOptions[1]) }
+fun VerticalRadioButtonGroup(
+    radioOptions: List<String>,
+    onOption: (String) -> Unit = {},
+    selectedOption: String? = null
+) {
+    val (selectedOption, onOptionSelected) = remember {
+        mutableStateOf(
+            selectedOption ?: radioOptions[1]
+        )
+    }
     Column(modifier = Modifier.fillMaxWidth()) {
         radioOptions.forEach { text ->
             Row(
@@ -44,7 +52,10 @@ fun VerticalRadioButtonGroup(radioOptions: List<String>, onOption: (String) -> U
                 )
                 RadioButton(
                     selected = (text == selectedOption),
-                    onClick = { onOptionSelected(text) }
+                    onClick = {
+                        onOptionSelected(text)
+                        onOption(text)
+                    }
                 )
             }
         }
