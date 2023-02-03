@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,8 +38,8 @@ import io.shortcut.showcase.R
 import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
+import io.shortcut.showcase.util.extensions.isAppInstalled
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 
@@ -62,8 +63,8 @@ fun HomeCategoryRow(
         ) {
             Text(
                 text = rowTitle.value,
-                style = ShowcaseThemeCustom.typography.h1,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary
+                style = ExtendedShowcaseTheme.typography.h1,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -75,8 +76,8 @@ fun HomeCategoryRow(
                         onShowAllClick()
                     },
                 text = stringResource(id = R.string.home_showAll),
-                style = ShowcaseThemeCustom.typography.bodySmall,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary
+                style = ExtendedShowcaseTheme.typography.bodySmall,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary
             )
         }
         LazyRow(
@@ -94,7 +95,8 @@ fun HomeCategoryRow(
                     imageURL = app.iconUrl,
                     appTitle = app.title,
                     appRating = app.highestRating,
-                    onAppIconClick = app.onClick
+                    onAppIconClick = app.onClick,
+                    appPackageName = app.androidPackageID
                 )
             }
         }
@@ -109,8 +111,10 @@ fun CategoryRowItem(
     appTitle: String,
     appRating: String,
     onAppIconClick: () -> Unit = {},
-    showInstallationInfo: Boolean = false
+    showInstallationInfo: Boolean = false,
+    appPackageName: String
 ) {
+    val context = LocalContext.current
     Column(
         modifier = modifier
             .clickable {
@@ -132,8 +136,8 @@ fun CategoryRowItem(
             modifier = Modifier
                 .sizeIn(maxWidth = 80.dp), // To stop the text from overflowing.
             text = appTitle,
-            style = ShowcaseThemeCustom.typography.h2,
-            color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+            style = ExtendedShowcaseTheme.typography.h2,
+            color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -143,8 +147,8 @@ fun CategoryRowItem(
             ) {
                 Text(
                     text = appRating,
-                    style = ShowcaseThemeCustom.typography.h3,
-                    color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                    style = ExtendedShowcaseTheme.typography.h3,
+                    color = ExtendedShowcaseTheme.colors.ShowcaseLightGrey,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -154,23 +158,23 @@ fun CategoryRowItem(
                         .size(Dimens.S),
                     imageVector = Icons.Filled.Star,
                     contentDescription = null,
-                    tint = ShowcaseThemeCustom.colors.ShowcaseLightGrey
+                    tint = ExtendedShowcaseTheme.colors.ShowcaseLightGrey
                 )
             }
         } else {
             Text(
                 text = stringResource(id = R.string.error_ratingUnknown),
-                style = ShowcaseThemeCustom.typography.h3,
-                color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                style = ExtendedShowcaseTheme.typography.h3,
+                color = ExtendedShowcaseTheme.colors.ShowcaseLightGrey,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
         }
-        if (showInstallationInfo) {
+        if (showInstallationInfo && context.isAppInstalled(appPackageName)) {
             Text(
-                text = stringResource(id = R.string.error_installation_unknown),
-                style = ShowcaseThemeCustom.typography.bodySmallItalic,
-                color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                text = stringResource(R.string.app_installed),
+                style = ExtendedShowcaseTheme.typography.bodySmallItalic,
+                color = ExtendedShowcaseTheme.colors.ShowcaseLightGrey,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -186,7 +190,8 @@ private fun CategoryRowItemPreview() {
         CategoryRowItem(
             imageURL = app.iconUrl,
             appTitle = app.title,
-            appRating = app.highestRating
+            appRating = app.highestRating,
+            appPackageName = app.androidPackageID
         )
     }
 }

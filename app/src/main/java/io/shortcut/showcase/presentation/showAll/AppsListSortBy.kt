@@ -15,7 +15,7 @@ import io.shortcut.showcase.R
 import io.shortcut.showcase.data.mapper.SortOrder
 import io.shortcut.showcase.data.mapper.getAllSortingOrders
 import io.shortcut.showcase.presentation.common.VerticalRadioButtonGroup
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
+import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 
 @Composable
 fun AppListSortBy(
@@ -27,7 +27,7 @@ fun AppListSortBy(
         Spacer(modifier = Modifier.height(40.dp))
         Text(
             text = stringResource(R.string.title_sort_by),
-            style = ShowcaseThemeCustom.typography.h1,
+            style = ExtendedShowcaseTheme.typography.h1,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(32.dp))

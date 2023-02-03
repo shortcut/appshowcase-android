@@ -10,7 +10,7 @@ import io.shortcut.showcase.presentation.common.bottomsheet.ModularBottomSheet
 import io.shortcut.showcase.presentation.showAll.AppListCategories
 import io.shortcut.showcase.presentation.showAll.AppListSortBy
 import io.shortcut.showcase.presentation.showAll.SheetContent
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
+import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 sealed class BottomSheetContentEvents {
@@ -31,7 +31,7 @@ fun AppListWithBottomSheetLayout(
 ) {
     ModularBottomSheet(
         state = modalBottomSheetState,
-        sheetBackgroundColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+        sheetBackgroundColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
         sheetContent = {
             SheetLayout(bottomSheetContent = currentContent, onEvent = onEvent)
         },

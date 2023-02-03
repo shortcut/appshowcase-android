@@ -32,7 +32,6 @@ import com.google.accompanist.pager.rememberPagerState
 import io.shortcut.showcase.presentation.idle.data.CarouselApp
 import io.shortcut.showcase.presentation.idle.data.carouselAppList
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import kotlinx.coroutines.delay
@@ -98,7 +97,7 @@ private fun CarouselItem(
             .height(374.dp),
         shape = RoundedCornerShape(10.dp),
         colors = CardDefaults.cardColors(
-            containerColor = ShowcaseThemeCustom.colors.ShowcaseSecondary
+            containerColor = ExtendedShowcaseTheme.colors.ShowcaseSecondary
         ),
     ) {
         Column(
@@ -117,8 +116,8 @@ private fun CarouselItem(
             Text(
                 modifier = childModifier,
                 text = appTitle,
-                style = ShowcaseThemeCustom.typography.h1,
-                color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                style = ExtendedShowcaseTheme.typography.h1,
+                color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -126,8 +125,8 @@ private fun CarouselItem(
             Text(
                 modifier = childModifier,
                 text = appCategory.uppercase(Locale.ROOT),
-                style = ShowcaseThemeCustom.typography.bodySmall,
-                color = ShowcaseThemeCustom.colors.ShowcaseGrey,
+                style = ExtendedShowcaseTheme.typography.bodySmall,
+                color = ExtendedShowcaseTheme.colors.ShowcaseGrey,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -135,8 +134,8 @@ private fun CarouselItem(
             Text(
                 modifier = childModifier,
                 text = shortDescription,
-                style = ShowcaseThemeCustom.typography.body,
-                color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                style = ExtendedShowcaseTheme.typography.body,
+                color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 4,
                 fontWeight = FontWeight.W400

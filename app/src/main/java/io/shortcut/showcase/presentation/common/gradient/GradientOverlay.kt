@@ -14,7 +14,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 
 @Composable
 fun GradientOverlay(
@@ -62,7 +61,7 @@ private fun GradientOverlayOverColumnPreview() {
             Text(
                 text = "Content is here",
                 textAlign = TextAlign.Center,
-                style = ShowcaseThemeCustom.typography.h3,
+                style = ExtendedShowcaseTheme.typography.h3,
                 color = Color.Black
             )
             GradientOverlay(

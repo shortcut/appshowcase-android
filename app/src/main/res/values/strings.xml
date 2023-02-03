@@ -17,4 +17,7 @@
     <string name="details_shortDescriptionTitle">Short description</string>
     <string name="title_category">Category</string>
     <string name="title_sort_by">SortBy</string>
+    <string name="app_installed">Installed</string>
+    <string name="btn_text_details">Details</string>
+    <string name="btn_text_lauch">Launch</string>
 </resources>

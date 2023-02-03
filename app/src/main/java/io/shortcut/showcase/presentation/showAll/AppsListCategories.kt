@@ -16,7 +16,7 @@ import io.shortcut.showcase.data.mapper.GeneralCategory
 import io.shortcut.showcase.data.mapper.getAllCategories
 import io.shortcut.showcase.data.mapper.getCategoryEnumFromStringValue
 import io.shortcut.showcase.presentation.common.VerticalRadioButtonGroup
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
+import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 
 @Composable
 fun AppListCategories(
@@ -28,7 +28,7 @@ fun AppListCategories(
         Spacer(modifier = Modifier.height(40.dp))
         Text(
             text = stringResource(R.string.title_category),
-            style = ShowcaseThemeCustom.typography.h1,
+            style = ExtendedShowcaseTheme.typography.h1,
             color = Color.White
         )
         Spacer(modifier = Modifier.height(32.dp))

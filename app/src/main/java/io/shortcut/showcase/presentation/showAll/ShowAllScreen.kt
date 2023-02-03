@@ -44,7 +44,6 @@ import io.shortcut.showcase.presentation.home.view.AppListWithBottomSheetLayout
 import io.shortcut.showcase.presentation.home.view.BottomSheetContentEvents
 import io.shortcut.showcase.presentation.home.view.CategoryRowItem
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.launch
@@ -59,7 +58,7 @@ fun ShowAllScreen(
 ) {
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     val systemUiController: SystemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+    systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
     val state by showAllViewModel.showAppListSState.collectAsState()
 
@@ -95,12 +94,12 @@ fun ShowAllScreen(
     ) {
         Scaffold(
             contentColor = Color.White,
-            containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+            containerColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
             topBar = {
                 ToolBarWithSearch(onBackClick, scrollBehavior)
             },
             modifier = Modifier
-                .background(ShowcaseThemeCustom.colors.ShowcaseBackground),
+                .background(ExtendedShowcaseTheme.colors.ShowcaseBackground),
         ) {
             ShowAllScreenContent(
                 state = state,
@@ -134,8 +133,8 @@ private fun ToolBarWithSearch(
             AboutActionIcon()
         },
         colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
-            scrolledContainerColor = ShowcaseThemeCustom.colors.ShowcaseBackground,
+            containerColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
+            scrolledContainerColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
             navigationIconContentColor = Color.White,
             actionIconContentColor = Color.White
         ),
@@ -175,7 +174,8 @@ private fun ShowAllScreenContent(
                     appIconSize = 80.dp,
                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 8.dp),
                     onAppIconClick = app.onClick,
-                    showInstallationInfo = true
+                    showInstallationInfo = true,
+                    appPackageName = app.androidPackageID
                 )
             }
         }

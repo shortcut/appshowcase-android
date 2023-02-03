@@ -23,7 +23,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 
@@ -46,7 +45,7 @@ fun CountryFilterRow(
             items(buttons) { button ->
                 FilterButton(
                     text = button.type.name,
-                    color = if (button.selected) ShowcaseThemeCustom.colors.ShowcasePrimary else ShowcaseThemeCustom.colors.ShowcaseDarkGrey,
+                    color = if (button.selected) ExtendedShowcaseTheme.colors.ShowcasePrimary else ExtendedShowcaseTheme.colors.ShowcaseDarkGrey,
                     onClick = { button.onClick() }
                 )
             }
@@ -76,8 +75,8 @@ private fun FilterButton(
                 vertical = 6.dp
             ),
         text = text,
-        color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
-        style = ShowcaseThemeCustom.typography.body,
+        color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
+        style = ExtendedShowcaseTheme.typography.body,
         fontWeight = FontWeight.W500,
         textAlign = TextAlign.Center
     )
@@ -89,7 +88,7 @@ private fun FilterButtonPreview() {
     ExtendedShowcaseTheme {
         FilterButton(
             text = "Norway",
-            color = ShowcaseThemeCustom.colors.ShowcasePrimary
+            color = ExtendedShowcaseTheme.colors.ShowcasePrimary
         )
     }
 }
