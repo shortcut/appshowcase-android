@@ -1,9 +1,11 @@
 package io.shortcut.showcase.util.extensions
 
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 
 
 fun Context.isAppInstalled(packageName: String): Boolean =
@@ -31,6 +33,19 @@ fun Context.launchApp(packageId: String) {
     if (launchIntent != null) {
         startActivity(launchIntent)
     } else {
-        Toast.makeText(this, "Package not found", Toast.LENGTH_SHORT).show()
+        launchPlayStorePage(packageName = packageId)
+    }
+}
+
+fun Context.launchPlayStorePage(packageName: String) {
+    try {
+        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=$packageName")))
+    } catch (e: ActivityNotFoundException) {
+        startActivity(
+            Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse("https://play.google.com/store/apps/details?id=$packageName")
+            )
+        )
     }
 }

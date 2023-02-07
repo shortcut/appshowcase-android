@@ -46,6 +46,7 @@ import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.isAppInstalled
 import io.shortcut.showcase.util.extensions.launchApp
+import io.shortcut.showcase.util.extensions.launchPlayStorePage
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 @Composable
@@ -98,22 +99,28 @@ private fun Header(
             )
             Spacer(modifier = Modifier.height(12.dp))
             val context = LocalContext.current
-            if (context.isAppInstalled(appPackageID)) {
-                Button(
-                    onClick = { context.launchApp(appPackageID) },
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
-                        containerColor = ExtendedShowcaseTheme.colors.ShowcaseSecondary
-                    ),
-                    border = BorderStroke(
-                        1.dp,
-                        color = ExtendedShowcaseTheme.colors.ShowcaseBackground
-                    ),
-                    modifier = Modifier.defaultMinSize(minWidth = 125.dp)
-                ) {
-                    Text(text = stringResource(R.string.btn_text_lauch))
-                }
+            val isInstalled = context.isAppInstalled(appPackageID)
+
+            Button(
+                onClick = {
+                    if (isInstalled)
+                        context.launchApp(appPackageID)
+                    else
+                        context.launchPlayStorePage(appPackageID)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
+                    containerColor = ExtendedShowcaseTheme.colors.ShowcaseSecondary
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    color = ExtendedShowcaseTheme.colors.ShowcaseBackground
+                ),
+                modifier = Modifier.defaultMinSize(minWidth = 125.dp)
+            ) {
+                Text(text = stringResource(R.string.btn_text_lauch))
             }
+
         }
     }
 }
