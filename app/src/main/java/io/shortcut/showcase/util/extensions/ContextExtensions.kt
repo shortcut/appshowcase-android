@@ -7,7 +7,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 
-
 fun Context.isAppInstalled(packageName: String): Boolean =
     try {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

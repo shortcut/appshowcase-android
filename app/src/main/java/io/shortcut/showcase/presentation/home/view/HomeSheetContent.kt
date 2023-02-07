@@ -103,10 +103,11 @@ private fun Header(
 
             Button(
                 onClick = {
-                    if (isInstalled)
+                    if (isInstalled) {
                         context.launchApp(appPackageID)
-                    else
+                    } else {
                         context.launchPlayStorePage(appPackageID)
+                    }
                 },
                 colors = ButtonDefaults.buttonColors(
                     contentColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
@@ -120,7 +121,6 @@ private fun Header(
             ) {
                 Text(text = stringResource(R.string.btn_text_lauch))
             }
-
         }
     }
 }
