@@ -1,4 +1,4 @@
-- With these changes in this release, the app can be accessed from firebase distribution
-- The project now has automated CI/CD pipeline that pushes release
-- Uses fastlane and github actions for the CI/CD pipeline
-- Fix for some lint issues.
+- Manage install and not installed apps, if the app is already installed, you can launch it else user can see it in playstore.
+- Show all  app in full screen mode.
+- Sorting with country rating and installs.
+- Filtering with category, country.

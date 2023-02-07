@@ -21,7 +21,6 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import io.shortcut.showcase.R
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 
 @Composable
@@ -40,19 +39,19 @@ fun ShowcaseButton(
         }
 
     val buttonColor = if (enabled) {
-        ShowcaseThemeCustom.colors.ShowcaseSecondary
+        ExtendedShowcaseTheme.colors.ShowcaseSecondary
     } else {
-        ShowcaseThemeCustom.colors.ShowcaseBackground
+        ExtendedShowcaseTheme.colors.ShowcaseBackground
     }
 
     val textColor = if (enabled) {
-        ShowcaseThemeCustom.colors.ShowcaseBackground
+        ExtendedShowcaseTheme.colors.ShowcaseBackground
     } else {
-        ShowcaseThemeCustom.colors.ShowcaseSecondary
+        ExtendedShowcaseTheme.colors.ShowcaseSecondary
     }
 
     val buttonBorder = if (!enabled) {
-        BorderStroke(width = Dp.Hairline, color = ShowcaseThemeCustom.colors.ShowcaseSecondary)
+        BorderStroke(width = Dp.Hairline, color = ExtendedShowcaseTheme.colors.ShowcaseSecondary)
     } else {
         null
     }
@@ -82,7 +81,7 @@ fun ShowcaseButton(
                     vertical = Dimens.XXS
                 ),
             text = buttonText,
-            style = ShowcaseThemeCustom.typography.button,
+            style = ExtendedShowcaseTheme.typography.button,
             color = textColor
         )
     }
@@ -95,7 +94,7 @@ private fun ShowcaseButtonPreview() {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground),
+                .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {

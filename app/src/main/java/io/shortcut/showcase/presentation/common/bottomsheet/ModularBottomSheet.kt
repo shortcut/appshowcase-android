@@ -1,4 +1,4 @@
-package io.shortcut.showcase.presentation.common
+package io.shortcut.showcase.presentation.common.bottomsheet
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -40,6 +40,7 @@ fun ModularBottomSheet(
                 sheetContent()
             }
         },
-        content = content
+        content = content,
+        sheetElevation = Dimens.S
     )
 }

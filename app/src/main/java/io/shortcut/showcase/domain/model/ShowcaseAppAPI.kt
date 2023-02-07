@@ -1,6 +1,10 @@
 package io.shortcut.showcase.domain.model
 
+import com.google.firebase.firestore.DocumentId
+
 data class ShowcaseAppAPI(
+    @DocumentId
+    val id: String = "",
     val title: String? = null,
     val iconUrl: String? = null,
     val publisher: String? = null,

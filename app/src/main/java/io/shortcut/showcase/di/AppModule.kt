@@ -6,10 +6,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.shortcut.showcase.data.local.ShowcaseDAO
 import io.shortcut.showcase.data.local.ShowcaseDatabase
-import io.shortcut.showcase.data.remote.FirebaseServiceImpl
-import io.shortcut.showcase.domain.model.ShowcaseAppAPI
-import io.shortcut.showcase.domain.model.ShowcaseBannerAPI
+import io.shortcut.showcase.domain.remote.FirebaseService
+import io.shortcut.showcase.domain.remote.FirebaseServiceImpl
 import javax.inject.Singleton
 
 @Module
@@ -31,10 +31,10 @@ object AppModule {
             "showcasedb.db"
         ).build()
     }
-}
 
-abstract class FirebaseService {
-    abstract suspend fun getApps(): List<ShowcaseAppAPI?>?
-
-    abstract suspend fun getBanners(): List<ShowcaseBannerAPI?>?
+    @Provides
+    @Singleton
+    fun provideShowcaseDAO(
+        db: ShowcaseDatabase
+    ): ShowcaseDAO = db.showcaseDAO
 }

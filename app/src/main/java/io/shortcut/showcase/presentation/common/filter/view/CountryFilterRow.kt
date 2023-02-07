@@ -3,8 +3,9 @@ package io.shortcut.showcase.presentation.common.filter.view
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -16,38 +17,38 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 
 @Composable
-fun FilterRow(
+fun CountryFilterRow(
     modifier: Modifier = Modifier,
-    buttons: List<FilterButtonData>,
-    buttonSpacing: Dp,
-    horizontalContentPadding: Dp
+    buttons: List<CountryFilter>,
+    buttonSpacing: Dp = Dimens.S,
+    horizontalContentPadding: Dp = Dimens.S
 ) {
-    val lazyListState = rememberLazyListState()
-
-    LazyRow(
-        modifier = modifier
-            .fillMaxWidth(),
-        state = lazyListState,
-        horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
-        verticalAlignment = Alignment.CenterVertically,
-        contentPadding = PaddingValues(horizontal = horizontalContentPadding)
-    ) {
-        items(buttons) { button ->
-            FilterButton(
-                text = button.type.name,
-                color = if (button.selected) ShowcaseThemeCustom.colors.ShowcasePrimary else ShowcaseThemeCustom.colors.ShowcaseDarkGrey,
-                onClick = { button.onClick() }
-            )
+    Box(modifier = modifier) {
+        val lazyListState = rememberLazyListState()
+        LazyRow(
+            modifier = Modifier.align(alignment = Alignment.Center),
+            state = lazyListState,
+            horizontalArrangement = Arrangement.spacedBy(buttonSpacing),
+            verticalAlignment = Alignment.CenterVertically,
+            contentPadding = PaddingValues(horizontal = horizontalContentPadding)
+        ) {
+            items(buttons) { button ->
+                FilterButton(
+                    text = button.type.name,
+                    color = if (button.selected) ExtendedShowcaseTheme.colors.ShowcasePrimary else ExtendedShowcaseTheme.colors.ShowcaseDarkGrey,
+                    onClick = { button.onClick() }
+                )
+            }
         }
     }
 }
@@ -61,6 +62,10 @@ private fun FilterButton(
 ) {
     Text(
         modifier = modifier
+            .defaultMinSize(minWidth = 6.dp)
+            .clickable {
+                onClick()
+            }
             .background(
                 color = color,
                 shape = RoundedCornerShape(8.dp)
@@ -68,14 +73,12 @@ private fun FilterButton(
             .padding(
                 horizontal = 16.dp,
                 vertical = 6.dp
-            )
-            .clickable {
-                onClick()
-            },
+            ),
         text = text,
-        color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
-        style = ShowcaseThemeCustom.typography.body,
-        fontWeight = FontWeight.W500
+        color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
+        style = ExtendedShowcaseTheme.typography.body,
+        fontWeight = FontWeight.W500,
+        textAlign = TextAlign.Center
     )
 }
 
@@ -85,7 +88,7 @@ private fun FilterButtonPreview() {
     ExtendedShowcaseTheme {
         FilterButton(
             text = "Norway",
-            color = ShowcaseThemeCustom.colors.ShowcasePrimary
+            color = ExtendedShowcaseTheme.colors.ShowcasePrimary
         )
     }
 }
@@ -94,7 +97,7 @@ private fun FilterButtonPreview() {
 @Composable
 private fun FilterRowPreview() {
     ExtendedShowcaseTheme {
-        FilterRow(
+        CountryFilterRow(
             buttons = genMockFilterButtons(),
             buttonSpacing = Dimens.S,
             horizontalContentPadding = Dimens.S

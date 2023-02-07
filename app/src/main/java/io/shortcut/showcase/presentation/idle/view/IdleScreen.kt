@@ -34,7 +34,6 @@ import io.shortcut.showcase.R
 import io.shortcut.showcase.presentation.idle.data.CarouselApp
 import io.shortcut.showcase.presentation.idle.data.carouselAppList
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import java.util.Locale
@@ -44,7 +43,7 @@ fun IdleScreen(
     onBackClick: () -> Unit = {}
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+    systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
 
     IdleContent(
@@ -86,7 +85,7 @@ private fun IdleContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
             .clickable(
                 interactionSource = remember { MutableInteractionSource() },
                 indication = null
@@ -121,8 +120,8 @@ private fun AppDetails(
             Text(
                 modifier = childModifier,
                 text = appTitle,
-                style = ShowcaseThemeCustom.typography.body,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.body,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -138,8 +137,8 @@ private fun AppDetails(
                         vertical = Dimens.XXS
                     ),
                 text = appCategory.uppercase(Locale.ROOT),
-                style = ShowcaseThemeCustom.typography.body,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.body,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
@@ -149,7 +148,7 @@ private fun AppDetails(
             modifier = childModifier,
             painter = painterResource(id = R.drawable.shortcut_logo_small),
             contentDescription = null,
-            tint = ShowcaseThemeCustom.colors.ShowcaseSecondary
+            tint = ExtendedShowcaseTheme.colors.ShowcaseSecondary
         )
     }
 }
@@ -159,10 +158,10 @@ private fun AppDetails(
 private fun AppDetailsPreview() {
     ExtendedShowcaseTheme {
         val app = genMockShowcaseAppUI()
-        val sampleColor = ShowcaseThemeCustom.colors.ShowcaseCategoryBusiness
+        val sampleColor = ExtendedShowcaseTheme.colors.ShowcaseCategoryBusiness
         AppDetails(
             appTitle = app.title,
-            appCategory = app.generalCategory.category,
+            appCategory = app.generalCategory.value,
             categoryColor = sampleColor
         )
     }

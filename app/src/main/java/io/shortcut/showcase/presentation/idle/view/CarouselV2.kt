@@ -20,7 +20,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import java.util.Locale
@@ -80,7 +78,7 @@ fun CarouselItemBeta(
     val cardBackgroundColor by transition.animateColor(
         label = "Card background color"
     ) { isExpanded ->
-        if (isExpanded) ShowcaseThemeCustom.colors.ShowcaseSecondary else Color.Transparent
+        if (isExpanded) ExtendedShowcaseTheme.colors.ShowcaseSecondary else Color.Transparent
     }
 
     val cardGeneralPadding by transition.animateDp(
@@ -158,8 +156,8 @@ fun CarouselItemBeta(
                     Text(
                         modifier = Modifier,
                         text = title,
-                        style = ShowcaseThemeCustom.typography.h1,
-                        color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                        style = ExtendedShowcaseTheme.typography.h1,
+                        color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
@@ -167,8 +165,8 @@ fun CarouselItemBeta(
                     Text(
                         modifier = Modifier,
                         text = category.uppercase(Locale.ROOT),
-                        style = ShowcaseThemeCustom.typography.bodySmall,
-                        color = ShowcaseThemeCustom.colors.ShowcaseGrey,
+                        style = ExtendedShowcaseTheme.typography.bodySmall,
+                        color = ExtendedShowcaseTheme.colors.ShowcaseGrey,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 1
                     )
@@ -176,8 +174,8 @@ fun CarouselItemBeta(
                     Text(
                         modifier = Modifier,
                         text = shortDescription,
-                        style = ShowcaseThemeCustom.typography.body,
-                        color = ShowcaseThemeCustom.colors.ShowcaseBackground,
+                        style = ExtendedShowcaseTheme.typography.body,
+                        color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 4,
                         fontWeight = FontWeight.W400
@@ -197,7 +195,7 @@ private fun CarouselItemBetaPreview() {
         CarouselItemBeta(
             iconURL = mockApp.iconUrl,
             title = mockApp.title,
-            category = mockApp.generalCategory.category,
+            category = mockApp.generalCategory.value,
             shortDescription = mockApp.shortDescription,
             animationSpeed = speed,
             expanded = true

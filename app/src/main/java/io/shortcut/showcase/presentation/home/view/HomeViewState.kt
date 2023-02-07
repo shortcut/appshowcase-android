@@ -1,17 +1,14 @@
 package io.shortcut.showcase.presentation.home.view
 
 import io.shortcut.showcase.data.mapper.Country
-import io.shortcut.showcase.presentation.common.filter.data.FilterButtonData
-import io.shortcut.showcase.presentation.data.ShowcaseAppUI
+import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
+import io.shortcut.showcase.presentation.showAll.SheetContent
 import io.shortcut.showcase.util.mock.genMockBanners
-import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 data class HomeViewState(
-    // Data
-    val apps: List<ShowcaseAppUI> = emptyList(),
-    val categorySections: List<CategorySection> = emptyList(),
+    val categorizedApps: List<CategorySection> = emptyList(),
 
     val banners: List<ShowcaseBannerUI> = genMockBanners(),
 
@@ -22,9 +19,9 @@ data class HomeViewState(
     val totalTimerTime: Long = 30000L, // 30: Seconds
     val isTimerRunning: Boolean = true,
 
-    val appInView: ShowcaseAppUI = genMockShowcaseAppUI(),
+    val bottomSheet: SheetContent = SheetContent.None,
     val screenshotGalleryIndex: Int = 0,
 
-    val filterButtons: List<FilterButtonData> = emptyList(),
-    val activeCountryFilter: Country = Country.Norway
+    val filterButtons: List<CountryFilter> = emptyList(),
+    val activeCountryFilter: Country = Country.All
 )

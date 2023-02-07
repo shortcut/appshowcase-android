@@ -9,8 +9,7 @@ import io.shortcut.showcase.util.formatter.formatGeneralCategory
 
 fun ShowcaseAppAPI.toShowcaseAppEntity(): ShowcaseAppEntity {
     return ShowcaseAppEntity(
-        id = 0,
-
+        id = this.id,
         title = title ?: "Unknown",
         iconUrl = iconUrl ?: "Unknown",
         publisher = publisher ?: "Unknown",
@@ -18,7 +17,8 @@ fun ShowcaseAppAPI.toShowcaseAppEntity(): ShowcaseAppEntity {
         screenshots = screenshots?.let { Screenshots(imageURLs = it) } ?: Screenshots(emptyList()),
         totalInstalls = totalInstalls ?: "Unknown",
         shortDescription = shortDescription ?: "Unknown",
-        generalCategory = generalCategory?.let { formatGeneralCategory(it) } ?: GeneralCategory.OTHER,
+        generalCategory = generalCategory?.let { formatGeneralCategory(it) }
+            ?: GeneralCategory.OTHER,
         highestRating = highestRating?.toFloat() ?: 0.0f,
         // totalHistogram = Histogram(histogramData = totalHistogram),
         androidPackageID = androidPackageID ?: "Unknown"

@@ -108,7 +108,7 @@ fun ExtendedShowcaseTheme(
 }
 
 // Use with eg. ShowcaseTheme.typography.body
-object ShowcaseThemeCustom {
+object ExtendedShowcaseTheme {
     val typography: ShowcaseTypography
         @Composable
         get() = LocalShowcaseTypography.current
