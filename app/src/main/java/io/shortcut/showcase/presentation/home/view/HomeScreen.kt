@@ -48,7 +48,6 @@ import io.shortcut.showcase.presentation.data.ShowcaseBannerUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
 import io.shortcut.showcase.presentation.home.navigation.HomeScreenDestinations
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 import io.shortcut.showcase.util.extensions.ViewEffects
 import io.shortcut.showcase.util.mock.genMockBanners
@@ -64,7 +63,7 @@ fun HomeScreen(
     onNavDestinations: (HomeScreenDestinations) -> Unit
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+    systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
 
     val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
@@ -149,8 +148,8 @@ fun HomeScreenContentList(
                             horizontal = Dimens.S,
                             vertical = Dimens.M
                         ),
-                    color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-                    iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                    color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
+                    iconTint = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                     onLongClick = {
                         onNavDestinations(HomeScreenDestinations.IdleScreen)
                     }
@@ -162,7 +161,7 @@ fun HomeScreenContentList(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+                    .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
                     .padding(paddingValues)
             ) {
                 item {
@@ -180,7 +179,7 @@ fun HomeScreenContentList(
                 .fillMaxWidth()
                 .fillMaxHeight(0.15f)
                 .align(Alignment.BottomCenter),
-            topColor = ShowcaseThemeCustom.colors.ShowcaseOverlay,
+            topColor = ExtendedShowcaseTheme.colors.ShowcaseOverlay,
             bottomColor = Color.Transparent
         )
         PullRefreshIndicator(
@@ -201,7 +200,7 @@ private fun HomeContent(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     ) {
         HomeScreenPager(images = banners)
         Spacer(modifier = Modifier.height(Dimens.L))

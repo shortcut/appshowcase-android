@@ -1,5 +1,6 @@
 package io.shortcut.showcase.presentation.home.view
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,6 +22,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -28,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -38,8 +43,10 @@ import coil.compose.AsyncImage
 import io.shortcut.showcase.R
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
+import io.shortcut.showcase.util.extensions.isAppInstalled
+import io.shortcut.showcase.util.extensions.launchApp
+import io.shortcut.showcase.util.extensions.launchPlayStorePage
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 
 @Composable
@@ -49,7 +56,8 @@ private fun Header(
     appUrl: String,
     appTitle: String,
     appCompany: String,
-    appCountry: String
+    appCountry: String,
+    appPackageID: String
 ) {
     Row(
         modifier = modifier
@@ -58,37 +66,61 @@ private fun Header(
     ) {
         AsyncImage(
             modifier = childModifier
-                .size(80.dp)
+                .size(110.dp)
                 .clip(shape = RoundedCornerShape(6.dp)),
             model = appUrl,
             contentDescription = null
         )
-        Spacer(modifier = Modifier.width(Dimens.S))
+        Spacer(modifier = Modifier.width(Dimens.L))
         Column(
             modifier = childModifier,
             horizontalAlignment = Alignment.Start
         ) {
             Text(
                 text = appTitle,
-                style = ShowcaseThemeCustom.typography.h2,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.h2,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
             Text(
                 text = appCompany,
-                style = ShowcaseThemeCustom.typography.body,
-                color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                style = ExtendedShowcaseTheme.typography.body,
+                color = ExtendedShowcaseTheme.colors.ShowcaseLightGrey,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
             Text(
                 text = appCountry,
-                style = ShowcaseThemeCustom.typography.bodySmall,
-                color = ShowcaseThemeCustom.colors.ShowcaseLightGrey,
+                style = ExtendedShowcaseTheme.typography.bodySmall,
+                color = ExtendedShowcaseTheme.colors.ShowcaseLightGrey,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1
             )
+            Spacer(modifier = Modifier.height(12.dp))
+            val context = LocalContext.current
+            val isInstalled = context.isAppInstalled(appPackageID)
+
+            Button(
+                onClick = {
+                    if (isInstalled) {
+                        context.launchApp(appPackageID)
+                    } else {
+                        context.launchPlayStorePage(appPackageID)
+                    }
+                },
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
+                    containerColor = ExtendedShowcaseTheme.colors.ShowcaseSecondary
+                ),
+                border = BorderStroke(
+                    1.dp,
+                    color = ExtendedShowcaseTheme.colors.ShowcaseBackground
+                ),
+                modifier = Modifier.defaultMinSize(minWidth = 125.dp)
+            ) {
+                Text(text = stringResource(R.string.btn_text_lauch))
+            }
         }
     }
 }
@@ -113,9 +145,9 @@ private fun Stats(
             Text(
                 modifier = childModifier,
                 text = stringResource(id = R.string.details_ratingTitle),
-                style = ShowcaseThemeCustom.typography.bodySmall,
+                style = ExtendedShowcaseTheme.typography.bodySmall,
                 textAlign = TextAlign.Center,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 overflow = TextOverflow.Ellipsis,
                 maxLines = 1,
             )
@@ -126,8 +158,8 @@ private fun Stats(
                 Text(
                     modifier = childModifier,
                     text = appRating,
-                    style = ShowcaseThemeCustom.typography.h2,
-                    color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                    style = ExtendedShowcaseTheme.typography.h2,
+                    color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -137,7 +169,7 @@ private fun Stats(
                         .size(Dimens.S),
                     imageVector = Icons.Filled.Star,
                     contentDescription = null,
-                    tint = ShowcaseThemeCustom.colors.ShowcaseSecondary
+                    tint = ExtendedShowcaseTheme.colors.ShowcaseSecondary
                 )
             }
         }
@@ -147,7 +179,7 @@ private fun Stats(
                 .height(Dimens.XL)
                 .width(1.dp),
             thickness = Dp.Hairline,
-            color = ShowcaseThemeCustom.colors.ShowcaseSecondary
+            color = ExtendedShowcaseTheme.colors.ShowcaseSecondary
         )
         Spacer(modifier = Modifier.width(Dimens.M))
         Column(
@@ -156,8 +188,8 @@ private fun Stats(
             Text(
                 modifier = childModifier,
                 text = stringResource(id = R.string.details_downloadsTitle),
-                style = ShowcaseThemeCustom.typography.bodySmall,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.bodySmall,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -165,8 +197,8 @@ private fun Stats(
             Text(
                 modifier = childModifier,
                 text = appDownloads,
-                style = ShowcaseThemeCustom.typography.h2,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.h2,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -177,7 +209,7 @@ private fun Stats(
                 .height(Dimens.XL)
                 .width(1.dp),
             thickness = Dp.Hairline,
-            color = ShowcaseThemeCustom.colors.ShowcaseSecondary
+            color = ExtendedShowcaseTheme.colors.ShowcaseSecondary
         )
         Spacer(modifier = Modifier.width(Dimens.M))
         Column(
@@ -186,8 +218,8 @@ private fun Stats(
             Text(
                 modifier = childModifier,
                 text = stringResource(id = R.string.details_categoryTitle),
-                style = ShowcaseThemeCustom.typography.bodySmall,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.bodySmall,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -195,8 +227,8 @@ private fun Stats(
             Text(
                 modifier = childModifier,
                 text = appCategory,
-                style = ShowcaseThemeCustom.typography.h2,
-                color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+                style = ExtendedShowcaseTheme.typography.h2,
+                color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
             )
@@ -218,8 +250,8 @@ private fun ShortDescription(
         Text(
             modifier = childModifier,
             text = stringResource(id = R.string.details_shortDescriptionTitle),
-            style = ShowcaseThemeCustom.typography.h2,
-            color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+            style = ExtendedShowcaseTheme.typography.h2,
+            color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1
         )
@@ -227,8 +259,8 @@ private fun ShortDescription(
         Text(
             modifier = childModifier,
             text = shortDescription,
-            style = ShowcaseThemeCustom.typography.body,
-            color = ShowcaseThemeCustom.colors.ShowcaseSecondary,
+            style = ExtendedShowcaseTheme.typography.body,
+            color = ExtendedShowcaseTheme.colors.ShowcaseSecondary,
             overflow = TextOverflow.Ellipsis,
             maxLines = 4
         )
@@ -282,7 +314,7 @@ fun HomeSheetContent(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     ) {
         Column(
             modifier = Modifier.padding(top = 32.dp),
@@ -293,7 +325,8 @@ fun HomeSheetContent(
                 appUrl = app.iconUrl,
                 appTitle = app.title,
                 appCompany = app.publisher,
-                appCountry = app.country.name
+                appCountry = app.country.name,
+                appPackageID = app.androidPackageID
             )
             Spacer(modifier = Modifier.height(Dimens.L))
             Stats(
@@ -326,7 +359,8 @@ private fun HeaderPreview() {
             appUrl = app.iconUrl,
             appTitle = app.title,
             appCompany = app.publisher,
-            appCountry = app.country.name
+            appCountry = app.country.name,
+            appPackageID = app.androidPackageID
         )
     }
 }

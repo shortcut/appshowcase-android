@@ -12,7 +12,7 @@ import io.shortcut.showcase.presentation.home.view.HomeScreen
 import io.shortcut.showcase.presentation.home.view.ScreenshotScreen
 import io.shortcut.showcase.presentation.idle.view.IdleScreen
 import io.shortcut.showcase.presentation.showAll.ShowAllScreen
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
+import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import kotlinx.serialization.builtins.ListSerializer
 import kotlinx.serialization.builtins.serializer
 import kotlinx.serialization.json.Json
@@ -22,7 +22,7 @@ fun MainNavigation(
     navController: NavHostController
 ) {
     val systemUiController: SystemUiController = rememberSystemUiController()
-    systemUiController.setSystemBarsColor(color = ShowcaseThemeCustom.colors.ShowcaseBackground)
+    systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
 
     NavHost(

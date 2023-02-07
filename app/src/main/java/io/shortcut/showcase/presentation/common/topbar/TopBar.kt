@@ -16,7 +16,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import io.shortcut.showcase.R
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
-import io.shortcut.showcase.ui.theme.ShowcaseThemeCustom
 import io.shortcut.showcase.util.dimens.Dimens
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -61,8 +60,8 @@ private fun TopBarPreview() {
         TopBar(
             modifier = Modifier
                 .padding(horizontal = Dimens.S),
-            color = ShowcaseThemeCustom.colors.ShowcaseBackground,
-            iconTint = ShowcaseThemeCustom.colors.ShowcaseSecondary
+            color = ExtendedShowcaseTheme.colors.ShowcaseBackground,
+            iconTint = ExtendedShowcaseTheme.colors.ShowcaseSecondary
         )
     }
 }
