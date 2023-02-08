@@ -20,4 +20,5 @@
     <string name="app_installed">Installed</string>
     <string name="btn_text_details">Details</string>
     <string name="btn_text_lauch">Launch</string>
+    <string name="search">Search</string>
 </resources>
