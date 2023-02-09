@@ -42,7 +42,7 @@ import java.util.Locale
 fun Carousel(
     modifier: Modifier = Modifier,
     apps: List<CarouselApp>,
-    currentIndex: (Int) -> Unit
+    currentIndex: (CarouselApp) -> Unit
 ) {
     val pageCount: Int = apps.size
     val startIndex = pageCount / 2
@@ -78,7 +78,7 @@ fun Carousel(
             animationSpeed = 500,
             expanded = pagerState.currentPage == index
         )
-        currentIndex(appIndex)
+        currentIndex(apps[appIndex])
     }
 }
 

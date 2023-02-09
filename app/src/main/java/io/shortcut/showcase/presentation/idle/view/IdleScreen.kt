@@ -16,10 +16,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -78,7 +74,6 @@ private fun IdleContent(
     apps: List<CarouselApp>
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
-        var index by remember { mutableStateOf(0) }
         IdleBackground(modifier = Modifier.align(Alignment.TopCenter))
         Column(
             modifier = modifier
@@ -89,13 +84,12 @@ private fun IdleContent(
             Carousel(
                 apps = apps
             ) {
-                index = it
+                //currentItem = it
             }
-            val shownApp = apps[index]
             AppDetails(
-                appTitle = shownApp.title,
-                appCategory = shownApp.generalCategory.value,
-                categoryColor = Color.Blue
+                appTitle = "",
+                appCategory = "",
+                categoryColor = Color.Transparent
             )
         }
     }
