@@ -80,7 +80,7 @@ fun HomeScreenContentList(
             modifier = Modifier
                 .fillMaxSize()
         ) { paddingValues ->
-            Box(modifier = Modifier.padding(paddingValues)) {
+            Box(modifier = Modifier.fillMaxSize()) {
                 when (homeAppsState) {
                     is HomeState.HomeAppSearchState -> HomeSearchResultList(
                         paddingValues,

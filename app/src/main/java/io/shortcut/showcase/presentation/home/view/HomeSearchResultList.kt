@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -35,14 +36,17 @@ fun HomeSearchResultList(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground),
+            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
+            .padding(paddingValues),
         contentPadding = PaddingValues(Dimens.S)
     ) {
         items(homeAppsState.searchResults) {
             HomeSearchAppItem(it)
-            Spacer(modifier = Modifier
-                .fillMaxWidth()
-                .height(Dimens.M))
+            Spacer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(Dimens.M)
+            )
         }
     }
 }
