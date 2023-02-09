@@ -1,6 +1,7 @@
 package io.shortcut.showcase.presentation.home.view
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,7 +32,7 @@ import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 @Composable
 fun HomeSearchResultList(
     paddingValues: PaddingValues,
-    homeAppsState: HomeState.HomeAppSearchState
+    homeAppsState: HomeAppSearchState,
 ) {
     LazyColumn(
         modifier = Modifier
@@ -53,8 +54,12 @@ fun HomeSearchResultList(
 
 @Composable
 fun HomeSearchAppItem(app: ShowcaseAppUI) {
-
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable {
+            app.onClick()
+        }, verticalAlignment = Alignment.CenterVertically
+    ) {
         AsyncImage(
             modifier = Modifier
                 .size(48.dp)

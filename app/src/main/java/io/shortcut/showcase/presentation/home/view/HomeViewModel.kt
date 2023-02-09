@@ -7,9 +7,9 @@ import io.shortcut.showcase.data.mapper.Country
 import io.shortcut.showcase.domain.repository.AppsRepository
 import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
+import io.shortcut.showcase.presentation.common.topbar.SearchWidgetState
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
-import io.shortcut.showcase.presentation.home.view.HomeState.HomeAppsGridState
 import io.shortcut.showcase.presentation.showAll.SheetContent
 import io.shortcut.showcase.util.resource.Resource
 import kotlinx.coroutines.FlowPreview
@@ -31,14 +31,14 @@ class HomeViewModel @Inject constructor(
     private val appRepository: AppsRepository
 ) : ViewModel() {
 
-    private val _homeAppsGridStateFlow = MutableStateFlow<HomeState>(HomeAppsGridState())
+    private val _homeAppsGridStateFlow = MutableStateFlow<HomeState>(HomeState())
     val homeViewState = _homeAppsGridStateFlow.asStateFlow()
 
     private val _viewEffects = MutableSharedFlow<HomeViewEffect>()
     val viewEffects = _viewEffects.asSharedFlow()
 
     private val countryFilterState: StateFlow<Country> =
-        homeViewState.map { if (it is HomeAppsGridState) it.activeCountryFilter else Country.All }
+        homeViewState.map { it.homeGridState.activeCountryFilter }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.Eagerly,
@@ -68,21 +68,20 @@ class HomeViewModel @Inject constructor(
                     is Resource.Success -> {
                         result.data?.let { banners ->
                             _homeAppsGridStateFlow.update { state ->
-                                updateHomeAppGridState(state) {
-                                    it.copy(
+                                state.copy(
+                                    homeGridState = state.homeGridState.copy(
                                         banners = banners,
-                                        isRefreshing = false
-                                    )
-                                }
+                                    ), isRefreshing = false
+                                )
                             }
                         }
                     }
 
                     is Resource.Loading -> {
                         _homeAppsGridStateFlow.update { state ->
-                            updateHomeAppGridState(state) {
-                                it.copy(isRefreshing = result.isLoading)
-                            }
+                            state.copy(
+                                isRefreshing = result.isLoading
+                            )
                         }
                     }
 
@@ -92,14 +91,6 @@ class HomeViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun updateHomeAppGridState(
-        it: HomeState,
-        update: (HomeAppsGridState) -> HomeState
-    ) = when (it) {
-        is HomeAppsGridState -> update(it)
-        is HomeState.HomeAppSearchState -> it
     }
 
     fun refreshAppsList() {
@@ -113,9 +104,9 @@ class HomeViewModel @Inject constructor(
 
                         is Resource.Loading -> {
                             _homeAppsGridStateFlow.update { state ->
-                                updateHomeAppGridState(state) {
-                                    it.copy(isRefreshing = result.isLoading)
-                                }
+                                state.copy(
+                                    isRefreshing = result.isLoading
+                                )
                             }
                         }
 
@@ -138,9 +129,9 @@ class HomeViewModel @Inject constructor(
 
                         is Resource.Loading -> {
                             _homeAppsGridStateFlow.update { state ->
-                                updateHomeAppGridState(state) {
-                                    it.copy(isRefreshing = result.isLoading)
-                                }
+                                state.copy(
+                                    isRefreshing = result.isLoading
+                                )
                             }
                         }
 
@@ -175,42 +166,44 @@ class HomeViewModel @Inject constructor(
                     )
                 }
             _homeAppsGridStateFlow.update { state ->
-                updateHomeAppGridState(state) {
-                    it.copy(categorizedApps = categorizedApps, isRefreshing = false)
-                }
+                state.copy(
+                    homeGridState = state.homeGridState.copy(categorizedApps = categorizedApps),
+                    isRefreshing = false
+                )
             }
         }
     }
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
         _homeAppsGridStateFlow.update { state ->
-            updateHomeAppGridState(state) {
-                it.copy(bottomSheet = SheetContent.AppInfo(app))
-            }
+            state.copy(
+                bottomSheet = SheetContent.AppInfo(app),
+                homeAppSearchState = null,
+                toolbarState = SearchWidgetState.CLOSED
+            )
         }
         sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
     private fun genFilterButtons(activeFilter: Country = countryFilterState.value) {
         _homeAppsGridStateFlow.update { state ->
-            updateHomeAppGridState(state) {
-                it.copy(
+            state.copy(
+                homeGridState = state.homeGridState.copy(
                     filterButtons = CountryFilter.getCountryFilterList(activeFilter) { country ->
                         setCountryFilter(country)
                     }
-                )
-            }
+                ))
         }
     }
 
     private fun setCountryFilter(country: Country) {
         viewModelScope.launch {
             _homeAppsGridStateFlow.update { state ->
-                updateHomeAppGridState(state) {
-                    it.copy(
+                state.copy(
+                    homeGridState = state.homeGridState.copy(
                         activeCountryFilter = country
                     )
-                }
+                )
             }
             genFilterButtons(country)
             fetchDataFromDatabase(country)
@@ -244,27 +237,33 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun setupSearchResults(query: String, data: List<ShowcaseAppUI>?) {
         data?.let { apps ->
-            _homeAppsGridStateFlow.emit(
-                HomeState.HomeAppSearchState(
-                    query = query,
-                    searchResults = apps
+            _homeAppsGridStateFlow.update { state ->
+                state.copy(
+                    homeAppSearchState = HomeAppSearchState(
+                        query = query,
+                        searchResults = apps.map { it.copy(onClick = { clickToOpenBottomSheet(it) }) }
+                    ), toolbarState = SearchWidgetState.OPENED
                 )
-            )
+            }
         }
     }
 
     fun handleSearchScreen(isVisible: Boolean) {
         viewModelScope.launch {
             if (isVisible) {
-                _homeAppsGridStateFlow.emit(
-                    HomeState.HomeAppSearchState(
-                        query = "",
-                        searchResults = emptyList()
+                _homeAppsGridStateFlow.update { state ->
+                    state.copy(
+                        homeAppSearchState = HomeAppSearchState(
+                            query = "",
+                            searchResults = emptyList(),
+                        ),
+                        toolbarState = SearchWidgetState.OPENED
                     )
-                )
+                }
             } else {
-                _homeAppsGridStateFlow.emit(HomeAppsGridState())
-                initHomeScreen()
+                _homeAppsGridStateFlow.update { state ->
+                    state.copy(homeAppSearchState = null, toolbarState = SearchWidgetState.CLOSED)
+                }
             }
         }
     }

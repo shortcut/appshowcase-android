@@ -74,20 +74,21 @@ fun HomeScreenContentList(
                         onNavDestinations(HomeScreenDestinations.IdleScreen)
                     },
                     onSearch = onSearch,
-                    onSearchVisible = onSearchVisible
+                    onSearchVisible = onSearchVisible,
+                    toolbarState = homeAppsState.toolbarState
                 )
             },
             modifier = Modifier
                 .fillMaxSize()
         ) { paddingValues ->
             Box(modifier = Modifier.fillMaxSize()) {
-                when (homeAppsState) {
-                    is HomeState.HomeAppSearchState -> HomeSearchResultList(
+                when {
+                    homeAppsState.homeAppSearchState != null -> HomeSearchResultList(
                         paddingValues,
-                        homeAppsState
+                        homeAppsState.homeAppSearchState
                     )
 
-                    is HomeState.HomeAppsGridState -> HomeAppsGrid(paddingValues, homeAppsState)
+                    else -> HomeAppsGrid(paddingValues, homeAppsState.homeGridState)
                 }
 
             }
@@ -101,7 +102,7 @@ fun HomeScreenContentList(
             topColor = ExtendedShowcaseTheme.colors.ShowcaseOverlay,
             bottomColor = Color.Transparent
         )
-        if (homeAppsState is HomeState.HomeAppsGridState) {
+        if (homeAppsState.homeAppSearchState == null) {
             PullRefreshIndicator(
                 homeAppsState.isRefreshing,
                 refreshState,
@@ -114,7 +115,7 @@ fun HomeScreenContentList(
 @Composable
 private fun HomeAppsGrid(
     paddingValues: PaddingValues,
-    homeAppsGridState: HomeState.HomeAppsGridState
+    homeAppsGridState: HomeAppsGridState
 ) {
     LazyColumn(
         modifier = Modifier

@@ -47,10 +47,10 @@ fun TopBarWithLogoAndSearch(
     modifier: Modifier = Modifier,
     onLongClick: () -> Unit = {},
     onSearch: ((String) -> Unit)? = null,
-    onSearchVisible: (Boolean) -> Unit
+    onSearchVisible: (Boolean) -> Unit,
+    toolbarState: SearchWidgetState = SearchWidgetState.CLOSED
 ) {
-    var searchState by remember { mutableStateOf(SearchWidgetState.CLOSED) }
-    when (searchState) {
+    when (toolbarState) {
         SearchWidgetState.OPENED -> {
             SearchWidget(
                 modifier = Modifier,
@@ -58,7 +58,6 @@ fun TopBarWithLogoAndSearch(
                     onSearch?.invoke(it)
                 },
                 onCloseSearch = {
-                    searchState = SearchWidgetState.CLOSED
                     onSearchVisible(false)
                 }
             )
@@ -83,7 +82,6 @@ fun TopBarWithLogoAndSearch(
                 navigationIcon = null,
                 actions = {
                     SearchActionIcon(onClick = {
-                        searchState = SearchWidgetState.OPENED
                         onSearchVisible(true)
                     })
                 },
