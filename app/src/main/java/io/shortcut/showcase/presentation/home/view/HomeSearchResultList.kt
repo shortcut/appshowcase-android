@@ -32,7 +32,7 @@ import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 @Composable
 fun HomeSearchResultList(
     paddingValues: PaddingValues,
-    homeAppsState: HomeAppSearchState,
+    homeAppsState: HomeAppSearchState
 ) {
     LazyColumn(
         modifier = Modifier
@@ -54,11 +54,13 @@ fun HomeSearchResultList(
 
 @Composable
 fun HomeSearchAppItem(app: ShowcaseAppUI) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            app.onClick()
-        }, verticalAlignment = Alignment.CenterVertically
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                app.onClick()
+            },
+        verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
             modifier = Modifier
@@ -87,6 +89,3 @@ private fun HomeSearchAppItemPreview() {
         HomeSearchAppItem(app = genMockShowcaseAppUI())
     }
 }
-
-
-

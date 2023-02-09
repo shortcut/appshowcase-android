@@ -71,7 +71,8 @@ class HomeViewModel @Inject constructor(
                                 state.copy(
                                     homeGridState = state.homeGridState.copy(
                                         banners = banners,
-                                    ), isRefreshing = false
+                                    ),
+                                    isRefreshing = false
                                 )
                             }
                         }
@@ -192,7 +193,8 @@ class HomeViewModel @Inject constructor(
                     filterButtons = CountryFilter.getCountryFilterList(activeFilter) { country ->
                         setCountryFilter(country)
                     }
-                ))
+                )
+            )
         }
     }
 
@@ -244,7 +246,8 @@ class HomeViewModel @Inject constructor(
                     homeAppSearchState = HomeAppSearchState(
                         query = query,
                         searchResults = apps.map { it.copy(onClick = { clickToOpenBottomSheet(it) }) }
-                    ), toolbarState = SearchWidgetState.OPENED
+                    ),
+                    toolbarState = SearchWidgetState.OPENED
                 )
             }
         }

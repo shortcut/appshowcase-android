@@ -107,7 +107,6 @@ private fun SearchWidget(
     onSearch: (String) -> Unit,
     onCloseSearch: () -> Unit
 ) {
-
     var searchTextState by remember { mutableStateOf("") }
 
     Surface(

@@ -90,7 +90,6 @@ fun HomeScreenContentList(
 
                     else -> HomeAppsGrid(paddingValues, homeAppsState.homeGridState)
                 }
-
             }
         }
 

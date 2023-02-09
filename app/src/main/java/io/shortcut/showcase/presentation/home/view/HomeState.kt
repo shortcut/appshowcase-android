@@ -25,11 +25,11 @@ data class HomeAppsGridState(
     val isTimerRunning: Boolean = true,
     val screenshotGalleryIndex: Int = 0,
     val filterButtons: List<CountryFilter> = emptyList(),
-    val activeCountryFilter: Country = Country.All,
+    val activeCountryFilter: Country = Country.All
 )
 
 data class HomeAppSearchState(
     val query: String,
     val searchResults: List<ShowcaseAppUI>,
-    val bottomSheet: SheetContent = SheetContent.None,
+    val bottomSheet: SheetContent = SheetContent.None
 )
