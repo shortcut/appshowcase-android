@@ -217,21 +217,23 @@ class HomeViewModel @Inject constructor(
     @OptIn(FlowPreview::class)
     fun search(query: String) {
         viewModelScope.launch {
-            appRepository.searchAppsWithName(query = query)
-                .collect { result ->
-                    when (result) {
-                        is Resource.Success -> {
-                            setupSearchResults(query, result.data)
-                        }
+            if (query.isBlank()) {
+                setupSearchResults(query, emptyList())
+            } else {
+                appRepository.searchAppsWithName(query = query)
+                    .collect { result ->
+                        when (result) {
+                            is Resource.Success -> {
+                                setupSearchResults(query, result.data)
+                            }
 
-                        is Resource.Loading -> {
-                        }
-
-                        is Resource.Error -> {
-                            /* TODO */
+                            is Resource.Loading -> {}
+                            is Resource.Error -> {
+                                /* TODO */
+                            }
                         }
                     }
-                }
+            }
         }
     }
 

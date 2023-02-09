@@ -140,6 +140,7 @@ private fun SearchWidget(
                 IconButton(
                     onClick = {
                         searchTextState = ""
+                        onSearch("")
                     }
                 ) {
                     Icon(
