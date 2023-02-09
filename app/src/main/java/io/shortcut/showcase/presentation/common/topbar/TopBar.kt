@@ -21,6 +21,7 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import io.shortcut.showcase.R
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
+import kotlinx.coroutines.delay
 
 enum class SearchWidgetState {
     OPENED,
@@ -98,7 +100,9 @@ private fun SearchWidget(
     onSearch: (String) -> Unit,
     onCloseSearch: () -> Unit
 ) {
+
     var searchTextState by remember { mutableStateOf("") }
+
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -109,7 +113,6 @@ private fun SearchWidget(
             value = searchTextState,
             onValueChange = {
                 searchTextState = it
-                onSearch(it)
             },
             modifier = Modifier,
             textStyle = ExtendedShowcaseTheme.typography.h2.copy(fontWeight = FontWeight.Normal),
@@ -140,7 +143,6 @@ private fun SearchWidget(
                 IconButton(
                     onClick = {
                         searchTextState = ""
-                        onSearch("")
                     }
                 ) {
                     Icon(
@@ -163,6 +165,12 @@ private fun SearchWidget(
             ),
             shape = RoundedCornerShape(0.dp)
         )
+
+        // To wait for user finish typing.
+        LaunchedEffect(key1 = searchTextState) {
+            delay(200)
+            onSearch(searchTextState)
+        }
     }
 }
 
