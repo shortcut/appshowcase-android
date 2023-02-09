@@ -41,7 +41,8 @@ import java.util.Locale
 @Composable
 fun Carousel(
     modifier: Modifier = Modifier,
-    apps: List<CarouselApp>
+    apps: List<CarouselApp>,
+    currentIndex: (CarouselApp) -> Unit
 ) {
     val pageCount: Int = apps.size
     val startIndex = pageCount / 2
@@ -60,8 +61,7 @@ fun Carousel(
     }
 
     HorizontalPager(
-        modifier = modifier
-            .fillMaxSize(),
+        modifier = modifier,
         count = Int.MAX_VALUE,
         state = pagerState,
         contentPadding = PaddingValues(horizontal = 90.dp),
@@ -78,6 +78,7 @@ fun Carousel(
             animationSpeed = 500,
             expanded = pagerState.currentPage == index
         )
+        currentIndex(apps[appIndex])
     }
 }
 
@@ -198,7 +199,8 @@ private fun CarouselPreview() {
     ExtendedShowcaseTheme {
         Carousel(
             apps = carouselAppList
-        )
+        ) {
+        }
     }
 }
 
