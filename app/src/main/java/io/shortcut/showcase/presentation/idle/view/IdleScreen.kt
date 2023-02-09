@@ -39,16 +39,13 @@ import io.shortcut.showcase.util.mock.genMockShowcaseAppUI
 import java.util.Locale
 
 @Composable
-fun IdleScreen(
-    onBackClick: () -> Unit = {}
-) {
+fun IdleScreen() {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
 
     IdleContent(
         apps = carouselAppList,
-        onBackClick = onBackClick
     )
 }
 

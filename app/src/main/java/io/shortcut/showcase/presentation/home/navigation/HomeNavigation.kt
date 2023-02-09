@@ -45,9 +45,7 @@ fun MainNavigation(
             )
         }
         composable(route = ShowcaseDestination.Idle.route) {
-            IdleScreen(
-                onBackClick = { navController.popBackStack() }
-            )
+            IdleScreen()
         }
         composable(route = ShowcaseDestination.ScreenshotGallery.route) { backstackEntry ->
             ScreenshotScreen(
