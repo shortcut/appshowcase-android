@@ -2,9 +2,8 @@ package io.shortcut.showcase.presentation.idle.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +16,10 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.google.accompanist.systemuicontroller.SystemUiController
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import io.shortcut.showcase.R
@@ -43,57 +46,58 @@ fun IdleScreen() {
     val systemUiController: SystemUiController = rememberSystemUiController()
     systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
-
     IdleContent(
         apps = carouselAppList,
     )
 }
 
 @Composable
-private fun IdleBackground() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        val vector = ImageVector.vectorResource(id = R.drawable.image)
-        val painter = rememberVectorPainter(image = vector)
-
-        Image(
-            modifier = Modifier
-                .fillMaxSize(),
-            painter = painter,
-            contentDescription = null,
-            contentScale = ContentScale.FillWidth
-        )
-    }
+private fun IdleBackground(modifier: Modifier) {
+    val vector = ImageVector.vectorResource(id = R.drawable.image)
+    val painter = rememberVectorPainter(image = vector)
+    Image(
+        modifier = modifier
+            .fillMaxWidth(),
+        painter = painter,
+        contentDescription = null,
+        contentScale = ContentScale.FillWidth
+    )
 }
 
 @Preview
 @Composable
 private fun IdleBackgroundPreview() {
     ExtendedShowcaseTheme {
-        IdleBackground()
+        IdleBackground(modifier = Modifier)
     }
 }
 
 @Composable
 private fun IdleContent(
     modifier: Modifier = Modifier,
-    apps: List<CarouselApp>,
-    onBackClick: () -> Unit = {}
+    apps: List<CarouselApp>
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = null
+    Box(modifier = Modifier.fillMaxSize()) {
+        var index by remember { mutableStateOf(0) }
+        IdleBackground(modifier = Modifier.align(Alignment.TopCenter))
+        Column(
+            modifier = modifier
+                .fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Bottom
+        ) {
+            Carousel(
+                apps = apps
             ) {
-                onBackClick()
-            },
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Carousel(
-            apps = apps
-        )
+                index = it
+            }
+            val shownApp = apps[index]
+            AppDetails(
+                appTitle = shownApp.title,
+                appCategory = shownApp.generalCategory.value,
+                categoryColor = Color.Blue
+            )
+        }
     }
 }
 
@@ -107,8 +111,11 @@ private fun AppDetails(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(top = Dimens.M),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top
     ) {
         Row(
             horizontalArrangement = Arrangement.Center,
