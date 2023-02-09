@@ -9,12 +9,18 @@ import io.shortcut.showcase.domain.repository.HomeScreenRepository
 import io.shortcut.showcase.presentation.common.filter.data.CountryFilter
 import io.shortcut.showcase.presentation.data.ShowcaseAppUI
 import io.shortcut.showcase.presentation.home.data.CategorySection
+import io.shortcut.showcase.presentation.home.view.HomeState.HomeAppsGridState
 import io.shortcut.showcase.presentation.showAll.SheetContent
 import io.shortcut.showcase.util.resource.Resource
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,13 +31,25 @@ class HomeViewModel @Inject constructor(
     private val appRepository: AppsRepository
 ) : ViewModel() {
 
-    private val _homeViewStateFlow = MutableStateFlow(HomeViewState())
-    val homeViewState = _homeViewStateFlow.asStateFlow()
+    private val _homeAppsGridStateFlow = MutableStateFlow<HomeState>(HomeAppsGridState())
+    val homeViewState = _homeAppsGridStateFlow.asStateFlow()
 
     private val _viewEffects = MutableSharedFlow<HomeViewEffect>()
     val viewEffects = _viewEffects.asSharedFlow()
 
+    private val countryFilterState: StateFlow<Country> =
+        homeViewState.map { if (it is HomeAppsGridState) it.activeCountryFilter else Country.All }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Eagerly,
+                initialValue = Country.All
+            )
+
     init {
+        initHomeScreen()
+    }
+
+    private fun initHomeScreen() {
         refreshAppsList()
         fetchBanners()
         genFilterButtons()
@@ -49,18 +67,22 @@ class HomeViewModel @Inject constructor(
                 when (result) {
                     is Resource.Success -> {
                         result.data?.let { banners ->
-                            _homeViewStateFlow.update {
-                                it.copy(
-                                    banners = banners,
-                                    refreshing = false
-                                )
+                            _homeAppsGridStateFlow.update { state ->
+                                updateHomeAppGridState(state) {
+                                    it.copy(
+                                        banners = banners,
+                                        isRefreshing = false
+                                    )
+                                }
                             }
                         }
                     }
 
                     is Resource.Loading -> {
-                        _homeViewStateFlow.update {
-                            it.copy(refreshing = result.isLoading)
+                        _homeAppsGridStateFlow.update { state ->
+                            updateHomeAppGridState(state) {
+                                it.copy(isRefreshing = result.isLoading)
+                            }
                         }
                     }
 
@@ -72,9 +94,17 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    private fun updateHomeAppGridState(
+        it: HomeState,
+        update: (HomeAppsGridState) -> HomeState
+    ) = when (it) {
+        is HomeAppsGridState -> update(it)
+        is HomeState.HomeAppSearchState -> it
+    }
+
     fun refreshAppsList() {
         viewModelScope.launch {
-            appRepository.fetchAppsFromRemote(homeViewState.value.activeCountryFilter)
+            appRepository.fetchAppsFromRemote(countryFilterState.value)
                 .collect { result ->
                     when (result) {
                         is Resource.Success -> {
@@ -82,8 +112,10 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is Resource.Loading -> {
-                            _homeViewStateFlow.update {
-                                it.copy(refreshing = result.isLoading)
+                            _homeAppsGridStateFlow.update { state ->
+                                updateHomeAppGridState(state) {
+                                    it.copy(isRefreshing = result.isLoading)
+                                }
                             }
                         }
 
@@ -105,8 +137,10 @@ class HomeViewModel @Inject constructor(
                         }
 
                         is Resource.Loading -> {
-                            _homeViewStateFlow.update {
-                                it.copy(loading = result.isLoading)
+                            _homeAppsGridStateFlow.update { state ->
+                                updateHomeAppGridState(state) {
+                                    it.copy(isRefreshing = result.isLoading)
+                                }
                             }
                         }
 
@@ -133,43 +167,50 @@ class HomeViewModel @Inject constructor(
                         onClickShowAll = {
                             sendViewEffect(
                                 HomeViewEffect.NavigateToShowAllApps(
-                                    country = homeViewState.value.activeCountryFilter,
+                                    country = countryFilterState.value,
                                     category = it.key
                                 )
                             )
                         }
                     )
                 }
-
-            _homeViewStateFlow.update { state ->
-                state.copy(categorizedApps = categorizedApps, refreshing = false)
+            _homeAppsGridStateFlow.update { state ->
+                updateHomeAppGridState(state) {
+                    it.copy(categorizedApps = categorizedApps, isRefreshing = false)
+                }
             }
         }
     }
 
     private fun clickToOpenBottomSheet(app: ShowcaseAppUI) {
-        _homeViewStateFlow.update { state ->
-            state.copy(bottomSheet = SheetContent.AppInfo(app))
+        _homeAppsGridStateFlow.update { state ->
+            updateHomeAppGridState(state) {
+                it.copy(bottomSheet = SheetContent.AppInfo(app))
+            }
         }
         sendViewEffect(HomeViewEffect.OpenBottomSheet)
     }
 
-    private fun genFilterButtons(activeFilter: Country = homeViewState.value.activeCountryFilter) {
-        _homeViewStateFlow.update { state ->
-            state.copy(
-                filterButtons = CountryFilter.getCountryFilterList(activeFilter) {
-                    setCountryFilter(it)
-                }
-            )
+    private fun genFilterButtons(activeFilter: Country = countryFilterState.value) {
+        _homeAppsGridStateFlow.update { state ->
+            updateHomeAppGridState(state) {
+                it.copy(
+                    filterButtons = CountryFilter.getCountryFilterList(activeFilter) { country ->
+                        setCountryFilter(country)
+                    }
+                )
+            }
         }
     }
 
     private fun setCountryFilter(country: Country) {
         viewModelScope.launch {
-            _homeViewStateFlow.update { state ->
-                state.copy(
-                    activeCountryFilter = country
-                )
+            _homeAppsGridStateFlow.update { state ->
+                updateHomeAppGridState(state) {
+                    it.copy(
+                        activeCountryFilter = country
+                    )
+                }
             }
             genFilterButtons(country)
             fetchDataFromDatabase(country)
@@ -178,5 +219,53 @@ class HomeViewModel @Inject constructor(
 
     fun hideBottomSheet() {
         sendViewEffect(HomeViewEffect.HideBottomSheet)
+    }
+
+    @OptIn(FlowPreview::class)
+    fun search(query: String) {
+        viewModelScope.launch {
+            appRepository.searchAppsWithName(query = query)
+                .collect { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            setupSearchResults(query, result.data)
+                        }
+
+                        is Resource.Loading -> {
+                        }
+
+                        is Resource.Error -> {
+                            /* TODO */
+                        }
+                    }
+                }
+        }
+    }
+
+    private suspend fun setupSearchResults(query: String, data: List<ShowcaseAppUI>?) {
+        data?.let { apps ->
+            _homeAppsGridStateFlow.emit(
+                HomeState.HomeAppSearchState(
+                    query = query,
+                    searchResults = apps
+                )
+            )
+        }
+    }
+
+    fun handleSearchScreen(isVisible: Boolean) {
+        viewModelScope.launch {
+            if (isVisible) {
+                _homeAppsGridStateFlow.emit(
+                    HomeState.HomeAppSearchState(
+                        query = "",
+                        searchResults = emptyList()
+                    )
+                )
+            } else {
+                _homeAppsGridStateFlow.emit(HomeAppsGridState())
+                initHomeScreen()
+            }
+        }
     }
 }

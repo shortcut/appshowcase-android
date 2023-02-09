@@ -25,9 +25,9 @@ fun HomeScreen(
     systemUiController.setSystemBarsColor(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
     systemUiController.isNavigationBarVisible = false
 
-    val homeViewState: HomeViewState by viewModel.homeViewState.collectAsState()
+    val homeAppsGridState: HomeState by viewModel.homeViewState.collectAsState()
     val refreshState =
-        rememberPullRefreshState(refreshing = homeViewState.refreshing, onRefresh = {
+        rememberPullRefreshState(refreshing = homeAppsGridState.isRefreshing, onRefresh = {
             viewModel.refreshAppsList()
         })
 
@@ -64,7 +64,7 @@ fun HomeScreen(
         }
     }
     AppListWithBottomSheetLayout(
-        currentContent = homeViewState.bottomSheet,
+        currentContent = homeAppsGridState.bottomSheet,
         onEvent = { events ->
             when (events) {
                 is BottomSheetContentEvents.Dismiss -> viewModel.hideBottomSheet()
@@ -81,6 +81,14 @@ fun HomeScreen(
         },
         modalBottomSheetState = modalBottomSheetState
     ) {
-        HomeScreenContentList(refreshState, onNavDestinations, homeViewState)
+        HomeScreenContentList(
+            refreshState,
+            onNavDestinations,
+            homeAppsGridState,
+            onSearch = { viewModel.search(it) },
+            onSearchVisible = {
+                viewModel.handleSearchScreen(isVisible = it)
+            }
+        )
     }
 }

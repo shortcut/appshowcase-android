@@ -29,6 +29,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -45,20 +46,20 @@ enum class SearchWidgetState {
 fun TopBarWithLogoAndSearch(
     modifier: Modifier = Modifier,
     onLongClick: () -> Unit = {},
-    onSearch: (() -> Unit)? = null
+    onSearch: ((String) -> Unit)? = null,
+    onSearchVisible: (Boolean) -> Unit
 ) {
     var searchState by remember { mutableStateOf(SearchWidgetState.CLOSED) }
-    var searchTextState by remember { mutableStateOf("") }
     when (searchState) {
         SearchWidgetState.OPENED -> {
             SearchWidget(
                 modifier = Modifier,
-                searchText = searchTextState,
                 onSearch = {
-                    searchTextState = it
+                    onSearch?.invoke(it)
                 },
                 onCloseSearch = {
                     searchState = SearchWidgetState.CLOSED
+                    onSearchVisible(false)
                 }
             )
         }
@@ -71,7 +72,8 @@ fun TopBarWithLogoAndSearch(
                             .combinedClickable(
                                 onLongClick = {
                                     onLongClick()
-                                }, onClick = {}
+                                },
+                                onClick = {}
                             ),
                         painter = painterResource(id = R.drawable.shortcut_logo_small),
                         contentDescription = null,
@@ -81,8 +83,8 @@ fun TopBarWithLogoAndSearch(
                 navigationIcon = null,
                 actions = {
                     SearchActionIcon(onClick = {
-                        onSearch?.invoke()
                         searchState = SearchWidgetState.OPENED
+                        onSearchVisible(true)
                     })
                 },
                 backgroundColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
@@ -90,24 +92,29 @@ fun TopBarWithLogoAndSearch(
             )
         }
     }
-
 }
 
 @Composable
 private fun SearchWidget(
     modifier: Modifier,
-    searchText: String,
     onSearch: (String) -> Unit,
     onCloseSearch: () -> Unit
 ) {
+    var searchTextState by remember { mutableStateOf("") }
     Surface(
         modifier = modifier
             .fillMaxWidth()
             .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
             .height(56.dp)
     ) {
-        TextField(value = searchText,
-            onValueChange = { onSearch(it) },
+        TextField(
+            value = searchTextState,
+            onValueChange = {
+                searchTextState = it
+                onSearch(it)
+            },
+            modifier = Modifier,
+            textStyle = ExtendedShowcaseTheme.typography.h2.copy(fontWeight = FontWeight.Normal),
             placeholder = {
                 Text(
                     modifier = Modifier.alpha(ContentAlpha.medium),
@@ -134,7 +141,7 @@ private fun SearchWidget(
             trailingIcon = {
                 IconButton(
                     onClick = {
-                        onSearch("")
+                        searchTextState = ""
                     }
                 ) {
                     Icon(
@@ -147,7 +154,6 @@ private fun SearchWidget(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
                 onSearch = {
-
                 }
             ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -180,6 +186,7 @@ private fun TopBarPreview() {
     ExtendedShowcaseTheme {
         TopBarWithLogoAndSearch(
             modifier = Modifier,
+            onSearchVisible = {}
         )
     }
 }
@@ -190,7 +197,8 @@ private fun SearchWidgetPreview() {
     ExtendedShowcaseTheme {
         SearchWidget(
             modifier = Modifier,
-            searchText = "",
-            onSearch = {}, onCloseSearch = {})
+            onSearch = {},
+            onCloseSearch = {}
+        )
     }
 }

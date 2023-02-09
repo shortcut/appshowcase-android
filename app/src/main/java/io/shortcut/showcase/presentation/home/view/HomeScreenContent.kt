@@ -1,6 +1,5 @@
 package io.shortcut.showcase.presentation.home.view
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,16 +47,17 @@ import io.shortcut.showcase.util.mock.genMockFilterButtons
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.delay
 
-
 @OptIn(
-    ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class,
-    ExperimentalFoundationApi::class
+    ExperimentalMaterialApi::class,
+    ExperimentalMaterial3Api::class
 )
 @Composable
 fun HomeScreenContentList(
     refreshState: PullRefreshState,
     onNavDestinations: (HomeScreenDestinations) -> Unit,
-    homeViewState: HomeViewState
+    homeAppsState: HomeState,
+    onSearch: (String) -> Unit,
+    onSearchVisible: (Boolean) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -73,16 +73,23 @@ fun HomeScreenContentList(
                     onLongClick = {
                         onNavDestinations(HomeScreenDestinations.IdleScreen)
                     },
-                    onSearch = {
-
-                    }
+                    onSearch = onSearch,
+                    onSearchVisible = onSearchVisible
                 )
             },
             modifier = Modifier
                 .fillMaxSize()
         ) { paddingValues ->
             Box(modifier = Modifier.padding(paddingValues)) {
-                HomeAppsGrid(paddingValues, homeViewState)
+                when (homeAppsState) {
+                    is HomeState.HomeAppSearchState -> HomeSearchResultList(
+                        paddingValues,
+                        homeAppsState
+                    )
+
+                    is HomeState.HomeAppsGridState -> HomeAppsGrid(paddingValues, homeAppsState)
+                }
+
             }
         }
 
@@ -94,18 +101,20 @@ fun HomeScreenContentList(
             topColor = ExtendedShowcaseTheme.colors.ShowcaseOverlay,
             bottomColor = Color.Transparent
         )
-        PullRefreshIndicator(
-            homeViewState.refreshing,
-            refreshState,
-            Modifier.align(Alignment.TopCenter)
-        )
+        if (homeAppsState is HomeState.HomeAppsGridState) {
+            PullRefreshIndicator(
+                homeAppsState.isRefreshing,
+                refreshState,
+                Modifier.align(Alignment.TopCenter)
+            )
+        }
     }
 }
 
 @Composable
 private fun HomeAppsGrid(
     paddingValues: PaddingValues,
-    homeViewState: HomeViewState
+    homeAppsGridState: HomeState.HomeAppsGridState
 ) {
     LazyColumn(
         modifier = Modifier
@@ -115,9 +124,9 @@ private fun HomeAppsGrid(
     ) {
         item {
             HomeContent(
-                banners = homeViewState.banners,
-                filterButtons = homeViewState.filterButtons,
-                sections = homeViewState.categorizedApps
+                banners = homeAppsGridState.banners,
+                filterButtons = homeAppsGridState.filterButtons,
+                sections = homeAppsGridState.categorizedApps
             )
         }
     }
