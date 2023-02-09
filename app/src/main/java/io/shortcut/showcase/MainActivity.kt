@@ -16,7 +16,6 @@ import io.shortcut.showcase.presentation.idle.view.IdleScreen
 import io.shortcut.showcase.ui.theme.ExtendedShowcaseTheme
 import kotlinx.coroutines.flow.MutableStateFlow
 
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     // Set a timeout state
