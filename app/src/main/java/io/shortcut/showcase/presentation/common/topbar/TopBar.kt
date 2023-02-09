@@ -21,13 +21,19 @@ import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -94,6 +100,7 @@ fun TopBarWithLogoAndSearch(
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 private fun SearchWidget(
     modifier: Modifier,
@@ -109,12 +116,21 @@ private fun SearchWidget(
             .background(color = ExtendedShowcaseTheme.colors.ShowcaseBackground)
             .height(56.dp)
     ) {
+        val focusRequester = FocusRequester()
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         TextField(
             value = searchTextState,
             onValueChange = {
                 searchTextState = it
             },
-            modifier = Modifier,
+            modifier = Modifier
+                .focusRequester(focusRequester)
+                .onFocusChanged {
+                    if (it.isFocused) {
+                        keyboardController?.show()
+                    }
+                },
             textStyle = ExtendedShowcaseTheme.typography.h2.copy(fontWeight = FontWeight.Normal),
             placeholder = {
                 Text(
@@ -165,6 +181,11 @@ private fun SearchWidget(
             ),
             shape = RoundedCornerShape(0.dp)
         )
+
+        DisposableEffect(Unit) {
+            focusRequester.requestFocus()
+            onDispose { }
+        }
 
         // To wait for user finish typing.
         LaunchedEffect(key1 = searchTextState) {
