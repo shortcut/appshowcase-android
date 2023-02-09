@@ -84,7 +84,6 @@ private fun IdleContent(
             Carousel(
                 apps = apps
             ) {
-                //currentItem = it
             }
             AppDetails(
                 appTitle = "",
