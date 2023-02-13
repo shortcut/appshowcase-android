@@ -1,4 +1,2 @@
-- Manage install and not installed apps, if the app is already installed, you can launch it else user can see it in playstore.
-- Show all  app in full screen mode.
-- Sorting with country rating and installs.
-- Filtering with category, country.
+- Now user can search for apps and open it to see information
+- Idle screen will be shown when there is no interaction in the app for 30 seconds.
