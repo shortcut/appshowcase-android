@@ -15,7 +15,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetValue
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.rememberModalBottomSheetState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -129,9 +128,7 @@ private fun ToolBarWithSearch(
     TopAppBar(
         title = {},
         navigationIcon = { NavigationIcon(onBackClick) },
-        actions = {
-            AboutActionIcon()
-        },
+        actions = {},
         colors = TopAppBarDefaults.mediumTopAppBarColors(
             containerColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
             scrolledContainerColor = ExtendedShowcaseTheme.colors.ShowcaseBackground,
@@ -190,18 +187,6 @@ fun NavigationIcon(onBackClick: () -> Unit) {
     ) {
         Icon(
             imageVector = Icons.Filled.ArrowBack,
-            contentDescription = null
-        )
-    }
-}
-
-@Composable
-fun AboutActionIcon() {
-    IconButton(
-        onClick = { }
-    ) {
-        Icon(
-            imageVector = Icons.Filled.Search,
             contentDescription = null
         )
     }

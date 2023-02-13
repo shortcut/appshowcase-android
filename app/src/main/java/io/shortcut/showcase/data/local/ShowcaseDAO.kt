@@ -23,6 +23,9 @@ interface ShowcaseDAO {
         category: String
     ): List<ShowcaseAppEntity>
 
+    @Query("SELECT * FROM ShowcaseAppEntity WHERE title like '%' || :query || '%'")
+    suspend fun searchAppsWithName(query: String): List<ShowcaseAppEntity>
+
     @Query("DELETE FROM ShowcaseAppEntity")
     suspend fun deleteAllApps()
 }

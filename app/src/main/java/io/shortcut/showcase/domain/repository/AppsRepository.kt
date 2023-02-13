@@ -23,6 +23,8 @@ interface AppsRepository {
         selectedCategory: GeneralCategory,
         sortBy: SortOrder
     ): Flow<Resource<List<ShowcaseAppUI>>>
+
+    suspend fun searchAppsWithName(query: String): Flow<Resource<List<ShowcaseAppUI>>>
 }
 
 class AppsRepositoryImpl @Inject constructor(
@@ -105,6 +107,19 @@ class AppsRepositoryImpl @Inject constructor(
                 Resource.Success(data = data.sortAppsList(sortBy))
             )
 
+            // Just for safety, we emit another loading false signal.
+            emit(Resource.Loading(false))
+        }
+    }
+
+    override suspend fun searchAppsWithName(query: String): Flow<Resource<List<ShowcaseAppUI>>> {
+        return flow {
+            // The flow starts by emitting a loading signal.
+            emit(Resource.Loading(isLoading = true))
+            val data = dao.searchAppsWithName(query = query).map { it.toShowcaseAppUI() }
+            emit(
+                Resource.Success(data = data)
+            )
             // Just for safety, we emit another loading false signal.
             emit(Resource.Loading(false))
         }
