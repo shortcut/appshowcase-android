@@ -46,6 +46,7 @@ import io.shortcut.showcase.util.mock.genMockBanners
 import io.shortcut.showcase.util.mock.genMockFilterButtons
 import io.shortcut.showcase.util.mock.genMockShowcaseAppUIList
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 @OptIn(
     ExperimentalMaterialApi::class,
@@ -202,7 +203,10 @@ private fun HomeScreenPager(
                 .fillMaxSize(),
             model = images[page].imageUrl,
             contentDescription = null,
-            contentScale = ContentScale.FillHeight
+            contentScale = ContentScale.FillHeight,
+            onError = {
+                Timber.e(it.result.throwable)
+            }
         )
     }
 }
