@@ -128,13 +128,7 @@ class HomeViewModel @Inject constructor(
                             setUpHomeViewState(result)
                         }
 
-                        is Resource.Loading -> {
-                            _homeAppsGridStateFlow.update { state ->
-                                state.copy(
-                                    isRefreshing = result.isLoading
-                                )
-                            }
-                        }
+                        is Resource.Loading -> {}
 
                         is Resource.Error -> {
                             /* TODO */
