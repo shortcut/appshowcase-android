@@ -127,7 +127,6 @@ class HomeViewModel @Inject constructor(
                         is Resource.Success -> {
                             setUpHomeViewState(result)
                         }
-
                         is Resource.Loading -> {}
 
                         is Resource.Error -> {
