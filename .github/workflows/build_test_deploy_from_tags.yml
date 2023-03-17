@@ -3,6 +3,7 @@ name: Build test and deploy android app
 on:
   push:
     branches: [ "feature/*" ]
+
 jobs:
   build:
     runs-on: ubuntu-latest
