@@ -15,7 +15,7 @@ jobs:
       - name: Find the total number of commits
         run: |
           echo "Running the numbers"
-          $count = git log --oneline | wc -l
+          $count = git rev-list --all --count
           echo $count
 
       - name: Bump version
@@ -42,4 +42,4 @@ jobs:
           SERVICE_CREDENTIALS_FILE: ${{ secrets.SERVICE_CREDENTIALS_FILE }}
 
       - name: Run lint, build and test
-        run: bundle exec fastlane build_test
+        run: bundle exec fastlane build_test_deploy
