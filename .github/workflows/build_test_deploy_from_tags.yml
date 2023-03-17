@@ -12,10 +12,10 @@ jobs:
         with:
           fetch-depth: 0
       - name: Find the total number of commits
-          run: |
-            echo "Running the numbers"
-            $count = git log --oneline | wc -l
-            echo $count
+        run: |
+          echo "Running the numbers"
+          $count = git log --oneline | wc -l
+          echo $count
 
       - name: Bump version
         uses: chkfung/android-version-actions@v1.2.1
