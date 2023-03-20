@@ -18,12 +18,13 @@ jobs:
         run: |
           echo "Running the numbers"
           echo "CODE=$(echo git rev-list --all --count" >> $VERSION_CODE
+          echo $VERSION_CODE
 
       - name: Bump version
         uses: chkfung/android-version-actions@v1.2.1
         with:
           gradlePath: app/build.gradle # or app/build.gradle.kts
-          versionCode: ${{VERSION_CODE}}
+          versionCode: 10
           versionName: 1.0.0
 
 
