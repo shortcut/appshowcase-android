@@ -16,12 +16,13 @@ jobs:
         run: |
           echo "Running the numbers"
           git rev-list --all --count
+          echo $(git rev-list --all --count)
 
       - name: Bump version
         uses: chkfung/android-version-actions@v1.2.1
         with:
           gradlePath: app/build.gradle # or app/build.gradle.kts
-          versionCode: ${{github.run_number}}
+          versionCode: $(git rev-list --all --count)
           versionName: 1.0.0
 
       - name: Setup Ruby
