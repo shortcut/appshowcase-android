@@ -20,12 +20,12 @@ jobs:
           echo "CODE=$(echo git rev-list --all --count" >> $VERSION_CODE
 
       - name: Bump version
-        uses: mad9000/actions-find-and-replace-string@2
-        id: version_name
+        uses: chkfung/android-version-actions@v1.2.1
         with:
-          source: ${{ github.ref_name }}
-          find: 'feature/'
-          replace: ''
+          gradlePath: app/build.gradle # or app/build.gradle.kts
+          versionCode: ${{VERSION_CODE}}
+          versionName: 1.0.0
+
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
