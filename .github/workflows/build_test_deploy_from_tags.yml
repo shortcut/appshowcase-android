@@ -22,7 +22,7 @@ jobs:
         uses: chkfung/android-version-actions@v1.2.1
         with:
           gradlePath: app/build.gradle # or app/build.gradle.kts
-          versionCode: $(git rev-list --all --count)
+          versionCode: ${{github.run_number}}
           versionName: 1.0.0
 
       - name: Setup Ruby
