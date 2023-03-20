@@ -3,6 +3,8 @@ name: Build test and deploy android app
 on:
   push:
     branches: [ "feature/*" ]
+env:
+  VERSION_CODE: 1
 
 jobs:
   build:
@@ -15,15 +17,15 @@ jobs:
       - name: Find the total number of commits
         run: |
           echo "Running the numbers"
-          git rev-list --all --count
-          echo $(git rev-list --all --count)
+          echo "CODE=$(echo git rev-list --all --count" >> $VERSION_CODE
 
       - name: Bump version
-        uses: chkfung/android-version-actions@v1.2.1
+        uses: mad9000/actions-find-and-replace-string@2
+        id: version_name
         with:
-          gradlePath: app/build.gradle # or app/build.gradle.kts
-          versionCode: ${{github.run_number}}
-          versionName: 1.0.0
+          source: ${{ github.ref_name }}
+          find: 'feature/'
+          replace: ''
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
