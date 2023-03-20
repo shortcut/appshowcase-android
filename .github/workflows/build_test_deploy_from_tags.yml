@@ -15,8 +15,7 @@ jobs:
       - name: Find the total number of commits
         run: |
           echo "Running the numbers"
-          $count = git rev-list --all --count
-          echo $count
+          git rev-list --all --count
 
       - name: Bump version
         uses: chkfung/android-version-actions@v1.2.1
