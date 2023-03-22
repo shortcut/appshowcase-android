@@ -78,7 +78,7 @@ android {
     }
 
     task printVersionInformation {
-        println defaultConfig.versionName + " (" + defaultConfig.versionCode + ")"
+        println defaultConfig.versionName + "(" + defaultConfig.versionCode + ")"
     }
 }
 
