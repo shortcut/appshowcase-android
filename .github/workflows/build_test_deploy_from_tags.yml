@@ -1,0 +1,72 @@
+name: build test and deploy android app
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the code
+        uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.2
+
+      - name: Install bundle for fastlane
+        run: |
+          bundle config path vendor/bundle
+          bundle install --jobs 4 --retry 3
+
+      - name: Create Service Credentials file
+        run: |
+          echo ${SERVICE_CREDENTIALS_FILE} | base64 -d > service_credentials_file.json
+        env:
+          SERVICE_CREDENTIALS_FILE: ${{ secrets.SERVICE_CREDENTIALS_FILE }}
+
+      - name: Setup keystore properties
+        env:
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEYSTORE_FILE_NAME: ${{ secrets.KEYSTORE_FILE_NAME }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        run: |
+          printf 'keyAlias=%s\nkeyPassword=%s\nstoreFile=%s\nstorePassword=%s' \
+          ${KEY_ALIAS} ${KEY_PASSWORD} ${KEYSTORE_FILE_NAME} ${KEYSTORE_PASSWORD} > keystore/keystore.properties          
+
+      - name: Decode keystore file
+        env:
+          KEYSTORE_FILE: ${{ secrets.KEYSTORE_FILE }}
+          KEYSTORE_FILE_NAME: ${{ secrets.KEYSTORE_FILE_NAME }}
+        run: |
+          echo ${KEYSTORE_FILE} | base64 -d > keystore/release.keystore
+
+      - name: Change/increase the version code
+        run : |
+          echo "NEW_VERSION_CODE=$(git rev-list --all --count)" >> $GITHUB_ENV
+          echo ${{ env.NEW_VERSION_CODE }}
+
+      - name: Distribute app with 🔥 App Distribution 🚀
+        run: bundle exec fastlane build_test_deploy
+        env:
+          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: Get version name and code.
+        run: |
+          echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
+
+      - name: Create a Tag for the release.
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.VERSION_INFORMATION }}
+          release_name: Release ${{ env.VERSION_INFORMATION }}
+          body: |
+          draft: false
+          prerelease: false
