@@ -18,7 +18,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 7
-        versionName "1.0.3"
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -75,6 +75,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
         }
+    }
+
+    task printVersionInformation {
+        println defaultConfig.versionName + " (" + defaultConfig.versionCode + ")"
     }
 }
 
