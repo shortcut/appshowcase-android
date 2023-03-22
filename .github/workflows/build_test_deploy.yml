@@ -8,14 +8,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
 
-      - name: Install bundle
+      - name: Install bundle for fastlane
         run: |
           bundle config path vendor/bundle
           bundle install --jobs 4 --retry 3
@@ -47,3 +47,19 @@ jobs:
         run: bundle exec fastlane build_test_deploy
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
+
+      - name: Get version name and code.
+        run: |
+          echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
+
+      - name: Create a Tag for the release.
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ env.VERSION_INFORMATION }}
+          release_name: Release ${{ env.VERSION_INFORMATION }}
+          body: |
+          draft: false
+          prerelease: false

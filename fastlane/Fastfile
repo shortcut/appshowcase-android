@@ -10,10 +10,9 @@ platform :android do
 
   desc "Build, test and deploy application"
   lane :build_test_deploy do
-    # lintKotlin()
-    # unit_test()
-    clean_assemble()
-    # deploy()
+    lintKotlin()
+    unit_test()
+    deploy()
   end
 
   desc "Run Kotlinter for lint checks"
@@ -26,17 +25,13 @@ platform :android do
     gradle(task: "testDebugUnitTest")
   end
 
-  desc "Clean and build with release type"
-    private_lane :clean_assemble do
-      gradle(
-          task: "clean assemble",
-          build_type: "release",
-          print_command: true,
-      )
-    end
-
-  desc "Deploy a new version to the Firebase app distribution"
+  desc "Deploy a new version to Firebase app distribution"
   private_lane :deploy do
+    gradle(
+        task: "clean assemble",
+        build_type: "release",
+        print_command: true,
+    )
     firebase_app_distribution(
         service_credentials_file: "service_credentials_file.json",
         app: ENV['FIREBASE_APP_ID'],
