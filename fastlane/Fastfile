@@ -8,10 +8,9 @@ platform :android do
     unit_test()
   end
 
-  desc "Build, test and deploy application to Google Play"
+  desc "Build, test and deploy application"
   lane :build_test_deploy do
     lintKotlin()
-    increment_vc()
     unit_test()
     deploy()
   end
@@ -21,20 +20,12 @@ platform :android do
       gradle(task: "lintKotlin")
     end
 
-  desc "Increment version code"
-     private_lane :increment_vc do
-     increment_version_code(
-           gradle_file_path: "./app/build.gradle",
-
-     )
-     end
-
   desc "Runs unit tests"
   private_lane :unit_test do
     gradle(task: "testDebugUnitTest")
   end
 
-  desc "Deploy a new version to the Google Play"
+  desc "Deploy a new version to Firebase app distribution"
   private_lane :deploy do
     gradle(
         task: "clean assemble",

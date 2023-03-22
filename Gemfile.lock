@@ -211,6 +211,7 @@ GEM
       xcpretty (~> 0.2, >= 0.0.7)
 
 PLATFORMS
+  arm64-darwin-22
   x86_64-darwin-20
 
 DEPENDENCIES
@@ -219,4 +220,4 @@ DEPENDENCIES
   fastlane-plugin-increment_version_code
 
 BUNDLED WITH
-   2.4.3
+   2.4.9
