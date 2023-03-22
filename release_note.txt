@@ -1,2 +1,1 @@
-- Now user can search for apps and open it to see information
-- Idle screen will be shown when there is no interaction in the app for 30 seconds.
+- Testing the Github task
