@@ -18,7 +18,7 @@ android {
         minSdk 24
         targetSdk 33
         versionCode 7
-        versionName "1.0.3"
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -78,7 +78,7 @@ android {
     }
 
     task printVersionInformation {
-        println "v" + defaultConfig.versionName + "(" + defaultConfig.versionCode + ")"
+        println defaultConfig.versionName + " (" + defaultConfig.versionCode + ")"
     }
 }
 

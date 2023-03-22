@@ -8,9 +8,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      # Get the number of times the action has run that wil be the version code.
+      # so this will always be incrementing
+      - name: Bump version code for the app.
+        uses: chkfung/android-version-actions@v1.2.1
+        with:
+          gradlePath: app/build.gradle # or app/build.gradle.kts
+          versionCode: ${{github.run_number}}
 
-      - name: Setup Ruby
+      # Get the app version and code from gradle task to create a tag name.
+      - name: Get app version information from gradle task.
+        run: |
+          echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
+
+      - name: Setup Ruby for bundle and fastlane
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: 3.2
@@ -48,11 +62,7 @@ jobs:
         env:
           FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
 
-      - name: Get version name and code.
-        run: |
-          echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
-
-      - name: Create a Tag for the release.
+      - name: Creating a Tag for this release.
         id: create_release
         uses: actions/create-release@v1
         env:
