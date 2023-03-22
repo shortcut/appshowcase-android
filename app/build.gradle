@@ -76,6 +76,10 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
+    task printVersionInformation {
+        println "v" + defaultConfig.versionName + "(" + defaultConfig.versionCode + ")"
+    }
 }
 
 dependencies {
