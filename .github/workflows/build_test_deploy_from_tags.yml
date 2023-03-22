@@ -19,6 +19,7 @@ jobs:
           git tag
           git describe
           git rev-list --all --count
+          echo "NEW_VERSION_CODE=$(git rev-list --all --count)" >> $GITHUB_ENV
 
       - name: Setup Ruby
         uses: ruby/setup-ruby@v1
@@ -53,14 +54,9 @@ jobs:
         run: |
           echo ${KEYSTORE_FILE} | base64 -d > keystore/release.keystore
 
-      - name: Change/increase the version code
-        run : |
-          echo "VERSION_INFORMATION=$(pwd)" 
-          echo "NEW_VERSION_CODE=$(git rev-list --all --count)" >> $GITHUB_ENV
-
       - name: Get version name and code.
         run: |
-          echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
+          echo "VERSION_INFORMATION=$(${{ env.VERSION_INFORMATION }}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
 
       - name: Create a Tag for the release.
         id: create_release
