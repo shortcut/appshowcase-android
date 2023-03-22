@@ -49,11 +49,6 @@ jobs:
           echo "NEW_VERSION_CODE=$(git rev-list --all --count)" >> $GITHUB_ENV
           echo ${{ env.NEW_VERSION_CODE }}
 
-      - name: Distribute app with 🔥 App Distribution 🚀
-        run: bundle exec fastlane build_test_deploy
-        env:
-          FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
-
       - name: Get version name and code.
         run: |
           echo "VERSION_INFORMATION=$(${{github.workspace}}/gradlew -q printVersionInformation)" >> $GITHUB_ENV
